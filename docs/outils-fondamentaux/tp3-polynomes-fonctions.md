@@ -17,6 +17,7 @@ listes, mesure de temps.
 
 - Le [mémento Python](memento.md), section listes et section matplotlib.
 - [Le carnet de ce TP](/lite/notebooks/index.html?path=tp3.ipynb){ target=_blank }.
+- [Le QCM d'auto-évaluation de ce TP](qcm/qcm_tp3.html){ target=_blank }, à faire après la séance.
 
 ---
 

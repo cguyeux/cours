@@ -1,0 +1,256 @@
+{
+  "titre": "QCM du TP5 : Chiffrer, déchiffrer, casser",
+  "source": "docs/outils-fondamentaux/tp5-synthese.md",
+  "langue": "fr",
+  "consignes": "Une seule bonne réponse par question, sauf mention contraire.",
+  "questions": [
+    {
+      "id": 1,
+      "type": "unique",
+      "difficulte": "facile",
+      "theme": "Lettres et nombres",
+      "source_fichier": "tp5-synthese.md",
+      "points": 1,
+      "enonce": "Comment obtient-on le numéro de 0 à 25 d'une lettre majuscule `c` ?",
+      "options": [
+        {
+          "texte": "`ord(c) - ord(\"A\")`",
+          "correcte": true,
+          "justification": "Les majuscules se suivent dans la table des caractères, donc la différence donne le rang."
+        },
+        {
+          "texte": "`ord(c)`",
+          "correcte": false,
+          "justification": "Cela donne le code du caractère, soit 65 pour la lettre A."
+        },
+        {
+          "texte": "`chr(c) - chr(\"A\")`",
+          "correcte": false,
+          "justification": "`chr` fait la conversion inverse, d'un nombre vers un caractère."
+        },
+        {
+          "texte": "`int(c)`",
+          "correcte": false,
+          "justification": "Une lettre n'est pas convertible en entier de cette façon."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "type": "unique",
+      "difficulte": "moyen",
+      "theme": "Chiffrement affine",
+      "source_fichier": "tp5-synthese.md",
+      "points": 1,
+      "enonce": "Le chiffrement affine avec a = 1 et b = 3 correspond à quel chiffrement classique ?",
+      "options": [
+        {
+          "texte": "Le chiffre de César",
+          "correcte": true,
+          "justification": "Chaque lettre est simplement décalée de trois rangs, ce que Suétone attribue à Jules César."
+        },
+        {
+          "texte": "Le chiffre de Vigenère",
+          "correcte": false,
+          "justification": "Vigenère utilise une clé de plusieurs lettres et un décalage variable."
+        },
+        {
+          "texte": "Le chiffre de Vernam",
+          "correcte": false,
+          "justification": "Vernam utilise une clé aléatoire aussi longue que le message."
+        },
+        {
+          "texte": "Le carré de Polybe",
+          "correcte": false,
+          "justification": "Polybe remplace chaque lettre par un couple de coordonnées."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "type": "unique",
+      "difficulte": "difficile",
+      "theme": "Inversibilité",
+      "source_fichier": "tp5-synthese.md",
+      "points": 2,
+      "enonce": "Pourquoi la clé a = 4 est-elle inutilisable pour un chiffrement affine sur 26 lettres ?",
+      "options": [
+        {
+          "texte": "Parce que 4 et 26 ne sont pas premiers entre eux : plusieurs lettres sont chiffrées en la même, et l'information est détruite",
+          "correcte": true,
+          "justification": "L'inverse de 4 modulo 26 n'existe pas, donc aucun déchiffrement n'est possible."
+        },
+        {
+          "texte": "Parce que 4 est pair et que le chiffrement exige un nombre premier",
+          "correcte": false,
+          "justification": "La condition porte sur le PGCD avec 26, pas sur la primalité de a : 9, 15, 21 et 25 conviennent sans être premiers."
+        },
+        {
+          "texte": "Parce que 4 est plus petit que 26",
+          "correcte": false,
+          "justification": "Toutes les clés valides sont plus petites que 26."
+        },
+        {
+          "texte": "Parce que le chiffrement échouerait avec une erreur",
+          "correcte": false,
+          "justification": "Le chiffrement fonctionne sans broncher, et c'est précisément ce qui rend l'erreur dangereuse."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "type": "unique",
+      "difficulte": "moyen",
+      "theme": "Espace des clés",
+      "source_fichier": "tp5-synthese.md",
+      "points": 1,
+      "enonce": "Combien de clés distinctes le chiffrement affine sur 26 lettres admet-il ?",
+      "options": [
+        {
+          "texte": "312, soit 12 valeurs de a multipliées par 26 valeurs de b",
+          "correcte": true,
+          "justification": "Douze valeurs de a sont premières avec 26, et b peut prendre les 26 valeurs."
+        },
+        {
+          "texte": "676, soit 26 fois 26",
+          "correcte": false,
+          "justification": "Toutes les valeurs de a ne conviennent pas : celles qui partagent un facteur avec 26 sont exclues."
+        },
+        {
+          "texte": "26, une par décalage",
+          "correcte": false,
+          "justification": "Ce serait le compte du seul chiffre de César, où a vaut toujours 1."
+        },
+        {
+          "texte": "128 bits",
+          "correcte": false,
+          "justification": "C'est l'ordre de grandeur d'une clé moderne, sans rapport avec ce chiffrement."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "type": "unique",
+      "difficulte": "moyen",
+      "theme": "Attaque",
+      "source_fichier": "tp5-synthese.md",
+      "points": 1,
+      "enonce": "Qu'est-ce qui condamne définitivement ce chiffrement, indépendamment de son élégance ?",
+      "options": [
+        {
+          "texte": "La petitesse de son espace de clés : 312 essais sont instantanés pour une machine",
+          "correcte": true,
+          "justification": "La sécurité d'un chiffrement tient d'abord à la taille de son espace de clés."
+        },
+        {
+          "texte": "Le fait qu'il utilise l'arithmétique modulaire",
+          "correcte": false,
+          "justification": "L'arithmétique modulaire est au cœur de la cryptographie moderne, RSA compris."
+        },
+        {
+          "texte": "Le fait qu'il ne traite que les majuscules",
+          "correcte": false,
+          "justification": "C'est une limitation de mise en œuvre, pas une faiblesse cryptographique."
+        },
+        {
+          "texte": "Sa lenteur au chiffrement",
+          "correcte": false,
+          "justification": "Il est au contraire extrêmement rapide."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "type": "unique",
+      "difficulte": "difficile",
+      "theme": "Analyse de fréquences",
+      "source_fichier": "tp5-synthese.md",
+      "points": 2,
+      "enonce": "Sur quelle propriété du chiffrement affine repose l'attaque par analyse de fréquences ?",
+      "options": [
+        {
+          "texte": "Une même lettre claire est toujours chiffrée en la même lettre, ce qui laisse intactes les fréquences relatives",
+          "correcte": true,
+          "justification": "La lettre la plus fréquente du chiffré est donc très probablement l'image du E."
+        },
+        {
+          "texte": "Le chiffrement est réversible",
+          "correcte": false,
+          "justification": "La réversibilité est nécessaire à tout chiffrement utilisable, y compris ceux qui résistent à cette attaque."
+        },
+        {
+          "texte": "La clé est composée de deux nombres",
+          "correcte": false,
+          "justification": "Le nombre de paramètres de la clé ne détermine pas cette faiblesse."
+        },
+        {
+          "texte": "L'alphabet compte 26 lettres",
+          "correcte": false,
+          "justification": "La taille de l'alphabet joue sur le nombre de clés, pas sur la conservation des fréquences."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "type": "unique",
+      "difficulte": "moyen",
+      "theme": "Limites de la méthode",
+      "source_fichier": "tp5-synthese.md",
+      "points": 1,
+      "enonce": "Pourquoi l'attaque par fréquences échoue-t-elle sur le message ATTAQUEALAUBE ?",
+      "options": [
+        {
+          "texte": "Parce que le texte est trop court : la lettre la plus fréquente y est le A et non le E",
+          "correcte": true,
+          "justification": "L'hypothèse statistique n'a de sens que sur un texte assez long."
+        },
+        {
+          "texte": "Parce que le message ne contient aucun E",
+          "correcte": false,
+          "justification": "Il en contient deux ; c'est leur fréquence relative qui n'est pas dominante."
+        },
+        {
+          "texte": "Parce que la clé utilisée est invalide",
+          "correcte": false,
+          "justification": "La clé (5, 8) est parfaitement valide."
+        },
+        {
+          "texte": "Parce que l'attaque ne fonctionne que sur des textes chiffrés par César",
+          "correcte": false,
+          "justification": "Elle s'applique à tout chiffrement par substitution monoalphabétique."
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "type": "multiple",
+      "difficulte": "moyen",
+      "theme": "Robustesse",
+      "source_fichier": "tp5-synthese.md",
+      "points": 2,
+      "enonce": "Quels comportements attend-on d'une implémentation sérieuse du chiffrement affine ? (plusieurs réponses)",
+      "options": [
+        {
+          "texte": "Refuser explicitement une clé non inversible plutôt que de produire un message irrécupérable",
+          "correcte": true,
+          "justification": "Un programme sérieux signale ce qu'il ne sait pas faire au lieu de le faire mal."
+        },
+        {
+          "texte": "Vérifier son propre fonctionnement par un aller-retour chiffrer puis déchiffrer",
+          "correcte": true,
+          "justification": "Ce test attrape d'un coup toutes les erreurs de signe et de modulo."
+        },
+        {
+          "texte": "Chiffrer aussi les espaces et la ponctuation pour renforcer la sécurité",
+          "correcte": false,
+          "justification": "Le TP nettoie au contraire le texte ; et cela ne changerait rien à la faiblesse de fond."
+        },
+        {
+          "texte": "Choisir la clé au hasard à chaque appel pour plus de sûreté",
+          "correcte": false,
+          "justification": "Le destinataire ne pourrait plus déchiffrer : la clé doit être partagée."
+        }
+      ]
+    }
+  ]
+}

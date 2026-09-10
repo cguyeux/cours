@@ -17,6 +17,7 @@ Les TP1 à TP3 : listes, boucles imbriquées, fonctions, mesure de temps.
 
 - Le [mémento Python](memento.md), sections listes et numpy.
 - [Le carnet de ce TP](/lite/notebooks/index.html?path=tp4.ipynb){ target=_blank }.
+- [Le QCM d'auto-évaluation de ce TP](qcm/qcm_tp4.html){ target=_blank }, à faire après la séance.
 
 ---
 

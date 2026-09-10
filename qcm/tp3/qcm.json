@@ -1,0 +1,256 @@
+{
+  "titre": "QCM du TP3 : Polynômes et fonctions",
+  "source": "docs/outils-fondamentaux/tp3-polynomes-fonctions.md",
+  "langue": "fr",
+  "consignes": "Une seule bonne réponse par question, sauf mention contraire.",
+  "questions": [
+    {
+      "id": 1,
+      "type": "unique",
+      "difficulte": "facile",
+      "theme": "Représentation",
+      "source_fichier": "tp3-polynomes-fonctions.md",
+      "points": 1,
+      "enonce": "Avec la convention du TP, quelle liste représente le polynôme 2 + 3x + 5x^3 ?",
+      "options": [
+        {
+          "texte": "`[2, 3, 0, 5]`",
+          "correcte": true,
+          "justification": "Le coefficient constant vient en premier, et le coefficient de x^i est `P[i]`."
+        },
+        {
+          "texte": "`[5, 0, 3, 2]`",
+          "correcte": false,
+          "justification": "C'est la convention inverse, du plus haut degré vers le plus bas."
+        },
+        {
+          "texte": "`[2, 3, 5]`",
+          "correcte": false,
+          "justification": "Le coefficient nul de x^2 doit figurer, sinon les degrés sont décalés."
+        },
+        {
+          "texte": "`[[0, 2], [1, 3], [3, 5]]`",
+          "correcte": false,
+          "justification": "Cette représentation par couples est possible en général, mais ce n'est pas celle du TP."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "type": "unique",
+      "difficulte": "moyen",
+      "theme": "Horner",
+      "source_fichier": "tp3-polynomes-fonctions.md",
+      "points": 1,
+      "enonce": "Que fait la boucle `for coefficient in reversed(P): total = total * x + coefficient` ?",
+      "options": [
+        {
+          "texte": "Elle évalue le polynôme par le schéma de Horner",
+          "correcte": true,
+          "justification": "On part du coefficient dominant et on multiplie par x avant d'ajouter le suivant."
+        },
+        {
+          "texte": "Elle calcule la dérivée du polynôme",
+          "correcte": false,
+          "justification": "La dérivée décale et multiplie les coefficients, elle ne les accumule pas."
+        },
+        {
+          "texte": "Elle inverse l'ordre des coefficients",
+          "correcte": false,
+          "justification": "`reversed` parcourt à l'envers, mais le résultat est un nombre, pas une liste."
+        },
+        {
+          "texte": "Elle calcule la somme des coefficients",
+          "correcte": false,
+          "justification": "Ce serait le cas seulement si x valait 1."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "type": "unique",
+      "difficulte": "difficile",
+      "theme": "Complexité",
+      "source_fichier": "tp3-polynomes-fonctions.md",
+      "points": 2,
+      "enonce": "Sur des flottants, l'évaluation naïve d'un polynôme avec `x ** i` est-elle quadratique en le degré ?",
+      "options": [
+        {
+          "texte": "Non : `x ** i` sur un flottant est une opération unique, donc les deux méthodes sont linéaires et le rapport mesuré reste constant à 2 environ",
+          "correcte": true,
+          "justification": "La mesure sur les degrés 1 000, 5 000 et 20 000 donne un rapport stable ; le raisonnement quadratique est faux ici."
+        },
+        {
+          "texte": "Oui : la puissance x^i coûte i multiplications, donc le total croît comme le carré du degré",
+          "correcte": false,
+          "justification": "C'est le raisonnement intuitif, et c'est exactement celui que la mesure dément sur des flottants."
+        },
+        {
+          "texte": "Oui, mais seulement au-delà du degré 10 000",
+          "correcte": false,
+          "justification": "Le rapport reste constant y compris au degré 20 000."
+        },
+        {
+          "texte": "La question n'a pas de sens, on ne peut pas mesurer un temps en Python",
+          "correcte": false,
+          "justification": "`time.perf_counter` mesure précisément ce genre d'écart."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "type": "unique",
+      "difficulte": "difficile",
+      "theme": "Complexité",
+      "source_fichier": "tp3-polynomes-fonctions.md",
+      "points": 2,
+      "enonce": "Dans quel cas le raisonnement quadratique redevient-il valable pour l'évaluation naïve ?",
+      "options": [
+        {
+          "texte": "Quand on évalue en un entier, car Python calcule alors des entiers exacts de plus en plus grands",
+          "correcte": true,
+          "justification": "Mesuré : le rapport passe de 3,7 à 5,4 entre les degrés 200 et 800, il ne reste plus constant."
+        },
+        {
+          "texte": "Quand le polynôme a des coefficients négatifs",
+          "correcte": false,
+          "justification": "Le signe des coefficients ne change rien au coût."
+        },
+        {
+          "texte": "Quand on utilise numpy",
+          "correcte": false,
+          "justification": "numpy accélérerait les deux méthodes sans changer la nature du raisonnement."
+        },
+        {
+          "texte": "Jamais : ce raisonnement est faux en toutes circonstances",
+          "correcte": false,
+          "justification": "Il est faux sur les flottants, mais redevient juste sur les grands entiers."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "type": "unique",
+      "difficulte": "facile",
+      "theme": "Dérivation",
+      "source_fichier": "tp3-polynomes-fonctions.md",
+      "points": 1,
+      "enonce": "Que renvoie `deriver([2, 3, 0, 5])` ?",
+      "options": [
+        {
+          "texte": "`[3, 0, 15]`",
+          "correcte": true,
+          "justification": "Chaque coefficient d'indice i devient i fois ce coefficient, à l'indice i - 1."
+        },
+        {
+          "texte": "`[0, 3, 0, 15]`",
+          "correcte": false,
+          "justification": "Le degré diminue de un : la liste a un élément de moins, pas autant."
+        },
+        {
+          "texte": "`[2, 6, 0, 20]`",
+          "correcte": false,
+          "justification": "Ici les coefficients ont été multipliés sans être décalés."
+        },
+        {
+          "texte": "`[3, 15]`",
+          "correcte": false,
+          "justification": "Le coefficient nul intermédiaire doit être conservé pour ne pas décaler les degrés."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "type": "unique",
+      "difficulte": "moyen",
+      "theme": "Racines",
+      "source_fichier": "tp3-polynomes-fonctions.md",
+      "points": 1,
+      "enonce": "Quelle condition la méthode de dichotomie exige-t-elle sur l'intervalle de départ ?",
+      "options": [
+        {
+          "texte": "Que f(a) et f(b) soient de signes opposés",
+          "correcte": true,
+          "justification": "C'est ce changement de signe qui garantit la présence d'une racine et permet de couper l'intervalle."
+        },
+        {
+          "texte": "Que f soit dérivable sur l'intervalle",
+          "correcte": false,
+          "justification": "La dichotomie n'utilise jamais la dérivée : c'est Newton qui en a besoin."
+        },
+        {
+          "texte": "Que l'intervalle soit de longueur inférieure à 1",
+          "correcte": false,
+          "justification": "Aucune contrainte de longueur n'est nécessaire."
+        },
+        {
+          "texte": "Que f soit un polynôme",
+          "correcte": false,
+          "justification": "La dichotomie s'applique à toute fonction continue."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "type": "unique",
+      "difficulte": "difficile",
+      "theme": "Newton",
+      "source_fichier": "tp3-polynomes-fonctions.md",
+      "points": 2,
+      "enonce": "Appliquée au polynôme x^3 - 2x + 2 en partant de 0, que fait la méthode de Newton ?",
+      "options": [
+        {
+          "texte": "Elle oscille indéfiniment entre 0 et 1, sans jamais converger",
+          "correcte": true,
+          "justification": "La tangente en 0 renvoie en 1 et celle en 1 renvoie en 0 : c'est un cycle, d'où l'utilité du plafond de tours."
+        },
+        {
+          "texte": "Elle converge en quelques tours vers la racine",
+          "correcte": false,
+          "justification": "C'est le comportement attendu près d'une racine, pas ici."
+        },
+        {
+          "texte": "Elle diverge vers l'infini",
+          "correcte": false,
+          "justification": "Elle ne s'éloigne pas : elle tourne en rond entre deux valeurs."
+        },
+        {
+          "texte": "Elle lève immédiatement une division par zéro",
+          "correcte": false,
+          "justification": "La dérivée en 0 vaut -2, donc aucune division par zéro."
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "type": "multiple",
+      "difficulte": "moyen",
+      "theme": "Comparaison des méthodes",
+      "source_fichier": "tp3-polynomes-fonctions.md",
+      "points": 2,
+      "enonce": "Quelles affirmations sont exactes ? (plusieurs réponses)",
+      "options": [
+        {
+          "texte": "La dichotomie est lente mais ne rate jamais une racine si l'intervalle change de signe",
+          "correcte": true,
+          "justification": "Elle gagne un chiffre binaire de précision par tour, avec une garantie de convergence."
+        },
+        {
+          "texte": "Newton double le nombre de décimales exactes à chaque tour près de la racine",
+          "correcte": true,
+          "justification": "C'est la convergence quadratique, visible aussi dans la méthode de Héron du TP1."
+        },
+        {
+          "texte": "Newton converge quel que soit le point de départ",
+          "correcte": false,
+          "justification": "Loin de la racine, elle peut osciller, diverger, ou converger vers une autre racine."
+        },
+        {
+          "texte": "La dichotomie exige le calcul de la dérivée",
+          "correcte": false,
+          "justification": "Elle n'utilise que les signes de la fonction."
+        }
+      ]
+    }
+  ]
+}

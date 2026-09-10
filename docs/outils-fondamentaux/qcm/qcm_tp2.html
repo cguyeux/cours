@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QCM du TP2 : Arithmétique et nombres premiers</title>
+<style>
+  :root { --ok:#1b8a5a; --ko:#c0392b; --accent:#2c5f8a; --bg:#f6f7f9; }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, "Segoe UI", Roboto, sans-serif; line-height:1.5;
+         max-width: 820px; margin: 0 auto; padding: 1.5rem; color:#1a1a1a; background:var(--bg); }
+  h1 { color: var(--accent); margin-bottom:.2rem; }
+  .meta { color:#666; font-size:.9rem; margin-bottom:1rem; }
+  .consignes { background:#eef3f8; border-left:4px solid var(--accent); padding:.6rem .9rem;
+               border-radius:4px; margin-bottom:1.2rem; }
+  .q { background:#fff; border:1px solid #e1e4e8; border-radius:8px; padding:1rem 1.2rem;
+       margin-bottom:1rem; box-shadow:0 1px 2px rgba(0,0,0,.04); }
+  .q h3 { margin:.1rem 0 .2rem; font-size:1.05rem; }
+  .badge { font-size:.72rem; font-weight:600; padding:.1rem .5rem; border-radius:10px;
+           margin-left:.4rem; vertical-align:middle; }
+  .b-facile{background:#e3f4ea;color:var(--ok);} .b-moyen{background:#fdf3e0;color:#b87600;}
+  .b-difficile{background:#fbe6e6;color:var(--ko);} .b-theme{background:#eef0f3;color:#555;}
+  .enonce { margin:.4rem 0 .8rem; }
+  .opt { display:block; padding:.45rem .6rem; border:1px solid #e1e4e8; border-radius:6px;
+         margin:.35rem 0; cursor:pointer; transition:background .12s; }
+  .opt:hover { background:#f0f4f8; }
+  .opt input { margin-right:.55rem; }
+  .opt.correct { border-color:var(--ok); background:#eaf7f0; }
+  .opt.wrong   { border-color:var(--ko); background:#fbecec; }
+  .just { font-size:.86rem; color:#555; margin:.2rem 0 0 1.7rem; display:none; }
+  .just.show { display:block; }
+  .src { font-size:.78rem; color:#888; margin-top:.5rem; display:none; }
+  .src.show { display:block; }
+  .bar { position:sticky; bottom:0; background:var(--bg); padding:.8rem 0; }
+  button { background:var(--accent); color:#fff; border:0; padding:.6rem 1.3rem;
+           font-size:1rem; border-radius:6px; cursor:pointer; }
+  button.ghost { background:#fff; color:var(--accent); border:1px solid var(--accent); margin-left:.5rem; }
+  #score { font-size:1.2rem; font-weight:700; margin-left:1rem; }
+  .qmark { float:right; font-weight:700; display:none; }
+  .qmark.show{display:inline;}
+</style>
+</head>
+<body>
+<h1>QCM du TP2 : Arithmétique et nombres premiers</h1>
+<div class="meta">Source : docs/outils-fondamentaux/tp2-arithmetique.md — 8 questions</div>
+<div class="consignes">Une seule bonne réponse par question, sauf mention contraire.</div>
+<form id="qcm"></form>
+<div class="bar">
+  <button type="button" onclick="grade()">Valider mes réponses</button>
+  <button type="button" class="ghost" onclick="location.reload()">Réinitialiser</button>
+  <span id="score"></span>
+</div>
+<script>
+const DATA = {"questions": [{"_enonce": "Comment teste-t-on en Python que <code>d<\/code> divise <code>n<\/code> ?", "_multiple": false, "difficulte": "facile", "theme": "Divisibilité", "source_fichier": "tp2-arithmetique.md", "_source": "tp2-arithmetique.md", "options": [{"_texte": "<code>n % d == 0<\/code>", "correcte": true, "_justification": "Le reste de la division est nul : c'est la définition, et tout le TP en découle."}, {"_texte": "<code>n / d == 0<\/code>", "correcte": false, "_justification": "Cette expression teste si le quotient est nul, ce qui n'a rien à voir."}, {"_texte": "<code>n // d == 0<\/code>", "correcte": false, "_justification": "Elle teste si le quotient entier est nul, donc si <code>n<\/code> est plus petit que <code>d<\/code>."}, {"_texte": "<code>d % n == 0<\/code>", "correcte": false, "_justification": "Les rôles sont inversés : cela teste si <code>n<\/code> divise <code>d<\/code>."}]}, {"_enonce": "Le nombre 91 est-il premier ?", "_multiple": false, "difficulte": "facile", "theme": "Nombres premiers", "source_fichier": "tp2-arithmetique.md", "_source": "tp2-arithmetique.md", "options": [{"_texte": "Non, car 91 = 7 x 13", "correcte": true, "_justification": "C'est un piège classique : 91 n'est divisible ni par 2, 3 ou 5, ce qui le fait paraître premier."}, {"_texte": "Oui, il n'est divisible que par 1 et par lui-même", "correcte": false, "_justification": "Il est divisible par 7 et par 13."}, {"_texte": "Non, car il est divisible par 3", "correcte": false, "_justification": "La somme de ses chiffres vaut 10, donc il n'est pas divisible par 3."}, {"_texte": "Oui, car il est impair et ne finit pas par 5", "correcte": false, "_justification": "Ce critère élimine seulement les multiples de 2 et de 5."}]}, {"_enonce": "Pourquoi un test de primalité peut-il s'arrêter à la racine carrée de <code>n<\/code> ?", "_multiple": false, "difficulte": "moyen", "theme": "Primalité", "source_fichier": "tp2-arithmetique.md", "_source": "tp2-arithmetique.md", "options": [{"_texte": "Parce que si n = a x b avec a inférieur ou égal à b, alors a est inférieur ou égal à la racine de n", "correcte": true, "_justification": "Le plus petit des deux facteurs est nécessairement en deçà de la racine : au-delà, il n'y a plus rien à trouver."}, {"_texte": "Parce que les nombres premiers sont tous inférieurs à la racine de n", "correcte": false, "_justification": "Affirmation fausse : il existe des nombres premiers de toute taille."}, {"_texte": "Parce que la racine carrée est une approximation acceptable", "correcte": false, "_justification": "Il ne s'agit pas d'une approximation : le raisonnement est exact et le test reste juste."}, {"_texte": "Parce que Python ne sait pas boucler au-delà de la racine de n", "correcte": false, "_justification": "Python boucle sans difficulté sur de grands intervalles ; c'est le temps qui pose problème."}]}, {"_enonce": "Sur les mesures du TP, le temps du test naïf est multiplié par dix quand <code>n<\/code> est multiplié par dix. Que devient celui du test qui s'arrête à la racine ?", "_multiple": false, "difficulte": "moyen", "theme": "Complexité", "source_fichier": "tp2-arithmetique.md", "_source": "tp2-arithmetique.md", "options": [{"_texte": "Il est multiplié par trois environ", "correcte": true, "_justification": "Le nombre de tours passe de n à racine de n divisé par deux, et la racine de dix vaut environ trois."}, {"_texte": "Il est multiplié par dix également", "correcte": false, "_justification": "Ce serait le cas si les deux méthodes avaient la même complexité, ce que la mesure dément."}, {"_texte": "Il reste rigoureusement constant", "correcte": false, "_justification": "Il croît, mais bien plus lentement."}, {"_texte": "Il est multiplié par cent", "correcte": false, "_justification": "Aucune des deux méthodes ne se dégrade aussi vite."}]}, {"_enonce": "Dans l'algorithme d'Euclide, pourquoi écrit-on <code>a, b = b, a % b<\/code> sur une seule ligne ?", "_multiple": false, "difficulte": "moyen", "theme": "Euclide", "source_fichier": "tp2-arithmetique.md", "_source": "tp2-arithmetique.md", "options": [{"_texte": "Parce que les deux affectations doivent se faire simultanément, à partir des anciennes valeurs", "correcte": true, "_justification": "En deux lignes, <code>b = a % b<\/code> utiliserait le nouveau <code>a<\/code> et donnerait un résultat faux."}, {"_texte": "Uniquement pour raccourcir le code", "correcte": false, "_justification": "La concision est un effet secondaire ; la simultanéité est une nécessité."}, {"_texte": "Parce que Python interdit deux affectations successives dans une boucle", "correcte": false, "_justification": "Rien ne l'interdit : c'est le résultat qui serait faux."}, {"_texte": "Pour éviter que la boucle ne se termine jamais", "correcte": false, "_justification": "La terminaison vient de la décroissance stricte du reste, pas de l'écriture simultanée."}]}, {"_enonce": "Dans le crible d'Ératosthène, pourquoi commence-t-on à rayer les multiples de <code>d<\/code> à partir de <code>d * d<\/code> et non de <code>2 * d<\/code> ?", "_multiple": false, "difficulte": "difficile", "theme": "Crible", "source_fichier": "tp2-arithmetique.md", "_source": "tp2-arithmetique.md", "options": [{"_texte": "Parce que tous les multiples plus petits ont déjà été rayés par un facteur plus petit", "correcte": true, "_justification": "Un multiple de d inférieur à d au carré possède nécessairement un facteur plus petit que d, déjà traité."}, {"_texte": "Parce que 2 x d peut dépasser la limite du tableau", "correcte": false, "_justification": "C'est le plus petit des multiples : il ne dépasse jamais la limite avant les autres."}, {"_texte": "Pour ne pas rayer d lui-même", "correcte": false, "_justification": "Commencer à 2 x d suffirait déjà à épargner d."}, {"_texte": "Parce que le crible ne fonctionne que sur les carrés parfaits", "correcte": false, "_justification": "Le crible fonctionne sur tous les entiers jusqu'à la limite."}]}, {"_enonce": "Dans <code>facteurs(n)<\/code>, la dernière instruction ajoute <code>n<\/code> au résultat si <code>n &gt; 1<\/code> après la boucle. Que se passe-t-il si on l'oublie ?", "_multiple": false, "difficulte": "difficile", "theme": "Factorisation", "source_fichier": "tp2-arithmetique.md", "_source": "tp2-arithmetique.md", "options": [{"_texte": "Un facteur premier plus grand que la racine de n est perdu, par exemple <code>facteurs(14)<\/code> rendrait <code>[2]<\/code>", "correcte": true, "_justification": "Quand la boucle s'arrête, ce qui reste de n est soit 1, soit un premier plus grand que sa racine."}, {"_texte": "Rien, l'instruction est une précaution inutile", "correcte": false, "_justification": "Elle est indispensable : sans elle, la moitié des factorisations sont incomplètes."}, {"_texte": "La fonction boucle indéfiniment", "correcte": false, "_justification": "La boucle se termine dans tous les cas ; c'est le résultat qui est tronqué."}, {"_texte": "Le premier facteur est compté deux fois", "correcte": false, "_justification": "La boucle interne gère correctement les multiplicités."}]}, {"_enonce": "Le TP recommande de vérifier un résultat plutôt que de relire son code. Quelles vérifications de ce genre y figurent ? (plusieurs réponses)", "_multiple": true, "difficulte": "moyen", "theme": "Méthode", "source_fichier": "tp2-arithmetique.md", "_source": "tp2-arithmetique.md", "options": [{"_texte": "Comparer le produit des facteurs premiers au nombre de départ", "correcte": true, "_justification": "Le produit doit redonner exactement l'entier factorisé."}, {"_texte": "Compter les nombres premiers sous 100 000 par le crible et par des tests un par un, puis comparer", "correcte": true, "_justification": "Deux méthodes indépendantes qui tombent sur 9592 constituent une vérification bien plus solide qu'une relecture."}, {"_texte": "Vérifier que le programme ne produit aucun avertissement", "correcte": false, "_justification": "L'absence d'avertissement ne dit rien de la justesse d'un résultat."}, {"_texte": "Mesurer le temps d'exécution", "correcte": false, "_justification": "La mesure du temps renseigne sur le coût, pas sur la justesse."}]}]};
+const form = document.getElementById('qcm');
+DATA.questions.forEach((q, i) => {
+  const multi = q._multiple;
+  const div = document.createElement('div');
+  div.className = 'q'; div.id = 'q'+i;
+  let badges = '';
+  if (q.difficulte) badges += `<span class="badge b-${q.difficulte}">${q.difficulte}</span>`;
+  if (q.theme) badges += `<span class="badge b-theme">${q.theme}</span>`;
+  const hint = multi ? ' <small>(plusieurs réponses)</small>' : '';
+  let html = `<span class="qmark" id="m${i}"></span><h3>Question ${i+1}${hint}${badges}</h3>`;
+  html += `<div class="enonce">${q._enonce}</div>`;
+  q.options.forEach((o, j) => {
+    const type = multi ? 'checkbox' : 'radio';
+    html += `<label class="opt" id="o${i}_${j}">`
+          + `<input type="${type}" name="q${i}" value="${j}">${o._texte}</label>`;
+    html += `<div class="just" id="j${i}_${j}">${o._justification||''}</div>`;
+  });
+  if (q.source_fichier) html += `<div class="src" id="s${i}">Source : ${q._source}</div>`;
+  div.innerHTML = html;
+  form.appendChild(div);
+});
+function grade(){
+  let correct = 0;
+  DATA.questions.forEach((q, i) => {
+    const chosen = [...form.querySelectorAll(`input[name=q${i}]:checked`)].map(e=>+e.value);
+    const good = q.options.map((o,j)=>o.correcte?j:-1).filter(j=>j>=0);
+    const ok = chosen.length===good.length && chosen.every(j=>good.includes(j));
+    if (ok) correct++;
+    q.options.forEach((o,j)=>{
+      const lab = document.getElementById(`o${i}_${j}`);
+      lab.classList.remove('correct','wrong');
+      if (o.correcte) lab.classList.add('correct');
+      else if (chosen.includes(j)) lab.classList.add('wrong');
+      const ju = document.getElementById(`j${i}_${j}`);
+      if (ju && o._justification) ju.classList.add('show');
+    });
+    const m = document.getElementById('m'+i);
+    m.textContent = ok ? '✓' : '✗';
+    m.style.color = ok ? 'var(--ok)' : 'var(--ko)';
+    m.classList.add('show');
+    const s = document.getElementById('s'+i); if (s) s.classList.add('show');
+  });
+  const n = DATA.questions.length;
+  const pct = Math.round(100*correct/n);
+  const sc = document.getElementById('score');
+  sc.textContent = `Score : ${correct} / ${n}  (${pct} %)`;
+  sc.style.color = pct>=50 ? 'var(--ok)' : 'var(--ko)';
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+</script>
+</body>
+</html>

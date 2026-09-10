@@ -1,0 +1,256 @@
+{
+  "titre": "QCM du TP2 : Arithmétique et nombres premiers",
+  "source": "docs/outils-fondamentaux/tp2-arithmetique.md",
+  "langue": "fr",
+  "consignes": "Une seule bonne réponse par question, sauf mention contraire.",
+  "questions": [
+    {
+      "id": 1,
+      "type": "unique",
+      "difficulte": "facile",
+      "theme": "Divisibilité",
+      "source_fichier": "tp2-arithmetique.md",
+      "points": 1,
+      "enonce": "Comment teste-t-on en Python que `d` divise `n` ?",
+      "options": [
+        {
+          "texte": "`n % d == 0`",
+          "correcte": true,
+          "justification": "Le reste de la division est nul : c'est la définition, et tout le TP en découle."
+        },
+        {
+          "texte": "`n / d == 0`",
+          "correcte": false,
+          "justification": "Cette expression teste si le quotient est nul, ce qui n'a rien à voir."
+        },
+        {
+          "texte": "`n // d == 0`",
+          "correcte": false,
+          "justification": "Elle teste si le quotient entier est nul, donc si `n` est plus petit que `d`."
+        },
+        {
+          "texte": "`d % n == 0`",
+          "correcte": false,
+          "justification": "Les rôles sont inversés : cela teste si `n` divise `d`."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "type": "unique",
+      "difficulte": "facile",
+      "theme": "Nombres premiers",
+      "source_fichier": "tp2-arithmetique.md",
+      "points": 1,
+      "enonce": "Le nombre 91 est-il premier ?",
+      "options": [
+        {
+          "texte": "Non, car 91 = 7 x 13",
+          "correcte": true,
+          "justification": "C'est un piège classique : 91 n'est divisible ni par 2, 3 ou 5, ce qui le fait paraître premier."
+        },
+        {
+          "texte": "Oui, il n'est divisible que par 1 et par lui-même",
+          "correcte": false,
+          "justification": "Il est divisible par 7 et par 13."
+        },
+        {
+          "texte": "Non, car il est divisible par 3",
+          "correcte": false,
+          "justification": "La somme de ses chiffres vaut 10, donc il n'est pas divisible par 3."
+        },
+        {
+          "texte": "Oui, car il est impair et ne finit pas par 5",
+          "correcte": false,
+          "justification": "Ce critère élimine seulement les multiples de 2 et de 5."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "type": "unique",
+      "difficulte": "moyen",
+      "theme": "Primalité",
+      "source_fichier": "tp2-arithmetique.md",
+      "points": 1,
+      "enonce": "Pourquoi un test de primalité peut-il s'arrêter à la racine carrée de `n` ?",
+      "options": [
+        {
+          "texte": "Parce que si n = a x b avec a inférieur ou égal à b, alors a est inférieur ou égal à la racine de n",
+          "correcte": true,
+          "justification": "Le plus petit des deux facteurs est nécessairement en deçà de la racine : au-delà, il n'y a plus rien à trouver."
+        },
+        {
+          "texte": "Parce que les nombres premiers sont tous inférieurs à la racine de n",
+          "correcte": false,
+          "justification": "Affirmation fausse : il existe des nombres premiers de toute taille."
+        },
+        {
+          "texte": "Parce que la racine carrée est une approximation acceptable",
+          "correcte": false,
+          "justification": "Il ne s'agit pas d'une approximation : le raisonnement est exact et le test reste juste."
+        },
+        {
+          "texte": "Parce que Python ne sait pas boucler au-delà de la racine de n",
+          "correcte": false,
+          "justification": "Python boucle sans difficulté sur de grands intervalles ; c'est le temps qui pose problème."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "type": "unique",
+      "difficulte": "moyen",
+      "theme": "Complexité",
+      "source_fichier": "tp2-arithmetique.md",
+      "points": 2,
+      "enonce": "Sur les mesures du TP, le temps du test naïf est multiplié par dix quand `n` est multiplié par dix. Que devient celui du test qui s'arrête à la racine ?",
+      "options": [
+        {
+          "texte": "Il est multiplié par trois environ",
+          "correcte": true,
+          "justification": "Le nombre de tours passe de n à racine de n divisé par deux, et la racine de dix vaut environ trois."
+        },
+        {
+          "texte": "Il est multiplié par dix également",
+          "correcte": false,
+          "justification": "Ce serait le cas si les deux méthodes avaient la même complexité, ce que la mesure dément."
+        },
+        {
+          "texte": "Il reste rigoureusement constant",
+          "correcte": false,
+          "justification": "Il croît, mais bien plus lentement."
+        },
+        {
+          "texte": "Il est multiplié par cent",
+          "correcte": false,
+          "justification": "Aucune des deux méthodes ne se dégrade aussi vite."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "type": "unique",
+      "difficulte": "moyen",
+      "theme": "Euclide",
+      "source_fichier": "tp2-arithmetique.md",
+      "points": 1,
+      "enonce": "Dans l'algorithme d'Euclide, pourquoi écrit-on `a, b = b, a % b` sur une seule ligne ?",
+      "options": [
+        {
+          "texte": "Parce que les deux affectations doivent se faire simultanément, à partir des anciennes valeurs",
+          "correcte": true,
+          "justification": "En deux lignes, `b = a % b` utiliserait le nouveau `a` et donnerait un résultat faux."
+        },
+        {
+          "texte": "Uniquement pour raccourcir le code",
+          "correcte": false,
+          "justification": "La concision est un effet secondaire ; la simultanéité est une nécessité."
+        },
+        {
+          "texte": "Parce que Python interdit deux affectations successives dans une boucle",
+          "correcte": false,
+          "justification": "Rien ne l'interdit : c'est le résultat qui serait faux."
+        },
+        {
+          "texte": "Pour éviter que la boucle ne se termine jamais",
+          "correcte": false,
+          "justification": "La terminaison vient de la décroissance stricte du reste, pas de l'écriture simultanée."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "type": "unique",
+      "difficulte": "difficile",
+      "theme": "Crible",
+      "source_fichier": "tp2-arithmetique.md",
+      "points": 2,
+      "enonce": "Dans le crible d'Ératosthène, pourquoi commence-t-on à rayer les multiples de `d` à partir de `d * d` et non de `2 * d` ?",
+      "options": [
+        {
+          "texte": "Parce que tous les multiples plus petits ont déjà été rayés par un facteur plus petit",
+          "correcte": true,
+          "justification": "Un multiple de d inférieur à d au carré possède nécessairement un facteur plus petit que d, déjà traité."
+        },
+        {
+          "texte": "Parce que 2 x d peut dépasser la limite du tableau",
+          "correcte": false,
+          "justification": "C'est le plus petit des multiples : il ne dépasse jamais la limite avant les autres."
+        },
+        {
+          "texte": "Pour ne pas rayer d lui-même",
+          "correcte": false,
+          "justification": "Commencer à 2 x d suffirait déjà à épargner d."
+        },
+        {
+          "texte": "Parce que le crible ne fonctionne que sur les carrés parfaits",
+          "correcte": false,
+          "justification": "Le crible fonctionne sur tous les entiers jusqu'à la limite."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "type": "unique",
+      "difficulte": "difficile",
+      "theme": "Factorisation",
+      "source_fichier": "tp2-arithmetique.md",
+      "points": 2,
+      "enonce": "Dans `facteurs(n)`, la dernière instruction ajoute `n` au résultat si `n > 1` après la boucle. Que se passe-t-il si on l'oublie ?",
+      "options": [
+        {
+          "texte": "Un facteur premier plus grand que la racine de n est perdu, par exemple `facteurs(14)` rendrait `[2]`",
+          "correcte": true,
+          "justification": "Quand la boucle s'arrête, ce qui reste de n est soit 1, soit un premier plus grand que sa racine."
+        },
+        {
+          "texte": "Rien, l'instruction est une précaution inutile",
+          "correcte": false,
+          "justification": "Elle est indispensable : sans elle, la moitié des factorisations sont incomplètes."
+        },
+        {
+          "texte": "La fonction boucle indéfiniment",
+          "correcte": false,
+          "justification": "La boucle se termine dans tous les cas ; c'est le résultat qui est tronqué."
+        },
+        {
+          "texte": "Le premier facteur est compté deux fois",
+          "correcte": false,
+          "justification": "La boucle interne gère correctement les multiplicités."
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "type": "multiple",
+      "difficulte": "moyen",
+      "theme": "Méthode",
+      "source_fichier": "tp2-arithmetique.md",
+      "points": 2,
+      "enonce": "Le TP recommande de vérifier un résultat plutôt que de relire son code. Quelles vérifications de ce genre y figurent ? (plusieurs réponses)",
+      "options": [
+        {
+          "texte": "Comparer le produit des facteurs premiers au nombre de départ",
+          "correcte": true,
+          "justification": "Le produit doit redonner exactement l'entier factorisé."
+        },
+        {
+          "texte": "Compter les nombres premiers sous 100 000 par le crible et par des tests un par un, puis comparer",
+          "correcte": true,
+          "justification": "Deux méthodes indépendantes qui tombent sur 9592 constituent une vérification bien plus solide qu'une relecture."
+        },
+        {
+          "texte": "Vérifier que le programme ne produit aucun avertissement",
+          "correcte": false,
+          "justification": "L'absence d'avertissement ne dit rien de la justesse d'un résultat."
+        },
+        {
+          "texte": "Mesurer le temps d'exécution",
+          "correcte": false,
+          "justification": "La mesure du temps renseigne sur le coût, pas sur la justesse."
+        }
+      ]
+    }
+  ]
+}

@@ -30,6 +30,14 @@ du code.
 | [TP4](tp4-matrices-gauss.md) | Matrices et systèmes | produit matriciel, pivot de Gauss, numpy |
 | [TP5](tp5-synthese.md) | Synthèse | un problème complet, de bout en bout |
 
+Chaque TP se termine par un QCM d'auto-évaluation, huit questions corrigées immédiatement,
+à faire après la séance pour vérifier ce qui est resté :
+[TP1](qcm/qcm_tp1.html){ target=_blank },
+[TP2](qcm/qcm_tp2.html){ target=_blank },
+[TP3](qcm/qcm_tp3.html){ target=_blank },
+[TP4](qcm/qcm_tp4.html){ target=_blank },
+[TP5](qcm/qcm_tp5.html){ target=_blank }.
+
 Le [mémento Python](memento.md) rassemble sur une seule page tout ce dont vous avez besoin
 pour ces séances. C'est le seul document autorisé pendant les évaluations, alors prenez
 l'habitude de le consulter dès maintenant plutôt que de chercher ailleurs.

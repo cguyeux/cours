@@ -18,6 +18,7 @@ La [mise en route](demarrage.md) : savoir exécuter une cellule et lire une erre
 
 - Le [mémento Python](memento.md), à garder ouvert dans un autre onglet.
 - [Le carnet de ce TP](/lite/notebooks/index.html?path=tp1.ipynb){ target=_blank }, où les
+- [Le QCM d'auto-évaluation de ce TP](qcm/qcm_tp1.html){ target=_blank }, à faire après la séance.
   énoncés sont déjà écrits.
 
 ---

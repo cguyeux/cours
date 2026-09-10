@@ -17,6 +17,7 @@ Le [TP1](tp1-calcul-numerique.md) : boucles, conditions, fonctions, `//` et `%`.
 
 - Le [mémento Python](memento.md).
 - [Le carnet de ce TP](/lite/notebooks/index.html?path=tp2.ipynb){ target=_blank }.
+- [Le QCM d'auto-évaluation de ce TP](qcm/qcm_tp2.html){ target=_blank }, à faire après la séance.
 
 ---
 

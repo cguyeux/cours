@@ -1,0 +1,256 @@
+{
+  "titre": "QCM du TP1 : Calcul numérique",
+  "source": "docs/outils-fondamentaux/tp1-calcul-numerique.md",
+  "langue": "fr",
+  "consignes": "Une seule bonne réponse par question, sauf mention contraire. Vous pouvez consulter le mémento.",
+  "questions": [
+    {
+      "id": 1,
+      "type": "unique",
+      "difficulte": "facile",
+      "theme": "Entiers",
+      "source_fichier": "tp1-calcul-numerique.md",
+      "points": 1,
+      "enonce": "En Python, que vaut `17 // 5` ?",
+      "options": [
+        {
+          "texte": "`3`",
+          "correcte": true,
+          "justification": "`//` donne le quotient de la division entière."
+        },
+        {
+          "texte": "`3.4`",
+          "correcte": false,
+          "justification": "C'est le résultat de `17 / 5`, avec une seule barre."
+        },
+        {
+          "texte": "`2`",
+          "correcte": false,
+          "justification": "`2` est le reste, donné par `17 % 5`."
+        },
+        {
+          "texte": "`4`",
+          "correcte": false,
+          "justification": "Le quotient n'est pas arrondi au plus proche, il est tronqué vers le bas."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "type": "unique",
+      "difficulte": "moyen",
+      "theme": "Entiers",
+      "source_fichier": "tp1-calcul-numerique.md",
+      "points": 1,
+      "enonce": "Que vaut `10 / 5` en Python 3 ?",
+      "options": [
+        {
+          "texte": "`2.0`, un flottant",
+          "correcte": true,
+          "justification": "`/` rend toujours un flottant, même quand la division tombe juste."
+        },
+        {
+          "texte": "`2`, un entier",
+          "correcte": false,
+          "justification": "C'était le comportement de Python 2, et beaucoup de code trouvé en ligne le suppose encore."
+        },
+        {
+          "texte": "`2`, un entier, parce que les deux opérandes sont entiers",
+          "correcte": false,
+          "justification": "Le type du résultat de `/` ne dépend pas de celui des opérandes."
+        },
+        {
+          "texte": "Une erreur, il faut utiliser `//` entre deux entiers",
+          "correcte": false,
+          "justification": "`/` est parfaitement valide entre deux entiers."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "type": "unique",
+      "difficulte": "facile",
+      "theme": "Flottants",
+      "source_fichier": "tp1-calcul-numerique.md",
+      "points": 1,
+      "enonce": "Que vaut l'expression `0.1 + 0.2 == 0.3` ?",
+      "options": [
+        {
+          "texte": "`False`",
+          "correcte": true,
+          "justification": "`0.1 + 0.2` vaut `0.30000000000000004` : en base 2, `0.1` est un développement infini que la machine tronque."
+        },
+        {
+          "texte": "`True`",
+          "correcte": false,
+          "justification": "Ce serait vrai en arithmétique exacte, pas en arithmétique flottante."
+        },
+        {
+          "texte": "Cela dépend du système d'exploitation",
+          "correcte": false,
+          "justification": "Le comportement est le même sur tous les langages et tous les processeurs depuis quarante ans."
+        },
+        {
+          "texte": "Python lève une erreur de précision",
+          "correcte": false,
+          "justification": "Aucune erreur n'est levée, et c'est précisément ce qui rend le piège dangereux."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "type": "unique",
+      "difficulte": "moyen",
+      "theme": "Flottants",
+      "source_fichier": "tp1-calcul-numerique.md",
+      "points": 1,
+      "enonce": "Pourquoi préférer `math.isclose(a, b)` à une comparaison du type `abs(a - b) < 1e-9` ?",
+      "options": [
+        {
+          "texte": "Parce que `math.isclose` tient compte de l'ordre de grandeur des nombres comparés",
+          "correcte": true,
+          "justification": "Un écart de `1e-9` n'a pas le même sens sur des millimètres et sur des distances entre galaxies."
+        },
+        {
+          "texte": "Parce que `math.isclose` est plus rapide",
+          "correcte": false,
+          "justification": "La vitesse n'est pas l'argument ; c'est la pertinence du seuil qui est en jeu."
+        },
+        {
+          "texte": "Parce que `abs` ne fonctionne pas sur les flottants",
+          "correcte": false,
+          "justification": "`abs` fonctionne parfaitement sur les flottants."
+        },
+        {
+          "texte": "Parce que `math.isclose` corrige l'erreur d'arrondi",
+          "correcte": false,
+          "justification": "Aucune fonction ne corrige l'erreur d'arrondi ; on l'accepte et on la borne."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "type": "unique",
+      "difficulte": "facile",
+      "theme": "Boucles",
+      "source_fichier": "tp1-calcul-numerique.md",
+      "points": 1,
+      "enonce": "Combien de valeurs `range(1, 6)` produit-il, et lesquelles ?",
+      "options": [
+        {
+          "texte": "Cinq valeurs : 1, 2, 3, 4, 5",
+          "correcte": true,
+          "justification": "La borne de départ est incluse, la borne d'arrivée est exclue."
+        },
+        {
+          "texte": "Six valeurs : 1, 2, 3, 4, 5, 6",
+          "correcte": false,
+          "justification": "La borne d'arrivée est exclue : 6 n'apparaît pas."
+        },
+        {
+          "texte": "Six valeurs : 0, 1, 2, 3, 4, 5",
+          "correcte": false,
+          "justification": "Le premier argument fixe le départ ; sans lui, `range(6)` commencerait bien à 0."
+        },
+        {
+          "texte": "Quatre valeurs : 2, 3, 4, 5",
+          "correcte": false,
+          "justification": "La borne de départ est incluse."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "type": "unique",
+      "difficulte": "moyen",
+      "theme": "Fonctions",
+      "source_fichier": "tp1-calcul-numerique.md",
+      "points": 1,
+      "enonce": "Une fonction se termine par `print(resultat)` au lieu de `return resultat`. Quelle est la conséquence ?",
+      "options": [
+        {
+          "texte": "La valeur s'affiche mais ne peut pas être réutilisée : la fonction renvoie `None`",
+          "correcte": true,
+          "justification": "`print` affiche, `return` renvoie ; sans `return`, une fonction renvoie `None`."
+        },
+        {
+          "texte": "Aucune, `print` et `return` sont équivalents",
+          "correcte": false,
+          "justification": "Ce sont deux opérations distinctes ; les confondre est l'erreur la plus fréquente en début d'apprentissage."
+        },
+        {
+          "texte": "La fonction renvoie la chaîne affichée",
+          "correcte": false,
+          "justification": "`print` ne renvoie rien d'exploitable."
+        },
+        {
+          "texte": "Python lève une erreur au moment de l'appel",
+          "correcte": false,
+          "justification": "Aucune erreur n'est levée, ce qui rend le défaut difficile à repérer."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "type": "unique",
+      "difficulte": "difficile",
+      "theme": "Méthodes numériques",
+      "source_fichier": "tp1-calcul-numerique.md",
+      "points": 2,
+      "enonce": "Dans la méthode de Héron, pourquoi le critère d'arrêt s'écrit-il `abs(suivant - x) <= tolerance * abs(suivant)` plutôt que `abs(suivant - x) <= tolerance` ?",
+      "options": [
+        {
+          "texte": "Parce qu'un critère relatif garde le même sens quel que soit l'ordre de grandeur du nombre traité",
+          "correcte": true,
+          "justification": "Un écart de `1e-12` est minuscule pour une racine de 2 et inatteignable pour une racine de `1e30`."
+        },
+        {
+          "texte": "Parce que la multiplication est plus rapide que la comparaison",
+          "correcte": false,
+          "justification": "Le coût des deux écritures est identique ; c'est la justesse qui les sépare."
+        },
+        {
+          "texte": "Pour éviter une division par zéro",
+          "correcte": false,
+          "justification": "Aucune division n'apparaît dans le critère d'arrêt."
+        },
+        {
+          "texte": "Parce que la valeur absolue ne fonctionne pas sur une différence de flottants",
+          "correcte": false,
+          "justification": "`abs` fonctionne parfaitement sur une différence de flottants."
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "type": "multiple",
+      "difficulte": "difficile",
+      "theme": "Robustesse",
+      "source_fichier": "tp1-calcul-numerique.md",
+      "points": 2,
+      "enonce": "Quelles précautions la fonction `heron(a)` du corrigé prend-elle avant de commencer ses itérations ? (plusieurs réponses)",
+      "options": [
+        {
+          "texte": "Elle lève une erreur explicite si `a` est négatif",
+          "correcte": true,
+          "justification": "Mieux vaut un programme qui s'arrête en disant pourquoi qu'un programme qui continue avec une valeur fausse."
+        },
+        {
+          "texte": "Elle traite le cas `a = 0` à part",
+          "correcte": true,
+          "justification": "Sans ce cas particulier, la première itération diviserait par zéro."
+        },
+        {
+          "texte": "Elle arrondit `a` à l'entier le plus proche",
+          "correcte": false,
+          "justification": "Aucun arrondi n'est fait : cela fausserait le résultat."
+        },
+        {
+          "texte": "Elle vérifie que `a` est un entier",
+          "correcte": false,
+          "justification": "La méthode fonctionne sur n'importe quel réel positif."
+        }
+      ]
+    }
+  ]
+}

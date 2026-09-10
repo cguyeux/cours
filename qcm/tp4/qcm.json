@@ -1,0 +1,256 @@
+{
+  "titre": "QCM du TP4 : Matrices et systèmes linéaires",
+  "source": "docs/outils-fondamentaux/tp4-matrices-gauss.md",
+  "langue": "fr",
+  "consignes": "Une seule bonne réponse par question, sauf mention contraire.",
+  "questions": [
+    {
+      "id": 1,
+      "type": "unique",
+      "difficulte": "difficile",
+      "theme": "Listes de listes",
+      "source_fichier": "tp4-matrices-gauss.md",
+      "points": 2,
+      "enonce": "Pourquoi ne faut-il jamais construire une matrice par `[[0] * 3] * 2` ?",
+      "options": [
+        {
+          "texte": "Parce que les deux lignes sont la même liste : modifier un élément de la première modifie aussi la seconde",
+          "correcte": true,
+          "justification": "L'opérateur de répétition duplique la référence, pas le contenu. Écrire `[[0] * 3 for _ in range(2)]`."
+        },
+        {
+          "texte": "Parce que la matrice obtenue a de mauvaises dimensions",
+          "correcte": false,
+          "justification": "Les dimensions sont correctes, et c'est bien ce qui rend le défaut sournois."
+        },
+        {
+          "texte": "Parce que Python interdit la multiplication d'une liste",
+          "correcte": false,
+          "justification": "L'expression est parfaitement valide, elle ne fait simplement pas ce qu'on croit."
+        },
+        {
+          "texte": "Parce que les valeurs ne sont pas initialisées à zéro",
+          "correcte": false,
+          "justification": "Elles le sont bien ; le problème est le partage des lignes."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "type": "unique",
+      "difficulte": "moyen",
+      "theme": "Coût",
+      "source_fichier": "tp4-matrices-gauss.md",
+      "points": 1,
+      "enonce": "Le produit de deux matrices carrées de taille n écrit en Python pur demande trois boucles imbriquées. Que devient le temps quand n double ?",
+      "options": [
+        {
+          "texte": "Il est multiplié par huit environ",
+          "correcte": true,
+          "justification": "Le coût croît comme n au cube, et deux au cube vaut huit : c'est ce que la mesure donne entre 40 et 80."
+        },
+        {
+          "texte": "Il est multiplié par deux",
+          "correcte": false,
+          "justification": "Ce serait le cas d'un coût linéaire, qui ne correspond pas à trois boucles imbriquées."
+        },
+        {
+          "texte": "Il est multiplié par quatre",
+          "correcte": false,
+          "justification": "Ce serait un coût quadratique, donc deux boucles seulement."
+        },
+        {
+          "texte": "Il reste constant grâce à l'optimisation de Python",
+          "correcte": false,
+          "justification": "Python n'optimise pas les boucles de cette manière."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "type": "unique",
+      "difficulte": "facile",
+      "theme": "numpy",
+      "source_fichier": "tp4-matrices-gauss.md",
+      "points": 1,
+      "enonce": "En numpy, quelle est la différence entre `A @ B` et `A * B` ?",
+      "options": [
+        {
+          "texte": "`@` est le produit matriciel, `*` multiplie case par case",
+          "correcte": true,
+          "justification": "Les confondre donne un résultat de la bonne forme et complètement faux."
+        },
+        {
+          "texte": "Les deux font le produit matriciel, `@` est seulement plus lisible",
+          "correcte": false,
+          "justification": "`*` ne fait jamais le produit matriciel sur des tableaux numpy."
+        },
+        {
+          "texte": "`*` est le produit matriciel, `@` la puissance",
+          "correcte": false,
+          "justification": "Les rôles sont inversés, et `@` n'est pas une puissance."
+        },
+        {
+          "texte": "`@` ne fonctionne que sur des matrices carrées",
+          "correcte": false,
+          "justification": "Il fonctionne dès que les dimensions sont compatibles."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "type": "unique",
+      "difficulte": "moyen",
+      "theme": "Pivot de Gauss",
+      "source_fichier": "tp4-matrices-gauss.md",
+      "points": 2,
+      "enonce": "À quoi sert le pivot partiel, qui consiste à choisir la ligne dont le coefficient est le plus grand en valeur absolue ?",
+      "options": [
+        {
+          "texte": "À éviter de diviser par un très petit nombre, ce qui amplifierait les erreurs d'arrondi",
+          "correcte": true,
+          "justification": "En arithmétique exacte tout pivot non nul conviendrait ; en flottants, le choix change le résultat de plusieurs ordres de grandeur."
+        },
+        {
+          "texte": "À accélérer l'élimination",
+          "correcte": false,
+          "justification": "Le nombre d'opérations est identique ; c'est la précision qui est en jeu."
+        },
+        {
+          "texte": "À garantir que le système possède une solution",
+          "correcte": false,
+          "justification": "L'existence d'une solution ne dépend pas du choix du pivot."
+        },
+        {
+          "texte": "À trier les équations par ordre croissant",
+          "correcte": false,
+          "justification": "Seule la ligne du pivot courant est échangée, il n'y a pas de tri global."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "type": "unique",
+      "difficulte": "moyen",
+      "theme": "Bonnes pratiques",
+      "source_fichier": "tp4-matrices-gauss.md",
+      "points": 1,
+      "enonce": "Pourquoi la fonction `resoudre(A, b)` du corrigé travaille-t-elle sur une copie de la matrice ?",
+      "options": [
+        {
+          "texte": "Pour ne pas abîmer les données de l'appelant, qui en a peut-être encore besoin",
+          "correcte": true,
+          "justification": "Une fonction qui modifie ses arguments est une source de bogues inépuisable."
+        },
+        {
+          "texte": "Parce que Python interdit de modifier une liste passée en argument",
+          "correcte": false,
+          "justification": "Rien ne l'interdit, et c'est précisément le danger."
+        },
+        {
+          "texte": "Pour accélérer les calculs",
+          "correcte": false,
+          "justification": "La copie coûte du temps plutôt qu'elle n'en fait gagner."
+        },
+        {
+          "texte": "Parce que le pivot partiel exige deux exemplaires de la matrice",
+          "correcte": false,
+          "justification": "Le pivot partiel travaille sur une seule matrice augmentée."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "type": "unique",
+      "difficulte": "difficile",
+      "theme": "Résolution",
+      "source_fichier": "tp4-matrices-gauss.md",
+      "points": 2,
+      "enonce": "Pour résoudre A x = b avec numpy, quelle écriture faut-il retenir ?",
+      "options": [
+        {
+          "texte": "`np.linalg.solve(A, b)`",
+          "correcte": true,
+          "justification": "Plus rapide et plus précis ; sur la matrice de Hilbert de taille 12, l'erreur est d'environ 0,7 contre 21 pour l'inverse."
+        },
+        {
+          "texte": "`np.linalg.inv(A) @ b`",
+          "correcte": false,
+          "justification": "C'est le réflexe le plus répandu, et le mauvais : calculer l'inverse coûte plus cher et amplifie les arrondis."
+        },
+        {
+          "texte": "`A / b`",
+          "correcte": false,
+          "justification": "Cette écriture divise terme à terme et n'a aucun rapport avec la résolution d'un système."
+        },
+        {
+          "texte": "`b @ np.linalg.inv(A)`",
+          "correcte": false,
+          "justification": "L'ordre est en plus incorrect, et l'inverse reste à proscrire."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "type": "unique",
+      "difficulte": "difficile",
+      "theme": "Conditionnement",
+      "source_fichier": "tp4-matrices-gauss.md",
+      "points": 2,
+      "enonce": "Le conditionnement de la matrice de Hilbert de taille 12 vaut environ 1,8 x 10^16. Qu'en conclure ?",
+      "options": [
+        {
+          "texte": "Le problème lui-même est mal posé : plus aucun chiffre du résultat n'est fiable, et aucun algorithme n'y remédiera",
+          "correcte": true,
+          "justification": "Le conditionnement atteint l'inverse de la précision des flottants ; ce n'est pas un défaut du programme."
+        },
+        {
+          "texte": "Le programme contient une erreur qu'il faut corriger",
+          "correcte": false,
+          "justification": "Les deux méthodes testées sont correctes ; c'est la matrice qui est pathologique."
+        },
+        {
+          "texte": "Il faut augmenter le nombre d'itérations",
+          "correcte": false,
+          "justification": "Le pivot de Gauss n'est pas une méthode itérative."
+        },
+        {
+          "texte": "La matrice n'est pas inversible",
+          "correcte": false,
+          "justification": "Elle est parfaitement inversible en théorie, et c'est bien ce qui rend le cas instructif."
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "type": "unique",
+      "difficulte": "moyen",
+      "theme": "Géométrie",
+      "source_fichier": "tp4-matrices-gauss.md",
+      "points": 1,
+      "enonce": "Que représente le produit de deux matrices de rotation du plan ?",
+      "options": [
+        {
+          "texte": "La composition des deux rotations : tourner de 30 degrés puis de 60 revient à tourner de 90",
+          "correcte": true,
+          "justification": "Le produit matriciel compose les transformations, ce que le TP vérifie numériquement avec `np.allclose`."
+        },
+        {
+          "texte": "La somme des deux angles appliquée à chaque coordonnée séparément",
+          "correcte": false,
+          "justification": "Les coordonnées sont mélangées par la rotation, elles ne se traitent pas séparément."
+        },
+        {
+          "texte": "Une homothétie de rapport égal au produit des angles",
+          "correcte": false,
+          "justification": "Une rotation ne change pas les longueurs."
+        },
+        {
+          "texte": "Rien de particulier, le produit de deux rotations n'est pas une rotation",
+          "correcte": false,
+          "justification": "Le produit de deux rotations planes est bien une rotation."
+        }
+      ]
+    }
+  ]
+}

@@ -18,6 +18,7 @@ Tous les TP précédents. Le TP2 en particulier : PGCD et arithmétique modulair
 
 - Le [mémento Python](memento.md).
 - [Le carnet de ce TP](/lite/notebooks/index.html?path=tp5.ipynb){ target=_blank }.
+- [Le QCM d'auto-évaluation de ce TP](qcm/qcm_tp5.html){ target=_blank }, à faire après la séance.
 
 ---
 
