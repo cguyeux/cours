@@ -1,0 +1,10 @@
+{
+  "LiteBuildConfig": {
+    "contents": ["notebooks"],
+    "output_dir": "site_build/lite",
+    "apps": ["repl", "notebooks", "tree"]
+  },
+  "PyodideAddon": {
+    "pyodide_url": "vendor/pyodide-subset.tar.bz2"
+  }
+}

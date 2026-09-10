@@ -1,0 +1,12 @@
+.venv/
+site_build/
+_output/
+.git/
+.jupyterlite.doit.db
+__pycache__/
+*.pyc
+tests/
+tools/
+Makefile
+deploy.sh
+README.md

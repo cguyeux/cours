@@ -1,0 +1,110 @@
+site_name: Cours de Christophe Guyeux
+site_url: https://cours.gclab.fr/
+site_description: >-
+  Supports de travaux pratiques du département informatique de l'IUT
+  Nord Franche-Comté. Accessibles sans VPN et sans compte.
+site_author: Christophe Guyeux
+copyright: >-
+  Christophe Guyeux, IUT Nord Franche-Comté — contenu sous licence CC BY-NC-SA 4.0
+docs_dir: docs
+site_dir: site_build
+
+theme:
+  name: material
+  language: fr
+  # font: false — les polices sont servies par le site, jamais par Google Fonts :
+  # aucune adresse IP d'étudiant ne part chez un tiers.
+  font: false
+  icon:
+    logo: material/function-variant
+    repo: fontawesome/brands/github
+  favicon: assets/favicon.png
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-night
+        name: Passer au thème sombre
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-sunny
+        name: Passer au thème clair
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.sections
+    - navigation.top
+    - navigation.footer
+    - toc.follow
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+
+nav:
+  - Accueil: index.md
+  - Outils fondamentaux:
+      - Le module: outils-fondamentaux/index.md
+      - Mise en route: outils-fondamentaux/demarrage.md
+      - TP1. Calcul numérique: outils-fondamentaux/tp1-calcul-numerique.md
+      - TP2. Arithmétique: outils-fondamentaux/tp2-arithmetique.md
+      - TP3. Polynômes et fonctions: outils-fondamentaux/tp3-polynomes-fonctions.md
+      - TP4. Matrices et systèmes: outils-fondamentaux/tp4-matrices-gauss.md
+      - TP5. Synthèse: outils-fondamentaux/tp5-synthese.md
+      - Mémento Python: outils-fondamentaux/memento.md
+  - À propos: a-propos.md
+
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+      permalink_title: Lien vers cette section
+      toc_depth: 3
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+      slugify: !!python/object/apply:pymdownx.slugs.slugify {kwds: {case: lower}}
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.caret
+  - pymdownx.mark
+  - pymdownx.tilde
+  - pymdownx.keys
+  - pymdownx.smartsymbols
+  - pymdownx.arithmatex:
+      generic: true
+
+plugins:
+  - search:
+      lang: fr
+
+extra_javascript:
+  - assets/javascripts/mathjax-config.js
+  - assets/vendor/mathjax/tex-mml-chtml.js
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/cguyeux
+      name: GitHub
+  generator: false
+
+not_in_nav: |
+  lite/**

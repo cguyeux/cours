@@ -1,0 +1,7 @@
+# Outils de vérification, non nécessaires à la construction du site
+-r requirements.txt
+pytest==8.4.2
+nbclient==0.10.2
+ipykernel==6.30.1
+numpy
+matplotlib

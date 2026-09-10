@@ -1,0 +1,8 @@
+.venv/
+site_build/
+_output/
+.jupyterlite.doit.db
+__pycache__/
+*.pyc
+vendor/pyodide/
+vendor/wheels/
