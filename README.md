@@ -51,6 +51,13 @@ Le script refuse de terminer si un corrigé échoue ou si le site ne répond pas
 - Le travail des étudiants dans JupyterLite est stocké dans leur navigateur, pas sur le
   serveur : la page de mise en route leur apprend à télécharger leur carnet.
 
+## Miroir de secours
+
+`deploy.sh` publie aussi le site construit sur la branche `gh-pages` du dépôt, servie par
+GitHub Pages à l'adresse <https://secours.gclab.fr>. Si le conteneur Scaleway tombait la
+veille d'une séance, cette adresse sert exactement le même contenu. L'adresse à communiquer
+aux étudiants reste `cours.gclab.fr`. Pour publier sans le miroir : `SANS_MIROIR=1 ./deploy.sh`.
+
 ## Infrastructure
 
 Conteneur Serverless Scaleway `site` du namespace `cours` (région `fr-par`), image dans

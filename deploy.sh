@@ -70,3 +70,23 @@ for chemin in / /outils-fondamentaux/ /lite/repl/index.html; do
 done
 
 echo "==> en ligne : $SITE  (image $VERSION)"
+
+# --- miroir de secours sur GitHub Pages ---------------------------------------
+# Le même site construit, sans les source maps, poussé sur la branche gh-pages
+# et servi à la racine de secours.gclab.fr. Branche orpheline réécrite à chaque
+# publication (--force) pour que l'historique ne grossisse pas de 50 Mo par
+# version. Aucun droit "workflow" n'est nécessaire : c'est un push ordinaire.
+if [ "${SANS_MIROIR:-}" != "1" ]; then
+    echo "==> miroir de secours (GitHub Pages)"
+    MIROIR=$(mktemp -d)
+    rsync -a --exclude='*.map' site_build/ "$MIROIR"/
+    echo "secours.gclab.fr" > "$MIROIR/CNAME"
+    touch "$MIROIR/.nojekyll"
+    ( cd "$MIROIR" \
+      && git init -q -b gh-pages \
+      && git add -A \
+      && git -c user.name="Christophe Guyeux" -c user.email="guyeux@gmail.com" \
+             commit -q -m "Miroir de secours : site construit ($VERSION)" \
+      && git push --force -q https://github.com/cguyeux/cours.git gh-pages:gh-pages )
+    echo "    https://secours.gclab.fr  (branche gh-pages, $VERSION)"
+fi
