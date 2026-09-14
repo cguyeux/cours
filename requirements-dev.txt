@@ -7,3 +7,12 @@ numpy
 matplotlib
 pandas
 scikit-learn
+geopandas
+xgboost
+statsmodels
+imbalanced-learn
+shap
+umap-learn
+hdbscan
+dowhy
+econml

@@ -70,6 +70,17 @@ nav:
   - IA prédictive (BUT3):
       - Le module: ia-predictive/index.md
       - TP1. Pandas: ia-predictive/tp1-pandas.md
+      - TP1bis. GeoPandas: ia-predictive/tp1bis-geopandas.md
+      - TP2. Clustering: ia-predictive/tp2-clustering.md
+      - TP2bis. Réduction de dimension: ia-predictive/tp2bis-reduction-dimension.md
+      - TP3. Classification: ia-predictive/tp3-classification.md
+      - TP5. Régression et validation: ia-predictive/tp5-regression.md
+      - TP4. XGBoost: ia-predictive/tp4-xgboost.md
+      - TP6. Séries temporelles: ia-predictive/tp6-series-temporelles.md
+      - TP7. XGBoost, objectifs et métriques: ia-predictive/tp7-xgboost-objectifs-metriques.md
+      - TP8. Prétraitement des variables: ia-predictive/tp8-pretraitement.md
+      - TP9. XGBoost, explicabilité et causalité: ia-predictive/tp9-xgboost-explicabilite-causalite.md
+      - TP10. Théorie de l'information: ia-predictive/tp10-theorie-information.md
   - À propos: a-propos.md
 
 markdown_extensions:

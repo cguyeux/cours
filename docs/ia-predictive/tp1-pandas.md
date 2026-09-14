@@ -427,3 +427,5 @@ Avant de continuer, vous devez pouvoir, sans regarder le corrigé :
     Contrairement au module IA générative, ce TP n'a pas de QCM d'auto-évaluation prêt à
     l'emploi : les TP d'IA prédictive n'en ont jamais eu. En créer un est possible avec le
     skill `qcm-generator`, mais reste à faire.
+
+[Passer au TP1bis (GeoPandas)](tp1bis-geopandas.md){ .md-button .md-button--primary }
