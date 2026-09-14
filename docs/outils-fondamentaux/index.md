@@ -1,8 +1,8 @@
 # Outils fondamentaux : les mathématiques en Python
 
 Bienvenue dans la partie pratique de la ressource **R1.07, outils mathématiques
-fondamentaux**, du BUT informatique, premier semestre. Cinq séances de travaux pratiques,
-plus une séance de prolongement, pendant lesquelles vous apprendrez Python en le faisant
+fondamentaux**, du BUT informatique, premier semestre. Six séances de travaux pratiques
+de 1 h 45, pendant lesquelles vous apprendrez Python en le faisant
 travailler sur des objets mathématiques : des entiers, des nombres premiers, des
 polynômes, des fonctions, des matrices, et pour finir des points et des figures du plan.
 
@@ -29,7 +29,7 @@ du code.
 | [TP3](tp3-polynomes-fonctions.md) | Polynômes et fonctions | évaluer, dériver, tracer, trouver une racine |
 | [TP4](tp4-matrices-gauss.md) | Matrices et systèmes | produit matriciel, pivot de Gauss, numpy |
 | [TP5](tp5-synthese.md) | Synthèse | un problème complet, de bout en bout |
-| [TP6](tp6-geometrie-plan.md) | Géométrie du plan, en prolongement | vecteurs, aires, intersections, point dans un polygone |
+| [TP6](tp6-geometrie-plan.md) | Géométrie du plan | vecteurs, aires, intersections, point dans un polygone |
 
 Chaque TP se termine par une liste d'auto-évaluation, ce que vous devez savoir faire avant
 la séance suivante, et par un QCM de dix questions corrigées immédiatement, à faire après

@@ -489,4 +489,4 @@ ce petit exemple.
   change pas.
 
 [Le QCM du TP5](qcm/qcm_tp5.html){ .md-button target=_blank }
-[La séance de prolongement : géométrie du plan](tp6-geometrie-plan.md){ .md-button .md-button--primary }
+[Passer au TP6](tp6-geometrie-plan.md){ .md-button .md-button--primary }

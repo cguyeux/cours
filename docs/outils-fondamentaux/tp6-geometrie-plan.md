@@ -1,12 +1,12 @@
 # TP6. Géométrie du plan
 
-**Durée : 1 h 45. Séance de prolongement.**
+**Durée : 1 h 45.**
 
 Le programme national de la ressource place la géométrie du plan en prolongement des
-autres savoirs. Cette séance se fait donc en fin de semestre si le temps le permet, ou en
-autonomie sinon. Elle réinvestit tout ce qui précède, les flottants du TP1, les fonctions
-du TP3 et les matrices du TP4, sur les objets qu'un informaticien manipule dès qu'il
-affiche quelque chose à l'écran : des points, des segments, des polygones.
+autres savoirs : cette séance clôt donc le semestre. Elle réinvestit tout ce qui précède,
+les flottants du TP1, les fonctions du TP3 et les matrices du TP4, sur les objets qu'un
+informaticien manipule dès qu'il affiche quelque chose à l'écran : des points, des
+segments, des polygones.
 
 ## Objectifs
 
