@@ -67,6 +67,9 @@ nav:
       - TP3. RAG et bases vectorielles: ia-generative/tp3-rag-vecteurs.md
       - TP4. Agents: ia-generative/tp4-agents.md
       - TP5. Multimodalité: ia-generative/tp5-multimodalite.md
+  - IA prédictive (BUT3):
+      - Le module: ia-predictive/index.md
+      - TP1. Pandas: ia-predictive/tp1-pandas.md
   - À propos: a-propos.md
 
 markdown_extensions:
