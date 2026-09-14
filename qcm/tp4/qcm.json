@@ -251,6 +251,68 @@
           "justification": "Le produit de deux rotations planes est bien une rotation."
         }
       ]
+    },
+    {
+      "theme": "Déterminant",
+      "difficulte": "moyen",
+      "enonce": "Pourquoi calcule-t-on un déterminant par élimination de Gauss plutôt que par la formule de développement suivant une ligne ?",
+      "options": [
+        {
+          "texte": "Gauss coûte de l'ordre de `n³` opérations, le développement de l'ordre de `n!`",
+          "correcte": true,
+          "justification": "Pour `n = 20`, c'est huit mille opérations contre deux mille milliards de milliards."
+        },
+        {
+          "texte": "La formule de développement est fausse au delà de la taille 3",
+          "correcte": false,
+          "justification": "Elle est exacte à toute taille, mais impraticable."
+        },
+        {
+          "texte": "Gauss donne un résultat exact, le développement un résultat approché",
+          "correcte": false,
+          "justification": "Sur des flottants, les deux sont approchés ; sur des fractions, les deux sont exacts."
+        },
+        {
+          "texte": "Parce que numpy ne sait pas développer un déterminant",
+          "correcte": false,
+          "justification": "La raison est le coût, pas une limite de numpy."
+        }
+      ],
+      "id": 9,
+      "type": "unique",
+      "source_fichier": "tp4-matrices-gauss.md",
+      "points": 1
+    },
+    {
+      "theme": "Calcul exact",
+      "difficulte": "difficile",
+      "enonce": "Sur la matrice de Hilbert de taille 12 écrite avec des `Fraction`, le premier appel à `resoudre` échoue avec « système singulier ». Pourquoi ?",
+      "options": [
+        {
+          "texte": "Le dernier pivot, exact et non nul, vaut environ `5.9e-15`, sous le seuil `1e-14` prévu pour le bruit d'arrondi des flottants",
+          "correcte": true,
+          "justification": "Sur des fractions il n'y a pas de bruit : seul le zéro exact doit être refusé, d'où `tolerance=0`."
+        },
+        {
+          "texte": "La matrice de Hilbert est réellement singulière",
+          "correcte": false,
+          "justification": "Elle est inversible en théorie, et la version exacte le prouve en rendant la solution `[1, ..., 1]`."
+        },
+        {
+          "texte": "Les `Fraction` ne supportent pas `abs` ni les comparaisons",
+          "correcte": false,
+          "justification": "Elles les supportent, c'est ce qui permet au pivot partiel de fonctionner sans modification."
+        },
+        {
+          "texte": "Le second membre est mal construit",
+          "correcte": false,
+          "justification": "Le second membre est la somme des lignes, ce qui rend la solution égale au vecteur de 1."
+        }
+      ],
+      "id": 10,
+      "type": "unique",
+      "source_fichier": "tp4-matrices-gauss.md",
+      "points": 1
     }
   ]
 }

@@ -251,6 +251,68 @@
           "justification": "Le destinataire ne pourrait plus déchiffrer : la clé doit être partagée."
         }
       ]
+    },
+    {
+      "theme": "Indice de coïncidence",
+      "difficulte": "moyen",
+      "enonce": "Pourquoi un chiffrement affine ne change-t-il pas l'indice de coïncidence d'un texte ?",
+      "options": [
+        {
+          "texte": "Parce qu'il permute les lettres sans changer les effectifs : la somme des `n(n - 1)` est la même",
+          "correcte": true,
+          "justification": "Chaque lettre est toujours remplacée par la même autre lettre, donc la distribution des effectifs est simplement réordonnée."
+        },
+        {
+          "texte": "Parce que l'indice ne dépend que de la longueur du texte",
+          "correcte": false,
+          "justification": "Il dépend des effectifs par lettre : le hasard donne 0,039, le français environ 0,08."
+        },
+        {
+          "texte": "Parce que `a` est premier avec 26",
+          "correcte": false,
+          "justification": "Cette condition assure le déchiffrement, pas la conservation des fréquences, qui vaut pour toute substitution simple."
+        },
+        {
+          "texte": "Il le change : c'est ainsi qu'on repère un texte chiffré",
+          "correcte": false,
+          "justification": "Il ne le change pas, et c'est justement cette invariance qui trahit une substitution."
+        }
+      ],
+      "id": 9,
+      "type": "unique",
+      "source_fichier": "tp5-synthese.md",
+      "points": 1
+    },
+    {
+      "theme": "Vigenère",
+      "difficulte": "difficile",
+      "enonce": "Comment retrouve-t-on la longueur de la clé d'un chiffre de Vigenère avec l'indice de coïncidence ?",
+      "options": [
+        {
+          "texte": "En découpant le chiffré en `L` colonnes pour chaque longueur candidate : l'indice moyen des colonnes remonte au niveau du français quand `L` est la longueur de la clé ou un de ses multiples",
+          "correcte": true,
+          "justification": "Chaque colonne est alors un chiffre de César, qui conserve les fréquences du français."
+        },
+        {
+          "texte": "En cherchant la lettre la plus fréquente du chiffré",
+          "correcte": false,
+          "justification": "C'est l'attaque du chiffre affine ; Vigenère aplatit les fréquences globales."
+        },
+        {
+          "texte": "En essayant les 312 clés possibles",
+          "correcte": false,
+          "justification": "312 est le nombre de clés du chiffre affine ; Vigenère en a `26` puissance `L`."
+        },
+        {
+          "texte": "En calculant le PGCD des longueurs des mots du message",
+          "correcte": false,
+          "justification": "Le texte nettoyé n'a plus d'espaces, donc plus de mots."
+        }
+      ],
+      "id": 10,
+      "type": "unique",
+      "source_fichier": "tp5-synthese.md",
+      "points": 1
     }
   ]
 }

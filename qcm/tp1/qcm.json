@@ -251,6 +251,68 @@
           "justification": "La méthode fonctionne sur n'importe quel réel positif."
         }
       ]
+    },
+    {
+      "theme": "Représentation des nombres",
+      "difficulte": "moyen",
+      "enonce": "Que vaut l'epsilon machine, le plus petit `eps` tel que `1.0 + eps != 1.0` ?",
+      "options": [
+        {
+          "texte": "Environ `2.2e-16`, soit 2 puissance -52",
+          "correcte": true,
+          "justification": "Un flottant a 52 chiffres binaires après la virgule, donc environ seize chiffres décimaux significatifs."
+        },
+        {
+          "texte": "Environ `1e-9`",
+          "correcte": false,
+          "justification": "C'est une tolérance de comparaison souvent choisie, pas l'epsilon machine."
+        },
+        {
+          "texte": "Environ `1e-308`, le plus petit flottant positif",
+          "correcte": false,
+          "justification": "Le plus petit flottant représentable n'a rien à voir avec l'écart minimal détectable autour de 1."
+        },
+        {
+          "texte": "Exactement `0`, car `1.0 + eps` est toujours différent de `1.0` si `eps > 0`",
+          "correcte": false,
+          "justification": "Faux sur une machine : `1e16 + 1 == 1e16` est vrai."
+        }
+      ],
+      "id": 9,
+      "type": "unique",
+      "source_fichier": "tp1-calcul-numerique.md",
+      "points": 1
+    },
+    {
+      "theme": "Élimination catastrophique",
+      "difficulte": "difficile",
+      "enonce": "La formule classique des racines du second degré donne, pour `x² - 1e8 x + 1 = 0`, une petite racine fausse de 25 %. Quelle est la cause ?",
+      "options": [
+        {
+          "texte": "La soustraction `-b - sqrt(delta)` de deux nombres presque égaux efface les chiffres significatifs",
+          "correcte": true,
+          "justification": "C'est l'élimination catastrophique : le résultat est petit, mais son erreur est celle des grands nombres soustraits."
+        },
+        {
+          "texte": "`math.sqrt` est imprécis sur les grands nombres",
+          "correcte": false,
+          "justification": "La racine carrée est calculée à l'epsilon machine près ; le problème vient de la soustraction qui suit."
+        },
+        {
+          "texte": "Python confond `/` et `//` dans la division par `2a`",
+          "correcte": false,
+          "justification": "La division est correcte ; aucune division entière n'intervient."
+        },
+        {
+          "texte": "Le discriminant est négatif",
+          "correcte": false,
+          "justification": "Le discriminant vaut environ `1e16`, largement positif."
+        }
+      ],
+      "id": 10,
+      "type": "unique",
+      "source_fichier": "tp1-calcul-numerique.md",
+      "points": 1
     }
   ]
 }

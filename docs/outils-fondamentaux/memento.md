@@ -122,6 +122,42 @@ pairs = [x for x in L if x % 2 == 0]
     `[[0] * 3] * 2` crée **deux références vers la même ligne** : modifier l'une modifie
     l'autre. Pour une matrice, écrire `[[0] * 3 for _ in range(2)]`.
 
+## Tuples, et l'affectation simultanée
+
+```python
+point = (3, 4)          # comme une liste, mais non modifiable
+x, y = point            # déballage : x vaut 3, y vaut 4
+a, b = 1071, 462
+a, b = b, a % b         # échange et mise à jour en une seule ligne (Euclide)
+for i, valeur in enumerate([10, 20, 30]):   # indice et valeur à la fois
+    print(i, valeur)
+for u, v in zip([1, 2, 3], [4, 5, 6]):      # deux listes parcourues ensemble
+    print(u * v)
+```
+
+`a, b = b, a % b` évalue **d'abord** tout le membre de droite, puis affecte : c'est ce qui
+rend l'échange possible sans variable temporaire.
+
+## Dictionnaires et comptage
+
+```python
+ages = {"Alice": 20, "Bob": 22}
+ages["Chloé"] = 19          # ajoute ou remplace
+ages["Alice"]               # 20
+"Bob" in ages               # True
+ages.get("Zoé", 0)          # 0 : valeur par défaut si la clé manque
+for nom, age in ages.items():
+    print(nom, age)
+
+from collections import Counter
+comptes = Counter("ABRACADABRA")
+comptes["A"]                # 5
+comptes.most_common(2)      # [('A', 5), ('B', 2)]
+```
+
+Un dictionnaire sert aussi de mémoire pour ne pas recalculer ce qu'on a déjà obtenu :
+`if n in deja: return deja[n]`.
+
 ## Chaînes de caractères
 
 ```python
@@ -136,6 +172,42 @@ ord("A"), chr(65)           # 65, 'A'
 f"{s} : {len(s)} lettres"   # chaîne formatée
 f"{3.14159:.2f}"            # '3.14', deux décimales
 ```
+
+## Attraper une erreur
+
+```python
+try:
+    x = int("abc")
+except ValueError as erreur:
+    print("entree invalide :", erreur)
+```
+
+À réserver aux erreurs que l'on sait traiter. Ne jamais écrire `except:` sans préciser
+le type : on masquerait aussi les bogues.
+
+## Fonctions anonymes et argument `key`
+
+```python
+L = [(3, "c"), (1, "a"), (2, "b")]
+sorted(L, key=lambda couple: couple[1])   # trie selon la lettre
+max(range(5), key=lambda i: abs(i - 2.6)) # l'indice qui maximise la distance à 2,6
+```
+
+`lambda` définit une fonction d'une ligne, sans nom, là où un `def` serait lourd. Le
+pivot partiel du TP4 s'en sert pour choisir la ligne du plus grand coefficient.
+
+## Calcul exact : `fractions`
+
+```python
+from fractions import Fraction
+
+Fraction(1, 3) + Fraction(1, 6)     # Fraction(1, 2), exact
+Fraction(0.1)                       # la vraie valeur du flottant 0.1
+float(Fraction(22, 7))              # retour au flottant
+```
+
+Lent, mais sans aucun arrondi : pour vérifier un résultat, ou résoudre exactement un petit
+système (TP4).
 
 ## Le module `math`
 
@@ -163,6 +235,30 @@ resultat = sum(range(100000))
 duree = time.perf_counter() - debut
 print(f"{duree:.4f} s")
 ```
+
+## Le hasard : `random`
+
+```python
+import random
+
+random.seed(42)             # rend les tirages reproductibles
+random.random()             # flottant dans [0, 1[
+random.randint(1, 6)        # entier entre 1 et 6 inclus
+random.uniform(-1, 1)       # flottant dans [-1, 1]
+random.choice("ABC")        # un élément au hasard
+```
+
+Toujours fixer `seed` dans un programme que l'on veut pouvoir rejouer à l'identique.
+
+## Formater un nombre
+
+| Écriture | Résultat | Sens |
+|---|---|---|
+| `f"{x:.3f}"` | `3.142` | trois décimales |
+| `f"{x:.2e}"` | `3.14e+00` | notation scientifique |
+| `f"{n:>6}"` | `    42` | aligné à droite sur six caractères |
+| `f"{n:06}"` | `000042` | complété par des zéros |
+| `f"{n:_}"` | `1_000_000` | séparateur de milliers |
 
 ## numpy, l'essentiel
 

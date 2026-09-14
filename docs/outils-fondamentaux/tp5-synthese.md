@@ -335,6 +335,124 @@ plus fréquente du message chiffré est très probablement l'image de E.
 
 ---
 
+## Entraînement et approfondissement
+
+Cette séance est notée, et les exercices ci-dessous n'en font pas partie. Ils sont là pour
+ceux qui veulent voir jusqu'où mène la piste ouverte à l'étape 6, et pour préparer le cours
+de cryptographie de deuxième année.
+
+### Étape 7. Mesurer si un texte « ressemble » à une langue
+
+L'attaque de l'étape 6 repose sur une intuition : un texte chiffré par substitution garde
+les fréquences du français. On peut mesurer cette ressemblance par un seul nombre,
+l'**indice de coïncidence**, qui est la probabilité que deux lettres tirées au hasard dans
+le texte soient identiques :
+
+\[ IC = \frac{\sum_{\ell} n_\ell (n_\ell - 1)}{N (N - 1)} \]
+
+où \( n_\ell \) est le nombre d'occurrences de la lettre \( \ell \) et \( N \) la
+longueur du texte. Pour un texte où toutes les lettres seraient équiprobables, il vaut
+\( 1/26 \approx 0{,}038 \). Pour du français, il est nettement plus élevé, entre 0,07 et
+0,08 sur un texte long.
+
+!!! question "Exercice 7.1 : l'indice de coïncidence"
+    Écrivez `indice_coincidence(texte)`. Calculez-le sur `texte_long`, sur `secret_long`,
+    et sur une suite de lettres tirées au hasard de même longueur.
+
+    **Résultat attendu :** la même valeur pour le clair et pour le chiffré affine, environ
+    0,087 sur ce texte court, contre environ 0,039 pour les lettres au hasard.
+
+    ??? success "Corrigé"
+        ```python
+        import random
+
+        def indice_coincidence(texte):
+            """Probabilité que deux lettres tirées au hasard dans le texte coïncident."""
+            N = len(texte)
+            comptes = Counter(texte)
+            return sum(n * (n - 1) for n in comptes.values()) / (N * (N - 1))
+
+        random.seed(1)
+        alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        hasard = "".join(random.choice(alphabet) for _ in range(len(texte_long)))
+
+        print(f"clair    : {indice_coincidence(texte_long):.4f}")
+        print(f"affine   : {indice_coincidence(secret_long):.4f}")
+        print(f"hasard   : {indice_coincidence(hasard):.4f}")
+        ```
+
+        Le chiffrement affine ne change pas l'indice : il permute les lettres, donc il
+        permute les \( n_\ell \) sans changer leur somme. C'est une signature, et elle
+        suffit à dire, sans même essayer de déchiffrer, qu'un texte a été chiffré par
+        substitution simple. La valeur est un peu haute ici parce que le texte est court
+        et répétitif ; sur un roman, elle tombe vers 0,075.
+
+### Étape 8. Vigenère, ou comment casser l'indice
+
+Le chiffre de Vigenère, au seizième siècle, corrige la faiblesse de la substitution :
+on choisit un mot-clé, et l'on décale chaque lettre du message du rang de la lettre
+correspondante du mot-clé, en recommençant le mot-clé quand il est épuisé. Une même lettre
+du clair n'est plus toujours chiffrée de la même façon, et les fréquences sont aplaties.
+
+!!! question "Exercice 8.1 : chiffrer par Vigenère"
+    Écrivez `vigenere(texte, cle)`. Chiffrez `texte_long` avec la clé `"CLE"`, et calculez
+    l'indice de coïncidence du résultat.
+
+    **Résultat attendu :** un indice d'environ 0,055, intermédiaire entre le français et
+    le hasard. L'attaque par fréquences de l'étape 6 ne s'applique plus telle quelle.
+
+    ??? success "Corrigé"
+        ```python
+        def vigenere(texte, cle):
+            """Chiffre de Vigenère : chaque lettre est décalée par la lettre de la clé en face."""
+            resultat = []
+            for i, c in enumerate(nettoyer(texte)):
+                decalage = lettre_vers_nombre(cle[i % len(cle)])
+                resultat.append(nombre_vers_lettre(lettre_vers_nombre(c) + decalage))
+            return "".join(resultat)
+
+        secret_vigenere = vigenere(texte_long, "CLE")
+        print(secret_vigenere[:40])
+        print(f"IC vigenere : {indice_coincidence(secret_vigenere):.4f}")
+        ```
+
+        La fonction `nombre_vers_lettre` de l'étape 1 fait le `% 26` pour nous : c'est
+        pour cela qu'on l'avait écrite ainsi. Avec trois décalages différents mélangés,
+        l'indice descend, et sur une clé longue il rejoindrait celui du hasard.
+
+!!! question "Exercice 8.2 : retrouver la longueur de la clé"
+    Si la clé a \( L \) lettres, alors les lettres du chiffré de rangs \( 0, L, 2L, \dots \)
+    ont toutes subi le même décalage : c'est un chiffre de César, et son indice de
+    coïncidence est celui du français. Pour chaque longueur candidate `L` de 1 à 7,
+    découpez le chiffré en `L` colonnes, calculez l'indice moyen des colonnes, et repérez
+    les longueurs où il remonte.
+
+    **Résultat attendu :** l'indice moyen bondit à environ 0,09 pour `L = 3` et
+    `L = 6`, et reste vers 0,055 pour les autres longueurs. La clé a donc trois lettres,
+    ou un multiple de trois.
+
+    ??? success "Corrigé"
+        ```python
+        for L in range(1, 8):
+            colonnes = [secret_vigenere[i::L] for i in range(L)]
+            moyenne = sum(indice_coincidence(col) for col in colonnes) / L
+            print(f"L = {L} : indice moyen {moyenne:.4f}")
+        ```
+
+        La notation `texte[i::L]` prend une lettre sur `L` à partir de la position `i`.
+        Une fois la longueur connue, chaque colonne se casse comme un César, par la
+        méthode de l'étape 6 : la lettre la plus fréquente de la colonne est l'image de E,
+        ce qui donne le décalage, donc la lettre de la clé. Vous avez tous les outils pour
+        finir : faites-le, et vous aurez cassé sans aucune indication un chiffre resté
+        réputé incassable pendant trois siècles.
+
+        Ce qui l'a finalement mis à terre, c'est exactement ce que vous venez de faire :
+        une statistique, l'indice de coïncidence, et un peu de calcul. C'est aussi la
+        raison pour laquelle les chiffrements modernes sont conçus pour qu'aucune
+        régularité du clair ne survive dans le chiffré.
+
+---
+
 ## Ce qui est évalué
 
 Le rendu de cette séance est le carnet complet, avec :
@@ -360,3 +478,15 @@ détruit silencieusement l'information. Un espace de clés trop petit rend le ch
 sans valeur, quelle que soit son élégance. Et une régularité statistique laissée intacte
 par le chiffrement est une porte d'entrée, ce qui vaut encore aujourd'hui bien au delà de
 ce petit exemple.
+
+## Auto-évaluation
+
+- [ ] expliquer pourquoi \( a \) doit être premier avec 26, et ce qui se passe sinon ;
+- [ ] calculer de tête le nombre de clés du chiffrement affine ;
+- [ ] écrire le test aller-retour qui valide un couple chiffrer, déchiffrer ;
+- [ ] dire pourquoi l'attaque par fréquences échoue sur un texte court ;
+- [ ] expliquer ce que mesure l'indice de coïncidence et pourquoi une substitution ne le
+  change pas.
+
+[Le QCM du TP5](qcm/qcm_tp5.html){ .md-button target=_blank }
+[La séance de prolongement : géométrie du plan](tp6-geometrie-plan.md){ .md-button .md-button--primary }

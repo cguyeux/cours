@@ -437,12 +437,237 @@ plt.show()
 
 ---
 
+## Entraînement et approfondissement
+
+À faire après la séance, ou en séance si vous avez terminé. Ces exercices sont au programme
+de l'évaluation, sauf ceux marqués « pour aller plus loin ». Ils complètent le TP sur deux
+points du programme que la séance n'a fait qu'effleurer : le calcul algébrique sur les
+polynômes, et le calcul numérique d'une dérivée et d'une intégrale.
+
+### Étape 6. L'algèbre des polynômes
+
+Additionner ou multiplier deux polynômes, c'est manipuler leurs listes de coefficients.
+La multiplication est la plus instructive : le coefficient de \( x^{k} \) dans \( PQ \)
+est la somme des \( p_i q_j \) pour tous les couples tels que \( i + j = k \).
+
+!!! question "Exercice 6.1 : somme et produit"
+    Écrivez `somme(P, Q)` et `produit_poly(P, Q)`. Attention, les deux listes n'ont pas
+    forcément la même longueur.
+
+    **Résultat attendu :** `produit_poly([1, 1], [1, 1])` vaut `[1, 2, 1]`, c'est-à-dire
+    \( (1 + x)^{2} = 1 + 2x + x^{2} \), et `produit_poly([-1, 1], [1, 1])` vaut
+    `[-1, 0, 1]`, l'identité \( (x - 1)(x + 1) = x^{2} - 1 \).
+
+    ??? success "Corrigé"
+        ```python
+        def somme(P, Q):
+            """Somme de deux polynômes donnés par leurs coefficients."""
+            longueur = max(len(P), len(Q))
+            P = P + [0] * (longueur - len(P))
+            Q = Q + [0] * (longueur - len(Q))
+            return [P[i] + Q[i] for i in range(longueur)]
+
+        def produit_poly(P, Q):
+            """Produit de deux polynômes donnés par leurs coefficients."""
+            if not P or not Q:
+                return []
+            R = [0] * (len(P) + len(Q) - 1)
+            for i in range(len(P)):
+                for j in range(len(Q)):
+                    R[i + j] = R[i + j] + P[i] * Q[j]
+            return R
+
+        print(somme([1, 2], [0, 0, 3]))
+        print(produit_poly([1, 1], [1, 1]))
+        print(produit_poly([-1, 1], [1, 1]))
+        ```
+
+        Le degré du produit est la somme des degrés, d'où la longueur
+        `len(P) + len(Q) - 1`. Vérifiez la fonction autrement qu'en lisant le résultat :
+        évaluez `P`, `Q` et leur produit en un même point, et contrôlez que
+        `evaluer(produit_poly(P, Q), x)` vaut `evaluer(P, x) * evaluer(Q, x)`. C'est le
+        même réflexe que la vérification de la division euclidienne au TP1.
+
+!!! question "Exercice 6.2 : le triangle de Pascal, par les polynômes"
+    Calculez \( (1 + x)^{10} \) en multipliant dix fois `[1, 1]` par lui-même. Que
+    reconnaissez-vous dans la liste obtenue ?
+
+    **Résultat attendu :** `[1, 10, 45, 120, 210, 252, 210, 120, 45, 10, 1]`.
+
+    ??? success "Corrigé"
+        ```python
+        binome = [1]
+        for _ in range(10):
+            binome = produit_poly(binome, [1, 1])
+        print(binome)
+        print(sum(binome), 2 ** 10)
+        ```
+
+        Ce sont les coefficients binomiaux \( \binom{10}{k} \), la dixième ligne du
+        triangle de Pascal. Leur somme vaut \( 2^{10} \), ce qui est la formule du binôme
+        évaluée en \( x = 1 \). Une identité algébrique que vous avez apprise par cœur
+        devient ici une vérification en deux lignes.
+
+### Étape 7. Dériver numériquement, et le mur des flottants
+
+Quand on ne connaît pas la formule de la dérivée, on l'approche par un taux de variation :
+
+\[ f'(x) \approx \frac{f(x + h) - f(x)}{h} \qquad \text{ou, mieux,} \qquad
+   f'(x) \approx \frac{f(x + h) - f(x - h)}{2h} \]
+
+On se dit que plus \( h \) est petit, meilleure est l'approximation. C'est vrai en
+mathématiques, et faux sur une machine.
+
+!!! question "Exercice 7.1 : trouver le meilleur pas"
+    Écrivez `derivee_avant(f, x, h)` et `derivee_centree(f, x, h)`. Calculez l'erreur de
+    chacune sur \( \sin \) en \( x = 1 \), dont la dérivée exacte est \( \cos 1 \), pour
+    `h` valant \( 10^{-1}, 10^{-2}, 10^{-4}, 10^{-6}, 10^{-8}, 10^{-10}, 10^{-12} \).
+
+    **Résultat attendu :** l'erreur diminue puis **remonte**. Le meilleur pas est de
+    l'ordre de \( 10^{-8} \) pour la formule avant, \( 10^{-6} \) pour la formule centrée,
+    et à \( h = 10^{-12} \) l'erreur est remontée de quatre à six ordres de grandeur
+    par rapport à ce meilleur pas.
+
+    ??? success "Corrigé"
+        ```python
+        import math
+
+        def derivee_avant(f, x, h):
+            return (f(x + h) - f(x)) / h
+
+        def derivee_centree(f, x, h):
+            return (f(x + h) - f(x - h)) / (2 * h)
+
+        exacte = math.cos(1.0)
+        for h in (1e-1, 1e-2, 1e-4, 1e-6, 1e-8, 1e-10, 1e-12):
+            e_avant = abs(derivee_avant(math.sin, 1.0, h) - exacte)
+            e_centree = abs(derivee_centree(math.sin, 1.0, h) - exacte)
+            print(f"h = {h:.0e} : avant {e_avant:.1e} | centree {e_centree:.1e}")
+        ```
+
+        Deux erreurs se disputent le résultat. L'erreur **de méthode**, due au fait qu'un
+        taux de variation n'est pas une dérivée, diminue avec \( h \) : proportionnelle à
+        \( h \) pour la formule avant, à \( h^{2} \) pour la formule centrée, ce qui se
+        lit dans les premières lignes, où l'erreur centrée perd deux zéros quand `h` en
+        perd un. L'erreur **d'arrondi**, due à la soustraction de deux valeurs presque
+        égales, est celle de l'exercice 7.1 du TP1 : elle vaut environ
+        \( 10^{-16} / h \) et **grandit** quand \( h \) diminue. Le meilleur pas est celui
+        où les deux se croisent.
+
+        La formule centrée est meilleure sur toute la ligne : à même coût, deux
+        évaluations de \( f \), elle gagne quatre à cinq chiffres. Retenez-la, et retenez
+        surtout qu'en calcul numérique « plus fin » ne veut pas dire « plus juste ».
+
+### Étape 8. Intégrer numériquement
+
+Calculer \( \int_a^b f(x)\,dx \) quand on n'a pas de primitive, c'est approcher l'aire sous
+la courbe par des morceaux simples. Trois méthodes, de plus en plus fines, découpent
+\( [a, b] \) en \( n \) tranches de largeur \( h = (b - a)/n \) :
+
+- **rectangles** : chaque tranche est un rectangle de hauteur \( f \) à son bord gauche ;
+- **trapèzes** : chaque tranche est un trapèze qui relie \( f \) aux deux bords ;
+- **Simpson** : on remplace \( f \) par une parabole sur chaque paire de tranches.
+
+!!! question "Exercice 8.1 : les trois méthodes"
+    Écrivez `rectangles(f, a, b, n)`, `trapezes(f, a, b, n)` et `simpson(f, a, b, n)`.
+    Testez-les sur \( \int_0^1 x^{2}\,dx = 1/3 \) pour `n` valant 10, 100 et 1000.
+
+    **Résultat attendu :** l'erreur des rectangles est divisée par 10 quand `n` est
+    multiplié par 10, celle des trapèzes par 100, et Simpson donne le résultat exact, à
+    un arrondi de \( 10^{-17} \) près.
+
+    ??? success "Corrigé"
+        ```python
+        def rectangles(f, a, b, n):
+            """Intégrale de f sur [a, b] par n rectangles à gauche."""
+            h = (b - a) / n
+            return h * sum(f(a + i * h) for i in range(n))
+
+        def trapezes(f, a, b, n):
+            """Intégrale de f sur [a, b] par n trapèzes."""
+            h = (b - a) / n
+            interieur = sum(f(a + i * h) for i in range(1, n))
+            return h * ((f(a) + f(b)) / 2 + interieur)
+
+        def simpson(f, a, b, n):
+            """Intégrale de f sur [a, b] par la méthode de Simpson, n pair."""
+            if n % 2 == 1:
+                n = n + 1
+            h = (b - a) / n
+            impairs = sum(f(a + i * h) for i in range(1, n, 2))
+            pairs = sum(f(a + i * h) for i in range(2, n, 2))
+            return h / 3 * (f(a) + f(b) + 4 * impairs + 2 * pairs)
+
+        def carre(x):
+            return x * x
+
+        for n in (10, 100, 1000):
+            e_rect = abs(rectangles(carre, 0, 1, n) - 1 / 3)
+            e_trap = abs(trapezes(carre, 0, 1, n) - 1 / 3)
+            e_simp = abs(simpson(carre, 0, 1, n) - 1 / 3)
+            print(f"n = {n:>4} : rectangles {e_rect:.1e} | trapezes {e_trap:.1e} | simpson {e_simp:.1e}")
+        ```
+
+        On dit que les rectangles sont d'**ordre 1**, les trapèzes d'**ordre 2** : l'erreur
+        est proportionnelle à \( h \), puis à \( h^{2} \). Simpson est d'ordre 4, et il
+        est même **exact** sur tout polynôme de degré au plus 3, ce qui explique le zéro
+        de la dernière colonne. Pour le voir travailler, essayez une fonction qui n'est
+        pas un polynôme : \( \int_0^{\pi} \sin x\,dx = 2 \), où l'erreur de Simpson est
+        divisée par \( 10^{4} \) chaque fois que `n` est multiplié par 10.
+
+!!! question "Exercice 8.2 : calculer π"
+    On a \( \int_0^1 \frac{4}{1 + x^{2}}\,dx = \pi \). Calculez cette intégrale par les
+    trapèzes et par Simpson avec `n = 1000`, et comparez à `math.pi`.
+
+    **Résultat attendu :** une erreur de l'ordre de \( 10^{-7} \) pour les trapèzes, et
+    un résultat indistinguable de `math.pi` pour Simpson.
+
+    ??? success "Corrigé"
+        ```python
+        def arctangente_derivee(x):
+            return 4 / (1 + x * x)
+
+        approx_trap = trapezes(arctangente_derivee, 0, 1, 1000)
+        approx_simp = simpson(arctangente_derivee, 0, 1, 1000)
+        print(approx_trap, abs(approx_trap - math.pi))
+        print(approx_simp, abs(approx_simp - math.pi))
+        ```
+
+        Mille évaluations d'une fraction, et l'on obtient toutes les décimales de π que
+        la machine sait écrire. Avec les rectangles, il en faudrait des milliards. Comme
+        au TP2, changer de méthode rapporte infiniment plus qu'augmenter `n`.
+
+!!! tip "Pour aller plus loin : Newton sur une fonction quelconque"
+    La fonction `newton` de l'étape 4 exige un polynôme, parce qu'elle a besoin de la
+    dérivée. Avec `derivee_centree`, écrivez une version `newton_general(f, depart)` qui
+    accepte n'importe quelle fonction. Appliquez-la à \( \cos x - x = 0 \), dont la
+    solution vaut environ `0.7390851332`. Puis trouvez un point de départ pour lequel elle
+    diverge, et expliquez pourquoi à l'aide d'un tracé.
+
+---
+
 ## Ce qu'il faut retenir
 
-Un polynôme se représente par la liste de ses coefficients, et s'évalue par le schéma de
-Horner, plus rapide et plus stable que la formule naïve. Dériver revient à décaler et
-multiplier la liste. Pour trouver une racine, la dichotomie ne rate jamais mais avance
-lentement ; Newton va vite mais peut diverger, et il faut donc toujours borner le nombre de
-tours. Enfin, tracer la fonction avant de la traiter fait gagner un temps considérable.
+Un polynôme se représente par la liste de ses coefficients, s'évalue par le schéma de
+Horner, plus rapide et plus stable que la formule naïve, et se multiplie en sommant les
+produits de coefficients d'indices \( i + j = k \). Dériver revient à décaler et multiplier
+la liste. Pour trouver une racine, la dichotomie ne rate jamais mais avance lentement ;
+Newton va vite mais peut diverger, et il faut donc toujours borner le nombre de tours. En
+calcul numérique, dériver ou intégrer plus finement n'est pas toujours plus juste, et
+changer de méthode vaut mieux qu'augmenter le nombre de points. Enfin, tracer la fonction
+avant de la traiter fait gagner un temps considérable.
 
+## Auto-évaluation
+
+Avant de passer au TP4, vous devez pouvoir, sans regarder le corrigé :
+
+- [ ] écrire le schéma de Horner en trois lignes et dire ce qu'il évite ;
+- [ ] expliquer pourquoi la version naïve n'est pas quadratique sur des flottants, mais
+  l'est sur des entiers ;
+- [ ] écrire la dichotomie et dire quelle hypothèse elle exige sur `f(a)` et `f(b)` ;
+- [ ] citer deux façons dont Newton peut échouer, et les deux garde-fous correspondants ;
+- [ ] dire pourquoi l'erreur d'une dérivée numérique remonte quand `h` devient trop petit ;
+- [ ] classer rectangles, trapèzes et Simpson par ordre de précision.
+
+[Le QCM du TP3](qcm/qcm_tp3.html){ .md-button target=_blank }
 [Passer au TP4](tp4-matrices-gauss.md){ .md-button .md-button--primary }

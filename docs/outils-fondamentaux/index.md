@@ -2,9 +2,9 @@
 
 Bienvenue dans la partie pratique de la ressource **R1.07, outils mathématiques
 fondamentaux**, du BUT informatique, premier semestre. Cinq séances de travaux pratiques,
-sept heures en tout, pendant lesquelles vous apprendrez Python en le faisant travailler sur
-des objets mathématiques : des entiers, des nombres premiers, des polynômes, des fonctions
-et des matrices.
+plus une séance de prolongement, pendant lesquelles vous apprendrez Python en le faisant
+travailler sur des objets mathématiques : des entiers, des nombres premiers, des
+polynômes, des fonctions, des matrices, et pour finir des points et des figures du plan.
 
 ## Ce que vise ce module
 
@@ -29,14 +29,17 @@ du code.
 | [TP3](tp3-polynomes-fonctions.md) | Polynômes et fonctions | évaluer, dériver, tracer, trouver une racine |
 | [TP4](tp4-matrices-gauss.md) | Matrices et systèmes | produit matriciel, pivot de Gauss, numpy |
 | [TP5](tp5-synthese.md) | Synthèse | un problème complet, de bout en bout |
+| [TP6](tp6-geometrie-plan.md) | Géométrie du plan, en prolongement | vecteurs, aires, intersections, point dans un polygone |
 
-Chaque TP se termine par un QCM d'auto-évaluation, huit questions corrigées immédiatement,
-à faire après la séance pour vérifier ce qui est resté :
+Chaque TP se termine par une liste d'auto-évaluation, ce que vous devez savoir faire avant
+la séance suivante, et par un QCM de dix questions corrigées immédiatement, à faire après
+la séance pour vérifier ce qui est resté :
 [TP1](qcm/qcm_tp1.html){ target=_blank },
 [TP2](qcm/qcm_tp2.html){ target=_blank },
 [TP3](qcm/qcm_tp3.html){ target=_blank },
 [TP4](qcm/qcm_tp4.html){ target=_blank },
-[TP5](qcm/qcm_tp5.html){ target=_blank }.
+[TP5](qcm/qcm_tp5.html){ target=_blank },
+[TP6](qcm/qcm_tp6.html){ target=_blank }.
 
 Le [mémento Python](memento.md) rassemble sur une seule page tout ce dont vous avez besoin
 pour ces séances. C'est le seul document autorisé pendant les évaluations, alors prenez
@@ -52,9 +55,14 @@ Sous chaque exercice se trouve un corrigé, replié. Ouvrez-le sans culpabilité
 bloqué plus de dix minutes, mais lisez-le vraiment au lieu de le recopier : un corrigé lu
 et compris vaut mieux qu'un exercice raté, un corrigé recopié ne vaut rien.
 
-Certaines parties sont marquées « pour aller plus loin ». Elles ne sont pas au programme de
-l'évaluation. Faites-les si vous avez terminé, ignorez-les sinon, et ne vous laissez pas
-intimider par ceux qui les font.
+Chaque TP se termine par une partie « Entraînement et approfondissement », qui ne tient pas
+dans la séance : elle est à faire chez vous, ou en séance si vous avez terminé, et elle
+**est** au programme de l'évaluation. Un TP fait en séance et jamais rouvert ensuite est
+un TP à moitié fait.
+
+Certaines parties sont marquées « pour aller plus loin ». Elles, en revanche, ne sont pas
+au programme de l'évaluation. Faites-les si vous avez terminé, ignorez-les sinon, et ne
+vous laissez pas intimider par ceux qui les font.
 
 ## Intelligence artificielle : le pacte
 

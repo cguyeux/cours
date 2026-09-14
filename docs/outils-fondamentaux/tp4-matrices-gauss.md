@@ -229,10 +229,11 @@ faux de plusieurs ordres de grandeur.
 
     ??? success "Corrigé"
         ```python
-        def resoudre(A, b):
+        def resoudre(A, b, tolerance=1e-14):
             """Résout A x = b par le pivot de Gauss avec pivot partiel.
 
             A est une liste de lignes, b une liste. Ni A ni b ne sont modifiés.
+            Un pivot inférieur ou égal à tolerance est considéré comme nul.
             """
             n = len(A)
             # copie de travail, matrice augmentée [A | b]
@@ -241,7 +242,7 @@ faux de plusieurs ordres de grandeur.
             for k in range(n):
                 # pivot partiel : la ligne dont le coefficient est le plus grand en valeur absolue
                 meilleure = max(range(k, n), key=lambda i: abs(M[i][k]))
-                if abs(M[meilleure][k]) < 1e-14:
+                if abs(M[meilleure][k]) <= tolerance:
                     raise ValueError("systeme singulier ou mal pose")
                 M[k], M[meilleure] = M[meilleure], M[k]
 
@@ -275,6 +276,13 @@ faux de plusieurs ordres de grandeur.
         augmentée \( [A \mid b] \), ce qui évite de faire les mêmes opérations deux fois
         sur deux objets séparés. Et on vérifie le résultat en recalculant \( Ax \), plutôt
         qu'en relisant le code.
+
+        Le seuil `tolerance` mérite un mot. Avec des flottants, un pivot « nul » ne vaut
+        jamais exactement `0.0` : c'est un résidu d'arrondis, de l'ordre de
+        \( 10^{-16} \). Comparer à zéro laisserait passer une matrice singulière, et la
+        remontée diviserait par ce résidu pour produire des valeurs absurdes. On compare
+        donc à un petit seuil, et on le laisse réglable : l'étape 8 montrera un cas où il
+        faut le mettre à zéro.
 
 !!! question "Exercice 4.2 : confronter à numpy"
     Comparez votre solution à celle de `numpy.linalg.solve` sur un système aléatoire de
@@ -420,12 +428,208 @@ plt.show()
 
 ---
 
+## Entraînement et approfondissement
+
+À faire après la séance, ou en séance si vous avez terminé. Ces exercices sont au programme
+de l'évaluation, sauf ceux marqués « pour aller plus loin ». Le pivot de Gauss que vous
+avez écrit à l'étape 4 est un outil bien plus général qu'une méthode de résolution : il
+donne aussi le déterminant, l'inverse, et, en changeant simplement le type des nombres, une
+solution exacte là où les flottants échouaient.
+
+### Étape 7. Le déterminant, gratuitement
+
+Le déterminant d'une matrice triangulaire est le produit de ses coefficients diagonaux. Or
+l'élimination de Gauss transforme \( A \) en une matrice triangulaire par des opérations
+dont on connaît l'effet sur le déterminant : ajouter à une ligne un multiple d'une autre ne
+le change pas, et échanger deux lignes change son signe.
+
+!!! question "Exercice 7.1 : déterminant par Gauss"
+    Écrivez `determinant(A)` en reprenant l'élimination de `resoudre`, sans second membre :
+    multipliez les pivots successifs, et changez le signe à chaque échange de lignes.
+    Comparez à `np.linalg.det`.
+
+    **Résultat attendu :** le déterminant de la matrice de l'étape 1 vaut `-2`, et celui
+    de `[[1, 2], [2, 4]]` vaut `0`.
+
+    ??? success "Corrigé"
+        ```python
+        def determinant(A):
+            """Déterminant de A par élimination de Gauss avec pivot partiel."""
+            n = len(A)
+            M = [list(ligne) for ligne in A]
+            det = 1.0
+            for k in range(n):
+                meilleure = max(range(k, n), key=lambda i: abs(M[i][k]))
+                if abs(M[meilleure][k]) < 1e-14:
+                    return 0.0
+                if meilleure != k:
+                    M[k], M[meilleure] = M[meilleure], M[k]
+                    det = -det
+                det = det * M[k][k]
+                for i in range(k + 1, n):
+                    facteur = M[i][k] / M[k][k]
+                    for j in range(k, n):
+                        M[i][j] = M[i][j] - facteur * M[k][j]
+            return det
+
+        A = [[1, 2, 2], [1, 3, -2], [3, 5, 8]]
+        print(determinant(A), float(np.linalg.det(np.array(A, dtype=float))))
+        print(determinant([[1, 2], [2, 4]]))
+        ```
+
+        Le coût est celui de l'élimination, de l'ordre de \( n^{3} \) opérations. La
+        formule du déterminant que l'on apprend en cours, par développement suivant une
+        ligne, coûte \( n! \) opérations : pour \( n = 20 \), c'est deux mille milliards
+        de milliards, contre huit mille pour Gauss. Ne développez jamais un déterminant
+        au delà de la taille 3, ni à la main ni en machine.
+
+### Étape 8. Le même algorithme, des nombres exacts
+
+À l'étape 5, la matrice de Hilbert de taille 12 a mis `solve` en échec : le problème est
+mal conditionné, et aucun algorithme sur des flottants ne peut le résoudre. Mais la cause
+est l'arrondi des flottants. Que se passe-t-il si l'on supprime l'arrondi ?
+
+Le module `fractions` du TP1 fournit des rationnels exacts. Et votre fonction `resoudre`
+ne fait que des additions, des multiplications et des divisions : elle marche donc, sans
+la moindre modification, sur des `Fraction`.
+
+!!! question "Exercice 8.1 : Hilbert vaincue"
+    Construisez la matrice de Hilbert de taille 12 avec des `Fraction(1, i + j + 1)`, le
+    second membre `b` comme somme des lignes, pour que la solution soit le vecteur de 1,
+    puis appelez **votre** fonction `resoudre` de l'étape 4 dessus. Le premier essai échoue
+    avec « système singulier ». Comprenez pourquoi avant de lire le corrigé, puis corrigez.
+
+    **Résultat attendu :** exactement `[1, 1, ..., 1]`, douze fois `Fraction(1, 1)`, là
+    où `solve` se trompait de 0,7.
+
+    ??? success "Corrigé"
+        ```python
+        from fractions import Fraction
+
+        def hilbert_exacte(n):
+            return [[Fraction(1, i + j + 1) for j in range(n)] for i in range(n)]
+
+        n = 12
+        H_exacte = hilbert_exacte(n)
+        b_exact = [sum(ligne) for ligne in H_exacte]
+
+        try:
+            resoudre(H_exacte, b_exact)
+        except ValueError as erreur:
+            print("premier essai :", erreur)
+
+        x_exact = resoudre(H_exacte, b_exact, tolerance=0)
+        print(x_exact)
+        print(all(v == 1 for v in x_exact))
+        ```
+
+        Le premier essai échoue parce que le dernier pivot vaut exactement
+        \( 1/170\,392\,979\,877\,120 \), soit environ \( 5{,}9 \times 10^{-15} \) :
+        un nombre parfaitement non nul, que le seuil de \( 10^{-14} \), conçu pour
+        écarter le bruit d'arrondi des flottants, prend pour du bruit. Sur des fractions,
+        il n'y a pas de bruit : le seul pivot à refuser est le zéro exact, d'où
+        `tolerance=0`. C'est le même algorithme, le même code, et un résultat parfait ;
+        seule la notion de « nul » a changé avec le type des nombres.
+
+        Regardez le prix. Les dénominateurs des coefficients atteignent seize chiffres
+        pour \( n = 12 \), et une soixantaine pour \( n = 40 \), qui se résout tout de
+        même en un dixième de seconde parce que la matrice est petite et très
+        structurée. Sur un système de mille inconnues issu de mesures réelles, les
+        fractions deviendraient ingérables. Les flottants ne sont pas un défaut de
+        conception, ils sont un compromis : rapides et à taille fixe, au prix d'un
+        arrondi que l'on doit savoir surveiller.
+
+!!! tip "Pour aller plus loin : l'inverse par Gauss-Jordan"
+    L'étape 5 a dit de ne jamais inverser une matrice pour résoudre un système. Il reste
+    utile de savoir comment on l'inverse. Accolez l'identité à droite de \( A \), pour
+    former \( [A \mid I] \), puis éliminez **au-dessus et au-dessous** de chaque pivot et
+    divisez chaque ligne par son pivot : quand la partie gauche est devenue l'identité, la
+    partie droite est \( A^{-1} \). Écrivez `inverse(A)` sur ce principe, et vérifiez avec
+    `np.allclose(np.array(inverse(A)) @ np.array(A, dtype=float), np.eye(3))`. Pour la
+    matrice de l'étape 1, la première ligne de l'inverse est `[-17, 3, 5]`.
+
+### Étape 9. Translations, coordonnées homogènes, et l'ordre des transformations
+
+Une matrice \( 2 \times 2 \) fait tourner, agrandit, réfléchit, mais elle ne peut pas
+**déplacer** : elle envoie toujours l'origine sur l'origine. Or déplacer une figure est la
+transformation la plus courante en infographie. L'astuce universelle consiste à ajouter une
+troisième coordonnée, toujours égale à 1 : le point \( (x, y) \) devient \( (x, y, 1) \), et
+la translation de vecteur \( (t_x, t_y) \) devient une matrice \( 3 \times 3 \) :
+
+\[ T(t_x, t_y) = \begin{pmatrix} 1 & 0 & t_x \\ 0 & 1 & t_y \\ 0 & 0 & 1 \end{pmatrix} \]
+
+La rotation s'écrit de même en \( 3 \times 3 \), en complétant par une ligne et une colonne
+d'identité. Toutes les transformations du plan deviennent alors des produits de matrices,
+et c'est exactement ce que fait votre carte graphique des millions de fois par seconde.
+
+!!! question "Exercice 9.1 : l'ordre compte"
+    Écrivez `translation(tx, ty)` et `rotation_h(angle)` qui renvoient des matrices
+    \( 3 \times 3 \). Appliquez au point \( (1, 0) \) la translation de \( (3, 1) \) suivie
+    de la rotation de 90°, puis la rotation suivie de la translation.
+
+    **Résultat attendu :** \( (-1, 4) \) dans le premier cas, \( (3, 2) \) dans le second.
+    Les deux résultats diffèrent.
+
+    ??? success "Corrigé"
+        ```python
+        def translation(tx, ty):
+            return np.array([[1.0, 0.0, tx],
+                             [0.0, 1.0, ty],
+                             [0.0, 0.0, 1.0]])
+
+        def rotation_h(angle):
+            c, s = np.cos(angle), np.sin(angle)
+            return np.array([[c, -s, 0.0],
+                             [s, c, 0.0],
+                             [0.0, 0.0, 1.0]])
+
+        point = np.array([1.0, 0.0, 1.0])
+        T = translation(3, 1)
+        R = rotation_h(np.pi / 2)
+
+        print(np.round(R @ T @ point, 10))   # translation d'abord, puis rotation
+        print(np.round(T @ R @ point, 10))   # rotation d'abord, puis translation
+        ```
+
+        Le produit se lit de droite à gauche : `R @ T @ point` applique `T` en premier.
+        Déplacer puis tourner autour de l'origine n'est pas tourner puis déplacer, et
+        c'est la source de la moitié des bogues d'affichage en jeu vidéo. Pour faire
+        tourner une figure autour de son propre centre \( C \), on compose trois
+        transformations : amener \( C \) à l'origine, tourner, ramener \( C \) chez lui,
+        soit \( T(C)\, R(\theta)\, T(-C) \).
+
+!!! tip "Pour aller plus loin"
+    Reprenez la maison de l'étape 6, ajoutez-lui la ligne de 1, et faites-la tourner
+    autour de son propre centre, puis autour de l'origine, sur le même tracé. Ajoutez une
+    homothétie de rapport 2 centrée sur la porte. Vous aurez écrit en trente lignes le
+    cœur d'un moteur de rendu 2D.
+
+---
+
 ## Ce qu'il faut retenir
 
 Une matrice se code par une liste de lignes, et attention à `[[0] * q] * n` qui partage la
 même ligne. Le produit matriciel coûte \( n^{3} \) opérations, ce qui se mesure. Le pivot
 de Gauss élimine puis remonte, et le pivot partiel n'est pas une coquetterie mais une
-nécessité numérique. Enfin, pour résoudre un système on écrit `solve`, jamais `inv`, et
-quand le conditionnement explose, aucun algorithme ne sauvera un problème mal posé.
+nécessité numérique ; la même élimination donne le déterminant, et, sur des fractions, une
+solution exacte. Pour résoudre un système on écrit `solve`, jamais `inv`, et quand le
+conditionnement explose, aucun algorithme sur des flottants ne sauvera un problème mal
+posé. Enfin, en coordonnées homogènes, toute transformation du plan est un produit de
+matrices, et l'ordre des facteurs compte.
 
+## Auto-évaluation
+
+Avant de passer au TP5, vous devez pouvoir, sans regarder le corrigé :
+
+- [ ] écrire `[[0] * q for _ in range(n)]` et expliquer ce qui cloche dans
+  `[[0] * q] * n` ;
+- [ ] dire de combien le temps du produit est multiplié quand la taille double, et
+  pourquoi ;
+- [ ] expliquer en une phrase ce qu'est le pivot partiel et pourquoi il est nécessaire ;
+- [ ] distinguer `A @ B` et `A * B` avec numpy ;
+- [ ] dire pourquoi on écrit `solve(A, b)` et non `inv(A) @ b` ;
+- [ ] expliquer ce que mesure le conditionnement, et ce qu'il signifie quand il approche
+  \( 10^{16} \).
+
+[Le QCM du TP4](qcm/qcm_tp4.html){ .md-button target=_blank }
 [Passer au TP5](tp5-synthese.md){ .md-button .md-button--primary }

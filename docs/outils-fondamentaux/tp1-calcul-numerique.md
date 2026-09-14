@@ -18,8 +18,8 @@ La [mise en route](demarrage.md) : savoir exécuter une cellule et lire une erre
 
 - Le [mémento Python](memento.md), à garder ouvert dans un autre onglet.
 - [Le carnet de ce TP](/lite/notebooks/index.html?path=tp1.ipynb){ target=_blank }, où les
-- [Le QCM d'auto-évaluation de ce TP](qcm/qcm_tp1.html){ target=_blank }, à faire après la séance.
   énoncés sont déjà écrits.
+- [Le QCM d'auto-évaluation de ce TP](qcm/qcm_tp1.html){ target=_blank }, à faire après la séance.
 
 ---
 
@@ -383,12 +383,237 @@ La suite converge très vite : le nombre de décimales exactes double à chaque 
 
 ---
 
+## Entraînement et approfondissement
+
+Les exercices qui suivent ne tiennent pas dans la séance. Faites-les chez vous, ou en
+séance si vous avez terminé : ils sont au programme de l'évaluation, sauf ceux marqués
+« pour aller plus loin ». Ils reprennent la question centrale du TP, comment la machine
+écrit les nombres et ce que cela lui fait perdre, et la poussent un cran plus loin.
+
+### Étape 6. Comment la machine écrit les nombres
+
+Vous savez que la machine compte en base 2. Python sait vous le montrer : `bin(n)` donne
+l'écriture binaire d'un entier, et `int(texte, 2)` fait le chemin inverse.
+
+```python
+print(bin(37))
+print(int("100101", 2))
+```
+
+Un flottant, lui, est écrit en binaire avec un nombre fixe de chiffres, cinquante-deux
+après la virgule pour le type `float`. C'est là que `0.1` pose problème : son écriture
+binaire ne se termine jamais, donc elle est coupée. Le module `fractions` permet de voir
+exactement quel nombre la machine a gardé à la place de `0.1` :
+
+```python
+from fractions import Fraction
+
+print(Fraction(0.1))
+```
+
+Ce n'est pas `1/10`. C'est une fraction dont le dénominateur est une puissance de 2, la plus
+proche possible de `1/10`, et l'écart entre les deux est l'erreur que vous avez vue
+s'accumuler à l'exercice 2.1.
+
+!!! question "Exercice 6.1 : conversion en binaire, à la main"
+    Écrivez `vers_binaire(n)` qui renvoie l'écriture binaire d'un entier positif sous forme
+    de chaîne de caractères, **sans utiliser `bin`**. Indication : le reste de la division
+    par 2 donne le dernier chiffre, comme le reste par 10 donnait le chiffre des unités à
+    l'exercice 1.2.
+
+    **Résultat attendu :** `vers_binaire(37)` vaut `"100101"`, et `vers_binaire(0)` vaut
+    `"0"`.
+
+    ??? success "Corrigé"
+        ```python
+        def vers_binaire(n):
+            """Écriture binaire de l'entier positif n, sans le préfixe 0b."""
+            if n == 0:
+                return "0"
+            chiffres = ""
+            while n > 0:
+                chiffres = str(n % 2) + chiffres
+                n = n // 2
+            return chiffres
+
+        print(vers_binaire(37), vers_binaire(0), vers_binaire(1024))
+        print(all(vers_binaire(n) == bin(n)[2:] for n in range(2000)))
+        ```
+
+        La dernière ligne compare votre fonction à celle de Python sur deux mille valeurs.
+        C'est la manière rapide de tester une fonction dont on connaît une référence : on
+        ne relit pas le code, on le confronte.
+
+        Le cas `n = 0` est traité à part, comme à l'exercice 4.1 : la boucle ne ferait
+        aucun tour et renverrait une chaîne vide.
+
+!!! question "Exercice 6.2 : l'epsilon de la machine"
+    Le plus petit nombre `eps` tel que `1.0 + eps` soit différent de `1.0` s'appelle
+    l'epsilon machine. Trouvez-le en partant de `eps = 1.0` et en le divisant par 2 tant
+    que `1.0 + eps / 2` reste différent de `1.0`. Comparez à `sys.float_info.epsilon`.
+
+    **Résultat attendu :** environ `2.2e-16`, soit \( 2^{-52} \).
+
+    ??? success "Corrigé"
+        ```python
+        import sys
+
+        eps = 1.0
+        while 1.0 + eps / 2 != 1.0:
+            eps = eps / 2
+
+        print(eps)
+        print(sys.float_info.epsilon)
+        print(eps == 2 ** -52)
+        ```
+
+        Cinquante-deux chiffres binaires après la virgule, c'est environ seize chiffres
+        décimaux significatifs. Au delà, la machine ne voit plus la différence entre deux
+        nombres. Vérifiez : `1e15 + 1 == 1e15` est faux, mais `1e16 + 1 == 1e16` est
+        vrai. Un flottant ne peut pas représenter l'entier \( 10^{16} + 1 \), alors qu'un
+        `int` de Python le fait sans effort.
+
+### Étape 7. Quand une soustraction efface tout
+
+L'erreur d'arrondi sur un flottant est minuscule, de l'ordre de \( 10^{-16} \) en valeur
+relative. Il existe pourtant une opération qui la transforme en erreur énorme : soustraire
+deux nombres presque égaux. Le résultat est petit, mais son erreur est celle des grands
+nombres de départ, et elle devient dominante. On parle d'**élimination catastrophique**.
+
+L'exemple classique est la résolution de l'équation du second degré
+\( ax^{2} + bx + c = 0 \) par la formule que vous connaissez :
+
+\[ x = \frac{-b \pm \sqrt{b^{2} - 4ac}}{2a} \]
+
+!!! question "Exercice 7.1 : la formule du lycée en difficulté"
+    Écrivez `racines_naif(a, b, c)` qui applique la formule ci-dessus, et appliquez-la à
+    \( x^{2} - 10^{8}x + 1 = 0 \). Le produit des deux racines doit valoir \( c/a = 1 \) :
+    vérifiez-le.
+
+    **Résultat attendu :** la grande racine vaut `1e8`, mais la petite vaut environ
+    `7.45e-9` au lieu de `1e-8`, et le produit des racines vaut `0.745` au lieu de `1`.
+
+    ??? success "Corrigé"
+        ```python
+        import math
+
+        def racines_naif(a, b, c):
+            """Racines réelles de ax² + bx + c par la formule classique."""
+            delta = b * b - 4 * a * c
+            if delta < 0:
+                raise ValueError("pas de racine réelle")
+            r = math.sqrt(delta)
+            return (-b - r) / (2 * a), (-b + r) / (2 * a)
+
+        petite, grande = racines_naif(1.0, -1e8, 1.0)
+        print(petite, grande)
+        print("produit :", petite * grande, "attendu : 1")
+        ```
+
+        Une erreur de 25 % sur une racine, avec une formule mathématiquement exacte.
+        Ici \( b^{2} = 10^{16} \) et \( 4ac = 4 \) : la racine carrée du discriminant vaut
+        \( 10^{8} \) à \( 2 \times 10^{-8} \) près, et c'est cette toute petite
+        différence que la formule \( -b - \sqrt{\Delta} \) doit calculer. Elle est noyée
+        dans l'arrondi de \( \sqrt{\Delta} \), qui est de l'ordre de \( 10^{8} \times
+        10^{-16} = 10^{-8} \), le même ordre de grandeur que la réponse. Le résultat
+        n'a donc plus qu'un chiffre de vrai, et c'est encore de la chance.
+
+!!! question "Exercice 7.2 : la formule stable"
+    La grande racine, elle, est calculée correctement, car on **additionne** deux nombres
+    de même signe. Or le produit des racines vaut \( c/a \) : la petite racine s'obtient
+    donc par \( x_2 = c / (a\,x_1) \), sans aucune soustraction. Écrivez
+    `racines(a, b, c)` qui calcule la racine « sûre » par la formule, puis l'autre par le
+    produit, et comparez.
+
+    **Résultat attendu :** les deux racines `1e-08` et `1e8`, un produit égal à `1`, et
+    en chacune un résidu \( a x^{2} + bx + c \) nul à la précision des flottants, soit
+    de l'ordre de \( 10^{-16} \) fois la taille des termes en jeu.
+
+    ??? success "Corrigé"
+        ```python
+        def racines(a, b, c):
+            """Racines réelles de ax² + bx + c, sans élimination catastrophique."""
+            delta = b * b - 4 * a * c
+            if delta < 0:
+                raise ValueError("pas de racine réelle")
+            r = math.sqrt(delta)
+            # on choisit le signe qui additionne au lieu de soustraire
+            if b >= 0:
+                sure = (-b - r) / (2 * a)
+            else:
+                sure = (-b + r) / (2 * a)
+            autre = c / (a * sure)
+            return min(sure, autre), max(sure, autre)
+
+        petite, grande = racines(1.0, -1e8, 1.0)
+        print(petite, grande)
+        print("produit :", petite * grande)
+        for x in (petite, grande):
+            residu = x * x - 1e8 * x + 1
+            print(f"residu : {residu:.1e}, soit {residu / max(x * x, 1.0):.1e} en relatif")
+        ```
+
+        Le résidu de la grande racine vaut `1.0`, ce qui surprend avant qu'on regarde
+        les termes : \( x^{2} \) et \( 10^{8} x \) valent tous deux \( 10^{16} \), et un
+        écart de 1 sur \( 10^{16} \) est exactement l'epsilon machine de l'exercice
+        6.2. C'est pourquoi on juge un résidu **relativement** à la taille des nombres
+        qu'il compare, jamais dans l'absolu : encore la leçon de l'exercice 2.2.
+
+        La fonction fait strictement le même nombre d'opérations que la version naïve.
+        Elle ne coûte rien de plus, et elle est juste. C'est le résumé de tout ce TP : en
+        calcul numérique, deux formules mathématiquement équivalentes ne sont pas
+        équivalentes pour la machine, et savoir laquelle choisir est une compétence.
+
+!!! question "Exercice 7.3 : calculer exactement, quand c'est possible"
+    Le module `fractions` fait de l'arithmétique **exacte** sur les rationnels, sans aucun
+    arrondi. Refaites l'exercice 2.1 en additionnant mille fois `Fraction(1, 10)`.
+
+    **Résultat attendu :** exactement `100`, et `Fraction(1, 10) + Fraction(2, 10) ==
+    Fraction(3, 10)` vaut `True`.
+
+    ??? success "Corrigé"
+        ```python
+        total = Fraction(0)
+        for _ in range(1000):
+            total = total + Fraction(1, 10)
+        print(total, total == 100)
+        print(Fraction(1, 10) + Fraction(2, 10) == Fraction(3, 10))
+        ```
+
+        Alors pourquoi ne pas toujours calculer ainsi ? Parce que c'est lent, cent à
+        mille fois plus que sur des flottants, et parce que les dénominateurs grossissent
+        à chaque opération jusqu'à devenir ingérables. Les fractions exactes servent quand
+        le résultat doit être irréprochable et que les données sont peu nombreuses : vous
+        les retrouverez au TP4, pour résoudre exactement un système que les flottants
+        massacrent.
+
+!!! tip "Pour aller plus loin : le module decimal"
+    Le module `decimal` calcule en base 10 avec un nombre de chiffres que vous choisissez.
+    Essayez `from decimal import Decimal, getcontext`, puis `getcontext().prec = 50` et
+    `Decimal(1) / Decimal(7)`. C'est ainsi que les logiciels de comptabilité manipulent
+    les montants, et c'est la réponse correcte à la remarque de l'exercice 2.1 sur les
+    logiciels bancaires.
+
+---
+
 ## Ce qu'il faut retenir
 
 Les entiers de Python sont exacts et sans limite de taille ; les flottants sont approchés,
 et deux flottants ne se comparent jamais avec `==`. Une boucle `for` parcourt une suite
 connue d'avance, une boucle `while` s'arrête sur une condition. Une fonction renvoie avec
-`return` et se documente en une phrase. Et un critère d'arrêt sérieux est relatif, pas
-absolu.
+`return` et se documente en une phrase. Un critère d'arrêt sérieux est relatif, pas
+absolu. Et deux formules égales sur le papier ne le sont pas pour la machine dès qu'une
+soustraction efface les chiffres significatifs.
 
+## Auto-évaluation
+
+Avant de passer au TP2, vous devez pouvoir, sans regarder le corrigé :
+
+- [ ] dire ce que valent `17 // 5`, `17 % 5` et `17 / 5`, et de quel type est chacun ;
+- [ ] expliquer en deux phrases pourquoi `0.1 + 0.2 == 0.3` est faux ;
+- [ ] écrire une boucle `for` qui affiche les carrés de 1 à 10, et la même en `while` ;
+- [ ] écrire une fonction avec une valeur par défaut, et la documenter ;
+- [ ] expliquer la différence entre un critère d'arrêt absolu et un critère relatif.
+
+[Le QCM du TP1](qcm/qcm_tp1.html){ .md-button target=_blank }
 [Passer au TP2](tp2-arithmetique.md){ .md-button .md-button--primary }

@@ -23,6 +23,7 @@ PAGES = {
     "tp3": "tp3-polynomes-fonctions.md",
     "tp4": "tp4-matrices-gauss.md",
     "tp5": "tp5-synthese.md",
+    "tp6": "tp6-geometrie-plan.md",
 }
 
 DEBUT_EXERCICE = re.compile(r'^!!! question "(?P<titre>[^"]+)"\s*$', re.MULTILINE)

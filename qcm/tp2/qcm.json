@@ -251,6 +251,68 @@
           "justification": "La mesure du temps renseigne sur le coût, pas sur la justesse."
         }
       ]
+    },
+    {
+      "theme": "Récurrence",
+      "difficulte": "moyen",
+      "enonce": "Pourquoi la version récursive naïve de Fibonacci est-elle exponentielle ?",
+      "options": [
+        {
+          "texte": "Chaque appel en déclenche deux, et les mêmes valeurs sont recalculées des centaines de milliers de fois",
+          "correcte": true,
+          "justification": "`F(1)` est recalculé exactement `F(30)` fois, soit 832 040 fois, pour obtenir `F(30)`."
+        },
+        {
+          "texte": "Parce que les entiers de Fibonacci grandissent exponentiellement",
+          "correcte": false,
+          "justification": "La taille des nombres n'est pas en cause : la version itérative calcule `F(10 000)` en quelques millisecondes."
+        },
+        {
+          "texte": "Parce que la récurrence est interdite en Python",
+          "correcte": false,
+          "justification": "La récurrence est autorisée, et Euclide étendu l'emploie efficacement."
+        },
+        {
+          "texte": "Parce que `if n < 2` est évalué à chaque appel",
+          "correcte": false,
+          "justification": "Un test par appel est négligeable ; c'est le nombre d'appels qui explose."
+        }
+      ],
+      "id": 9,
+      "type": "unique",
+      "source_fichier": "tp2-arithmetique.md",
+      "points": 1
+    },
+    {
+      "theme": "Arithmétique modulaire",
+      "difficulte": "moyen",
+      "enonce": "Combien de tours de boucle fait l'exponentiation rapide pour calculer `7 ** 10_000_000 % 1_000_003` ?",
+      "options": [
+        {
+          "texte": "Environ 24, le nombre de chiffres binaires de l'exposant",
+          "correcte": true,
+          "justification": "On divise l'exposant par 2 à chaque tour : `2 ** 24` dépasse dix millions."
+        },
+        {
+          "texte": "Dix millions, un par unité de l'exposant",
+          "correcte": false,
+          "justification": "C'est la version naïve, qui met une seconde environ."
+        },
+        {
+          "texte": "Environ mille, la racine carrée de l'exposant",
+          "correcte": false,
+          "justification": "La racine carrée intervient dans le test de primalité, pas ici."
+        },
+        {
+          "texte": "Un seul, grâce à `pow`",
+          "correcte": false,
+          "justification": "`pow(a, e, n)` fait lui aussi une boucle sur les bits de l'exposant, cachée dans du code compilé."
+        }
+      ],
+      "id": 10,
+      "type": "unique",
+      "source_fichier": "tp2-arithmetique.md",
+      "points": 1
     }
   ]
 }

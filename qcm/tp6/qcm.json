@@ -1,0 +1,158 @@
+{
+  "titre": "QCM du TP6 : Géométrie du plan",
+  "source": "docs/outils-fondamentaux/tp6-geometrie-plan.md",
+  "langue": "fr",
+  "consignes": "Une seule bonne réponse par question, sauf mention contraire. Vous pouvez consulter le mémento.",
+  "questions": [
+    {
+      "id": 1,
+      "type": "unique",
+      "difficulte": "facile",
+      "theme": "Vecteurs",
+      "source_fichier": "tp6-geometrie-plan.md",
+      "points": 1,
+      "enonce": "Que vaut le produit scalaire de `(1, 2)` et `(3, 4)` ?",
+      "options": [
+        {"texte": "`11`", "correcte": true, "justification": "`1 * 3 + 2 * 4 = 11`."},
+        {"texte": "`-2`", "correcte": false, "justification": "`1 * 4 - 2 * 3 = -2` est le déterminant, pas le produit scalaire."},
+        {"texte": "`(3, 8)`", "correcte": false, "justification": "C'est le produit terme à terme ; le produit scalaire est un nombre, pas un vecteur."},
+        {"texte": "`10`", "correcte": false, "justification": "Erreur de calcul : `1 * 3 + 2 * 4` vaut 11."}
+      ]
+    },
+    {
+      "id": 2,
+      "type": "unique",
+      "difficulte": "facile",
+      "theme": "Vecteurs",
+      "source_fichier": "tp6-geometrie-plan.md",
+      "points": 1,
+      "enonce": "Pourquoi le corrigé écrit-il `math.hypot(x, y)` plutôt que `math.sqrt(x * x + y * y)` pour la norme ?",
+      "options": [
+        {"texte": "Parce que les carrés `x * x + y * y` peuvent déborder vers l'infini pour de grandes coordonnées, alors que `hypot` évite ce débordement", "correcte": true, "justification": "Au delà de `1e154`, le carré d'un flottant vaut `inf` ; `hypot` calcule la norme sans passer par les carrés."},
+        {"texte": "Parce que `math.sqrt` n'accepte pas les sommes", "correcte": false, "justification": "`math.sqrt` accepte n'importe quel flottant positif."},
+        {"texte": "Parce que `hypot` est exact alors que `sqrt` est approché", "correcte": false, "justification": "Les deux renvoient des flottants approchés ; la différence est le débordement, pas l'exactitude."},
+        {"texte": "Uniquement pour écrire moins de caractères", "correcte": false, "justification": "La raison est numérique, pas typographique."}
+      ]
+    },
+    {
+      "id": 3,
+      "type": "unique",
+      "difficulte": "moyen",
+      "theme": "Déterminant",
+      "source_fichier": "tp6-geometrie-plan.md",
+      "points": 1,
+      "enonce": "Que représente la valeur absolue du déterminant `u[0] * v[1] - u[1] * v[0]` de deux vecteurs du plan ?",
+      "options": [
+        {"texte": "L'aire du parallélogramme construit sur les deux vecteurs", "correcte": true, "justification": "C'est l'interprétation géométrique du déterminant 2 x 2, d'où découle la formule du lacet."},
+        {"texte": "La longueur de la somme des deux vecteurs", "correcte": false, "justification": "La longueur d'un vecteur se calcule avec la norme, pas avec le déterminant."},
+        {"texte": "Le cosinus de l'angle entre les deux vecteurs", "correcte": false, "justification": "Le cosinus vient du produit scalaire divisé par les normes."},
+        {"texte": "La distance entre les deux extrémités des vecteurs", "correcte": false, "justification": "Une distance est une norme de différence, pas un déterminant."}
+      ]
+    },
+    {
+      "id": 4,
+      "type": "unique",
+      "difficulte": "moyen",
+      "theme": "Déterminant",
+      "source_fichier": "tp6-geometrie-plan.md",
+      "points": 1,
+      "enonce": "`orientation(A, B, C)` renvoie `1`. Qu'en déduit-on ?",
+      "options": [
+        {"texte": "Le trajet A puis B puis C tourne à gauche, dans le sens inverse des aiguilles d'une montre", "correcte": true, "justification": "Un déterminant strictement positif de AB et AC signifie une rotation dans le sens direct."},
+        {"texte": "Le trajet tourne à droite", "correcte": false, "justification": "Tourner à droite correspond à un déterminant négatif, donc à `-1`."},
+        {"texte": "Les trois points sont alignés", "correcte": false, "justification": "Trois points alignés donnent un déterminant nul, donc `0`."},
+        {"texte": "C est plus loin de A que B", "correcte": false, "justification": "L'orientation ne dit rien des distances."}
+      ]
+    },
+    {
+      "id": 5,
+      "type": "unique",
+      "difficulte": "moyen",
+      "theme": "Aire",
+      "source_fichier": "tp6-geometrie-plan.md",
+      "points": 1,
+      "enonce": "Dans la formule du lacet, à quoi sert l'indice `(i + 1) % n` ?",
+      "options": [
+        {"texte": "À relier le dernier sommet au premier, pour fermer le polygone", "correcte": true, "justification": "Quand `i` vaut `n - 1`, `(i + 1) % n` vaut `0` : le côté qui suit le dernier sommet revient au premier."},
+        {"texte": "À éviter une division par zéro", "correcte": false, "justification": "Il n'y a aucune division dans la formule du lacet."},
+        {"texte": "À trier les sommets dans le sens direct", "correcte": false, "justification": "La formule ne trie rien ; elle parcourt les sommets dans l'ordre donné."},
+        {"texte": "À ignorer le dernier sommet, qui est un doublon du premier", "correcte": false, "justification": "Au contraire, le dernier sommet est bien pris en compte, et relié au premier."}
+      ]
+    },
+    {
+      "id": 6,
+      "type": "unique",
+      "difficulte": "facile",
+      "theme": "Aire",
+      "source_fichier": "tp6-geometrie-plan.md",
+      "points": 1,
+      "enonce": "Quelle est l'aire de la maison `[(0, 0), (2, 0), (2, 1.5), (1, 2.5), (0, 1.5)]` ?",
+      "options": [
+        {"texte": "`4.0`", "correcte": true, "justification": "Un rectangle de 2 par 1,5, soit 3, surmonté d'un triangle de base 2 et de hauteur 1, soit 1."},
+        {"texte": "`5.0`", "correcte": false, "justification": "C'est l'aire du rectangle englobant 2 par 2,5, pas celle de la maison."},
+        {"texte": "`3.0`", "correcte": false, "justification": "C'est l'aire du rectangle seul, sans le toit."},
+        {"texte": "`4.5`", "correcte": false, "justification": "Le toit est un triangle, d'aire base fois hauteur sur 2, soit 1 et non 1,5."}
+      ]
+    },
+    {
+      "id": 7,
+      "type": "unique",
+      "difficulte": "difficile",
+      "theme": "Point dans un polygone",
+      "source_fichier": "tp6-geometrie-plan.md",
+      "points": 1,
+      "enonce": "Dans le lancer de rayon, comment décide-t-on qu'un point est à l'intérieur du polygone ?",
+      "options": [
+        {"texte": "Le rayon horizontal partant du point traverse un nombre impair de côtés", "correcte": true, "justification": "Chaque traversée fait passer de l'intérieur à l'extérieur ou l'inverse ; un nombre impair de traversées signifie qu'on était dedans au départ."},
+        {"texte": "Le point est plus proche du centre du polygone que tous les sommets", "correcte": false, "justification": "Ce critère est faux pour tout polygone non convexe, et même pour un rectangle allongé."},
+        {"texte": "Le déterminant avec chaque côté est positif", "correcte": false, "justification": "Ce critère ne fonctionne que pour un polygone convexe parcouru dans le sens direct, pas pour la maison ni pour l'étoile."},
+        {"texte": "L'aire du polygone diminue quand on y ajoute le point", "correcte": false, "justification": "Ajouter un sommet ne fait pas diminuer une aire de manière fiable, et ce n'est pas l'algorithme du TP."}
+      ]
+    },
+    {
+      "id": 8,
+      "type": "unique",
+      "difficulte": "difficile",
+      "theme": "Point dans un polygone",
+      "source_fichier": "tp6-geometrie-plan.md",
+      "points": 1,
+      "enonce": "Pourquoi la condition d'encadrement du lancer de rayon s'écrit-elle `(y1 > y) != (y2 > y)`, avec une inégalité stricte, plutôt que `y1 <= y <= y2 or y2 <= y <= y1` ?",
+      "options": [
+        {"texte": "Pour qu'un rayon passant exactement par un sommet ne compte ce sommet que pour un seul des deux côtés qui s'y rejoignent", "correcte": true, "justification": "Avec des inégalités larges, le sommet serait compté deux fois et le résultat basculerait à tort."},
+        {"texte": "Parce que `!=` est plus rapide que `or`", "correcte": false, "justification": "La vitesse n'est pas en cause ; c'est un problème de cas limite."},
+        {"texte": "Parce que Python n'accepte pas les doubles inégalités", "correcte": false, "justification": "`a <= x <= b` est parfaitement valide en Python."},
+        {"texte": "Pour exclure les polygones non convexes", "correcte": false, "justification": "Le lancer de rayon fonctionne justement sur les polygones non convexes."}
+      ]
+    },
+    {
+      "id": 9,
+      "type": "unique",
+      "difficulte": "moyen",
+      "theme": "Monte-Carlo",
+      "source_fichier": "tp6-geometrie-plan.md",
+      "points": 1,
+      "enonce": "La méthode de Monte-Carlo estime l'aire de la maison avec 200 000 points et obtient deux chiffres justes. Combien de points faut-il, en ordre de grandeur, pour en gagner un de plus ?",
+      "options": [
+        {"texte": "Cent fois plus, soit 20 millions", "correcte": true, "justification": "L'erreur décroît comme un sur racine de N : diviser l'erreur par 10 exige de multiplier N par 100."},
+        {"texte": "Dix fois plus, soit 2 millions", "correcte": false, "justification": "Ce serait vrai si l'erreur décroissait comme un sur N ; elle ne décroît que comme un sur racine de N."},
+        {"texte": "Deux fois plus", "correcte": false, "justification": "Doubler N ne divise l'erreur que par racine de 2, soit 1,4."},
+        {"texte": "Le même nombre, en changeant la graine", "correcte": false, "justification": "Changer la graine change le résultat, pas sa précision moyenne."}
+      ]
+    },
+    {
+      "id": 10,
+      "type": "unique",
+      "difficulte": "moyen",
+      "theme": "Flottants",
+      "source_fichier": "tp6-geometrie-plan.md",
+      "points": 1,
+      "enonce": "Pourquoi le corrigé de `angle` écrit-il `cosinus = max(-1.0, min(1.0, cosinus))` avant d'appeler `math.acos` ?",
+      "options": [
+        {"texte": "Parce que, par arrondi, le quotient peut légèrement dépasser 1 pour deux vecteurs parallèles, et `acos` refuserait alors de répondre", "correcte": true, "justification": "Le TP montre qu'on peut obtenir `1.0000000000000002`, hors du domaine de `acos`."},
+        {"texte": "Parce que `acos` ne connaît que les angles aigus", "correcte": false, "justification": "`acos` renvoie un angle entre 0 et pi, aigu ou obtus."},
+        {"texte": "Pour convertir le résultat en degrés", "correcte": false, "justification": "La conversion en degrés est faite par `math.degrees`, après `acos`."},
+        {"texte": "Pour que l'angle soit toujours positif", "correcte": false, "justification": "`acos` renvoie déjà une valeur positive ; le problème est le domaine d'entrée, pas le signe de sortie."}
+      ]
+    }
+  ]
+}

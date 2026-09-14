@@ -4,8 +4,11 @@ Supports de travaux pratiques de Christophe Guyeux, département informatique de
 Franche-Comté. Site public, sans compte ni VPN : <https://cours.gclab.fr>
 
 Contenu actuel : la ressource R1.07 « outils mathématiques fondamentaux » du BUT
-informatique, semestre 1, soit cinq TP d'introduction à Python par les mathématiques.
-Les autres cours seront réintégrés section par section.
+informatique, semestre 1, soit cinq TP d'introduction à Python par les mathématiques, une
+sixième séance de prolongement (géométrie du plan), un mémento et un QCM par TP.
+Chaque TP porte une partie « Entraînement et approfondissement » hors séance mais au
+programme, et une liste d'auto-évaluation. Les autres cours seront réintégrés section par
+section.
 
 ## Organisation
 
@@ -14,7 +17,8 @@ Les autres cours seront réintégrés section par section.
 | `docs/` | les pages, en Markdown ; source unique du contenu |
 | `notebooks/` | carnets JupyterLite, **générés** depuis `docs/`, ne pas éditer à la main |
 | `vendor/` | distribution Pyodide réduite (noyau, numpy, matplotlib), embarquée dans l'image |
-| `tools/generer_carnets.py` | fabrique les carnets à partir des énoncés |
+| `tools/generer_carnets.py` | fabrique les carnets à partir des énoncés (dictionnaire `PAGES` à compléter pour tout nouveau TP) |
+| `qcm/tpN/qcm.json` | pivot de chaque QCM ; rendu HTML dans `docs/outils-fondamentaux/qcm/` par le skill `qcm-generator` |
 | `tests/test_corriges.py` | exécute tout le code des corrigés du site |
 | `Dockerfile`, `nginx.conf` | image de production : MkDocs + JupyterLite, servis par nginx |
 | `deploy.sh` | construction, envoi et mise en ligne sur Scaleway |
@@ -30,6 +34,19 @@ make servir       # sert le site sur http://127.0.0.1:8899
 Le code des corrigés est **exécuté** à chaque construction : un corrigé faux fait échouer le
 build. Un bloc volontairement incorrect dans un énoncé se marque
 ` ```python title="..." `, ce qui l'exclut de l'exécution.
+
+Le test prouve que le code tourne, pas que les valeurs annoncées dans les énoncés sont les
+bonnes. Après toute modification, relire les sorties réelles :
+
+```
+.venv/bin/python -c "import sys; sys.path.insert(0, 'tests'); import test_corriges as t; [print('==', p.name), print(t.sorties(p))] for p in t.pages() if t.blocs_de(p)]"
+```
+
+Régénérer un QCM après avoir modifié son pivot :
+
+```
+python3 ~/.claude/skills/qcm-generator/scripts/build_qcm.py qcm/tp1/qcm.json --formats html --outdir docs/outils-fondamentaux/qcm --basename qcm_tp1
+```
 
 ## Mettre en ligne
 

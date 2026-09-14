@@ -57,6 +57,7 @@ nav:
       - TP3. Polynômes et fonctions: outils-fondamentaux/tp3-polynomes-fonctions.md
       - TP4. Matrices et systèmes: outils-fondamentaux/tp4-matrices-gauss.md
       - TP5. Synthèse: outils-fondamentaux/tp5-synthese.md
+      - TP6. Géométrie du plan: outils-fondamentaux/tp6-geometrie-plan.md
       - Mémento Python: outils-fondamentaux/memento.md
   - À propos: a-propos.md
 
@@ -74,6 +75,8 @@ markdown_extensions:
       toc_depth: 3
   - pymdownx.details
   - pymdownx.superfences
+  - pymdownx.tasklist:
+      custom_checkbox: true
   - pymdownx.tabbed:
       alternate_style: true
       slugify: !!python/object/apply:pymdownx.slugs.slugify {kwds: {case: lower}}

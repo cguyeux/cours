@@ -251,6 +251,68 @@
           "justification": "Elle n'utilise que les signes de la fonction."
         }
       ]
+    },
+    {
+      "theme": "Dérivation numérique",
+      "difficulte": "difficile",
+      "enonce": "Quand on calcule `(f(x + h) - f(x)) / h` avec un `h` de plus en plus petit, pourquoi l'erreur finit-elle par remonter ?",
+      "options": [
+        {
+          "texte": "Parce que la soustraction de deux valeurs presque égales perd des chiffres significatifs, avec une erreur d'arrondi de l'ordre de `1e-16 / h`",
+          "correcte": true,
+          "justification": "Deux erreurs se disputent le résultat : celle de méthode décroît avec `h`, celle d'arrondi croît quand `h` diminue."
+        },
+        {
+          "texte": "Parce que `f` n'est plus dérivable pour de petits `h`",
+          "correcte": false,
+          "justification": "La dérivabilité de `f` ne dépend pas du pas choisi."
+        },
+        {
+          "texte": "Parce que Python arrondit `h` à zéro en dessous de `1e-8`",
+          "correcte": false,
+          "justification": "`1e-12` est parfaitement représentable ; le problème est la soustraction, pas `h`."
+        },
+        {
+          "texte": "Elle ne remonte pas : plus `h` est petit, meilleure est l'approximation",
+          "correcte": false,
+          "justification": "C'est vrai en mathématiques et faux sur une machine, le TP le mesure."
+        }
+      ],
+      "id": 9,
+      "type": "unique",
+      "source_fichier": "tp3-polynomes-fonctions.md",
+      "points": 1
+    },
+    {
+      "theme": "Intégration numérique",
+      "difficulte": "moyen",
+      "enonce": "Quand on multiplie le nombre de tranches par 10, comment évolue l'erreur de la méthode des trapèzes ?",
+      "options": [
+        {
+          "texte": "Elle est divisée par 100 : la méthode est d'ordre 2",
+          "correcte": true,
+          "justification": "Mesuré sur l'intégrale de `x²` : `1.7e-3`, `1.7e-5`, `1.7e-7` pour `n` valant 10, 100, 1000."
+        },
+        {
+          "texte": "Elle est divisée par 10 : la méthode est d'ordre 1",
+          "correcte": false,
+          "justification": "C'est le comportement des rectangles."
+        },
+        {
+          "texte": "Elle est divisée par 10 000 : la méthode est d'ordre 4",
+          "correcte": false,
+          "justification": "C'est le comportement de Simpson."
+        },
+        {
+          "texte": "Elle ne change pas",
+          "correcte": false,
+          "justification": "Toutes les méthodes vues convergent quand `n` augmente."
+        }
+      ],
+      "id": 10,
+      "type": "unique",
+      "source_fichier": "tp3-polynomes-fonctions.md",
+      "points": 1
     }
   ]
 }
