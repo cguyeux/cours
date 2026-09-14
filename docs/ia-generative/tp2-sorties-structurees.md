@@ -399,4 +399,4 @@ Avant de continuer, vous devez pouvoir, sans regarder le corrigé :
 - [ ] écrire un schéma avec un champ qui est lui-même une liste d'un autre schéma.
 
 [Le QCM du TP2](qcm/qcm_tp2.html){ .md-button target=_blank }
-[Retour au module IA générative](index.md){ .md-button .md-button--primary }
+[Passer au TP3](tp3-rag-vecteurs.md){ .md-button .md-button--primary }

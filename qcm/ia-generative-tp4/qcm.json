@@ -1,0 +1,349 @@
+{
+  "titre": "QCM — TP4 : Orchestration d'agents LangChain",
+  "source": "site/docs/ia-generative/tp4-agents.md",
+  "langue": "fr",
+  "consignes": "Cochez la ou les bonnes réponses. Sauf mention « plusieurs réponses possibles », une seule réponse est correcte.",
+  "questions": [
+    {
+      "id": 1,
+      "enonce": "Selon le rappel de l'étape 0, qu'est-ce qu'un agent piloté par un LLM ?",
+      "type": "unique",
+      "difficulte": "facile",
+      "theme": "Notion d'agent",
+      "source_fichier": "tp4-agents.md",
+      "points": 1,
+      "options": [
+        {
+          "texte": "Un système autonome propulsé par un modèle de langage qui reçoit des données en entrée et décide des actions à entreprendre en fonction de son objectif et des outils disponibles.",
+          "correcte": true,
+          "justification": "Définition donnée mot pour mot à l'étape 0 : « Un agent est un système autonome propulsé par un modèle de langage qui reçoit des données en entrée et décide des actions à entreprendre... »."
+        },
+        {
+          "texte": "Un modèle de langage entraîné spécifiquement pour ne jamais faire appel à des outils externes.",
+          "correcte": false,
+          "justification": "Faux : l'agent combine au contraire l'exécution par un ou plusieurs outils ; les outils sont centraux dans tout le TP."
+        },
+        {
+          "texte": "Une base de données vectorielle utilisée uniquement pour le RAG.",
+          "correcte": false,
+          "justification": "Faux : le vector store relève du RAG évoqué seulement dans « Pour aller plus loin », ce n'est pas la définition d'un agent."
+        },
+        {
+          "texte": "Un simple script de formatage et de linting du code.",
+          "correcte": false,
+          "justification": "Faux : le formatage/linting renvoie à pre-commit (exercice 1.2), sans rapport avec la définition d'un agent."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "enonce": "D'après l'étape 0, quelles sont les composantes que combine un agent ?",
+      "type": "multiple",
+      "difficulte": "moyen",
+      "theme": "Notion d'agent",
+      "source_fichier": "tp4-agents.md",
+      "points": 1,
+      "options": [
+        {
+          "texte": "La prise de décision : le LLM planifie les actions.",
+          "correcte": true,
+          "justification": "Listé à l'étape 0 : « la prise de décision (le LLM planifie les actions) »."
+        },
+        {
+          "texte": "L'exécution : un ou plusieurs outils réalisent l'action demandée.",
+          "correcte": true,
+          "justification": "Listé à l'étape 0 : « l'exécution (un ou plusieurs outils réalisent l'action demandée) »."
+        },
+        {
+          "texte": "La boucle de rétroaction : l'exécuteur transmet les résultats au LLM pour la suite du raisonnement.",
+          "correcte": true,
+          "justification": "Listé à l'étape 0 : « la boucle de rétroaction (l'exécuteur d'agent transmet les résultats au LLM...) »."
+        },
+        {
+          "texte": "Le réentraînement automatique des poids du modèle à chaque requête.",
+          "correcte": false,
+          "justification": "Faux : aucun réentraînement n'est mentionné ; un agent orchestre un LLM existant, il ne le ré-entraîne pas."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "enonce": "Quel outil LangChain est utilisé à l'étape 2 pour interroger Wikipedia ?",
+      "type": "unique",
+      "difficulte": "facile",
+      "theme": "Outils — Wikipedia",
+      "source_fichier": "tp4-agents.md",
+      "points": 1,
+      "options": [
+        {
+          "texte": "`WikipediaQueryRun`, instancié avec un `WikipediaAPIWrapper`.",
+          "correcte": true,
+          "justification": "À l'étape 2 : `wikipedia = WikipediaQueryRun(api_wrapper=WikipediaAPIWrapper())`."
+        },
+        {
+          "texte": "`TavilySearchResults`.",
+          "correcte": false,
+          "justification": "Faux : `TavilySearchResults` est l'outil de recherche web des étapes 3 et 4, pas celui de Wikipedia."
+        },
+        {
+          "texte": "`PythonREPLTool`.",
+          "correcte": false,
+          "justification": "Faux : `PythonREPLTool` est l'outil d'exécution de code de l'étape 6."
+        },
+        {
+          "texte": "`load_tools([\"arxiv\"])`.",
+          "correcte": false,
+          "justification": "Faux : `load_tools([\"arxiv\"])` charge l'outil arXiv de l'étape 5, pas Wikipedia."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "enonce": "Dans le sigle « agent ReAct » introduit à l'étape 3, que signifie ReAct ?",
+      "type": "unique",
+      "difficulte": "facile",
+      "theme": "Agent ReAct",
+      "source_fichier": "tp4-agents.md",
+      "points": 1,
+      "options": [
+        {
+          "texte": "Reasoning + Acting (raisonnement et action).",
+          "correcte": true,
+          "justification": "L'étape 3 précise explicitement : « un agent ReAct (Reasoning + Acting) »."
+        },
+        {
+          "texte": "Reactive Architecture, une bibliothèque JavaScript.",
+          "correcte": false,
+          "justification": "Faux : aucun rapport avec le framework JavaScript React ; ReAct désigne ici Reasoning + Acting."
+        },
+        {
+          "texte": "Retrieval + Activation, une variante du RAG.",
+          "correcte": false,
+          "justification": "Faux : invention ; le RAG n'est évoqué que dans « Pour aller plus loin », et ReAct signifie Reasoning + Acting."
+        },
+        {
+          "texte": "Recursive Action, un mode d'auto-appel illimité de l'agent.",
+          "correcte": false,
+          "justification": "Faux : ce terme n'apparaît pas dans le TP ; ReAct = Reasoning + Acting."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "enonce": "À l'étape 3, comment l'agent ReAct est-il assemblé puis exécuté ?",
+      "type": "unique",
+      "difficulte": "moyen",
+      "theme": "Construction d'agent ReAct",
+      "source_fichier": "tp4-agents.md",
+      "points": 1,
+      "options": [
+        {
+          "texte": "On crée l'agent avec `create_react_agent(llm, tools, prompt)`, puis on l'enveloppe dans un `AgentExecutor(agent=agent, tools=tools, verbose=True)`.",
+          "correcte": true,
+          "justification": "Code de l'étape 3 : `agent = create_react_agent(llm, tools, prompt)` puis `agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)`."
+        },
+        {
+          "texte": "On appelle directement `llm.invoke(...)` sans passer par un exécuteur.",
+          "correcte": false,
+          "justification": "Faux : c'est l'`AgentExecutor` qui pilote la boucle d'actions ; un appel direct au LLM ne donne pas un agent."
+        },
+        {
+          "texte": "On utilise `create_openai_functions_agent` avec le template `langchain-ai/openai-functions-template`.",
+          "correcte": false,
+          "justification": "Faux : cette fonction et ce template sont ceux de l'étape 6 (agent Python REPL), pas de l'étape 3."
+        },
+        {
+          "texte": "On charge l'agent uniquement via `load_tools` sans construire de prompt.",
+          "correcte": false,
+          "justification": "Faux : `load_tools` charge des outils ; il faut tout de même un prompt (ici récupéré via `hub.pull`) et un agent."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "enonce": "Aux étapes 3 et 4, quel élément distingue principalement la configuration de l'agent Mistral de celle de l'agent OpenAI ?",
+      "type": "unique",
+      "difficulte": "moyen",
+      "theme": "Comparaison de fournisseurs LLM",
+      "source_fichier": "tp4-agents.md",
+      "points": 1,
+      "options": [
+        {
+          "texte": "Le LLM (`ChatMistralAI(model=\"mistral-large-latest\")` vs `ChatOpenAI(model_name=\"gpt-4.1\")`) et le prompt tiré du hub (`amalnuaimi/react-mistral` vs `hwchase17/react`).",
+          "correcte": true,
+          "justification": "L'étape 3 utilise `ChatMistralAI` avec `hub.pull(\"amalnuaimi/react-mistral\")` ; l'étape 4 utilise `ChatOpenAI(model_name=\"gpt-4.1\")` avec `hub.pull(\"hwchase17/react\")`."
+        },
+        {
+          "texte": "L'étape 4 abandonne complètement l'outil Tavily au profit d'arXiv.",
+          "correcte": false,
+          "justification": "Faux : les deux étapes utilisent `TavilySearchResults(max_results=2)` ; arXiv n'apparaît qu'à l'étape 5."
+        },
+        {
+          "texte": "Seule la version Mistral utilise un `AgentExecutor` ; la version OpenAI s'en passe.",
+          "correcte": false,
+          "justification": "Faux : les deux étapes construisent un `AgentExecutor`."
+        },
+        {
+          "texte": "La version OpenAI fixe `temperature=0` alors que la version Mistral ne fixe aucune température.",
+          "correcte": false,
+          "justification": "Faux : c'est l'inverse : `ChatMistralAI(..., temperature=0)` à l'étape 3, et aucune température explicite dans l'extrait de l'étape 4."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "enonce": "À l'étape 5, comment l'outil arXiv est-il mis à disposition de l'agent ?",
+      "type": "unique",
+      "difficulte": "facile",
+      "theme": "Outils — arXiv",
+      "source_fichier": "tp4-agents.md",
+      "points": 1,
+      "options": [
+        {
+          "texte": "Via `load_tools([\"arxiv\"])`.",
+          "correcte": true,
+          "justification": "Code de l'étape 5 : `tools = load_tools([\"arxiv\"])`."
+        },
+        {
+          "texte": "Via `WikipediaQueryRun(api_wrapper=...)`.",
+          "correcte": false,
+          "justification": "Faux : c'est l'outil Wikipedia de l'étape 2."
+        },
+        {
+          "texte": "Via le décorateur `@tool` appliqué à une fonction `arxiv()`.",
+          "correcte": false,
+          "justification": "Faux : le décorateur `@tool` sert à créer ses propres outils à l'étape 8, pas à charger arXiv."
+        },
+        {
+          "texte": "Via `TavilySearchResults(max_results=2)`.",
+          "correcte": false,
+          "justification": "Faux : Tavily est l'outil de recherche web généraliste, distinct de l'outil arXiv."
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "enonce": "À l'étape 6, quel type d'agent est construit pour exécuter du code Python avec le `PythonREPLTool` ?",
+      "type": "unique",
+      "difficulte": "moyen",
+      "theme": "Agent développeur — Python REPL",
+      "source_fichier": "tp4-agents.md",
+      "points": 1,
+      "options": [
+        {
+          "texte": "Un agent de type fonctions OpenAI, créé avec `create_openai_functions_agent`, à partir du template `langchain-ai/openai-functions-template` complété par des `instructions`.",
+          "correcte": true,
+          "justification": "Étape 6 : `base_prompt = hub.pull(\"langchain-ai/openai-functions-template\")` puis `agent = create_openai_functions_agent(ChatOpenAI(temperature=0), tools, prompt)`."
+        },
+        {
+          "texte": "Un agent ReAct créé avec `create_react_agent` et le prompt `hwchase17/react`.",
+          "correcte": false,
+          "justification": "Faux : `create_react_agent` est utilisé aux étapes 3, 4, 5 et 7, mais l'étape 6 emploie `create_openai_functions_agent`."
+        },
+        {
+          "texte": "Un agent de type tool calling créé avec `create_tool_calling_agent`.",
+          "correcte": false,
+          "justification": "Faux : `create_tool_calling_agent` est utilisé à l'étape 8 pour les outils maison, pas à l'étape 6."
+        },
+        {
+          "texte": "Aucun agent : on appelle `PythonREPLTool().run(...)` directement.",
+          "correcte": false,
+          "justification": "Faux : l'étape 6 construit bien un agent et un `AgentExecutor` autour de l'outil."
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "enonce": "À l'étape 7, comment l'agent est-il rendu robuste aux erreurs d'analyse de la sortie du LLM, et quels outils combine-t-il ?",
+      "type": "unique",
+      "difficulte": "moyen",
+      "theme": "Combinaison d'outils et gestion d'erreurs",
+      "source_fichier": "tp4-agents.md",
+      "points": 1,
+      "options": [
+        {
+          "texte": "On passe `handle_parsing_errors=True` à l'`AgentExecutor`, qui combine les outils `llm-math` et `wikipedia` chargés via `load_tools`.",
+          "correcte": true,
+          "justification": "Étape 7 : `tools = load_tools([\"llm-math\", \"wikipedia\"], llm=llm)` et `AgentExecutor(..., handle_parsing_errors=True, verbose=True)`. L'exercice 7.2 invite à désactiver ce champ pour constater l'erreur."
+        },
+        {
+          "texte": "On passe `return_intermediate_steps=True`, qui combine `arxiv` et `tavily`.",
+          "correcte": false,
+          "justification": "Faux : `return_intermediate_steps` concerne l'inspection des étapes (exercice 4.1) ; les outils de l'étape 7 sont `llm-math` et `wikipedia`."
+        },
+        {
+          "texte": "On fixe `temperature=0` sur le LLM, ce qui suffit à éviter toute erreur d'analyse.",
+          "correcte": false,
+          "justification": "Faux : la température ne traite pas les erreurs de parsing ; c'est `handle_parsing_errors` qui le fait."
+        },
+        {
+          "texte": "On enveloppe l'appel dans un `try/except` manuel autour de `agent_executor.invoke`.",
+          "correcte": false,
+          "justification": "Faux : le TP utilise le paramètre intégré `handle_parsing_errors`, pas un try/except manuel."
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "enonce": "À l'étape 8, comment expose-t-on de simples fonctions Python comme outils, et quel type d'agent les utilise ensuite ?",
+      "type": "unique",
+      "difficulte": "difficile",
+      "theme": "Conception d'outils personnalisés",
+      "source_fichier": "tp4-agents.md",
+      "points": 1,
+      "options": [
+        {
+          "texte": "On décore chaque fonction avec `@tool` (importé de `langchain_core.tools`), puis on crée l'agent avec `create_tool_calling_agent` et le prompt `hwchase17/openai-tools-agent`.",
+          "correcte": true,
+          "justification": "Étape 8 : `from langchain_core.tools import tool` avec `@tool` sur `multiply`/`add`/`exponentiate`, puis `create_tool_calling_agent(llm, tools, prompt)` avec `hub.pull(\"hwchase17/openai-tools-agent\")`."
+        },
+        {
+          "texte": "On hérite de la classe `WikipediaAPIWrapper` pour chaque fonction, puis on crée un agent ReAct.",
+          "correcte": false,
+          "justification": "Faux : `WikipediaAPIWrapper` sert à l'outil Wikipedia (étape 2) ; les outils maison passent par le décorateur `@tool`."
+        },
+        {
+          "texte": "On enregistre les fonctions via `load_tools([\"multiply\", \"add\"])`, puis on crée l'agent avec `create_react_agent`.",
+          "correcte": false,
+          "justification": "Faux : `load_tools` charge des outils prédéfinis par leur nom, pas des fonctions maison ; l'étape 8 utilise `@tool` et `create_tool_calling_agent`."
+        },
+        {
+          "texte": "On convertit les fonctions en `PythonREPLTool`, puis on crée un `create_openai_functions_agent`.",
+          "correcte": false,
+          "justification": "Faux : `PythonREPLTool` exécute du code arbitraire (étape 6) ; il ne sert pas à exposer une fonction précise comme outil."
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "enonce": "À l'étape 9 (assemblage multi-agents), quelles propositions correspondent à l'architecture décrite dans le TP ?",
+      "type": "multiple",
+      "difficulte": "difficile",
+      "theme": "Assemblage multi-agents",
+      "source_fichier": "tp4-agents.md",
+      "points": 1,
+      "options": [
+        {
+          "texte": "Un agent `chercheur` spécialisé en recherche documentaire s'appuie sur Tavily et arXiv.",
+          "correcte": true,
+          "justification": "Étape 9, point 1 : « Définissez un agent chercheur spécialisé en recherche documentaire (Tavily + arXiv) »."
+        },
+        {
+          "texte": "Un agent `analyste` résume et compare les informations à l'aide du Python REPL et d'outils mathématiques.",
+          "correcte": true,
+          "justification": "Étape 9, point 2 : « Créez un agent analyste qui résume et compare les informations (Python REPL + outils mathématiques) »."
+        },
+        {
+          "texte": "Un contrôleur (script Python ou LangGraph) orchestre les appels successifs entre agents.",
+          "correcte": true,
+          "justification": "Étape 9, point 3 : « Utilisez un contrôleur (script Python ou LangGraph) pour orchestrer les appels successifs » ; LangGraph est aussi cité à l'exercice 9.3."
+        },
+        {
+          "texte": "Un seul agent généraliste doit obligatoirement remplacer tous les agents spécialisés.",
+          "correcte": false,
+          "justification": "Faux : l'étape 9 recommande au contraire d'orchestrer plusieurs agents spécialisés quand les besoins deviennent complexes."
+        }
+      ]
+    }
+  ]
+}

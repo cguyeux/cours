@@ -64,6 +64,9 @@ nav:
       - Mise en route BUT3: ia-generative/demarrage.md
       - TP1. Premiers pas: ia-generative/tp1-premiers-pas.md
       - TP2. Sorties structurées: ia-generative/tp2-sorties-structurees.md
+      - TP3. RAG et bases vectorielles: ia-generative/tp3-rag-vecteurs.md
+      - TP4. Agents: ia-generative/tp4-agents.md
+      - TP5. Multimodalité: ia-generative/tp5-multimodalite.md
   - À propos: a-propos.md
 
 markdown_extensions:

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QCM — TP4 : Orchestration d'agents LangChain</title>
+<style>
+  :root { --ok:#1b8a5a; --ko:#c0392b; --accent:#2c5f8a; --bg:#f6f7f9; }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, "Segoe UI", Roboto, sans-serif; line-height:1.5;
+         max-width: 820px; margin: 0 auto; padding: 1.5rem; color:#1a1a1a; background:var(--bg); }
+  h1 { color: var(--accent); margin-bottom:.2rem; }
+  .meta { color:#666; font-size:.9rem; margin-bottom:1rem; }
+  .consignes { background:#eef3f8; border-left:4px solid var(--accent); padding:.6rem .9rem;
+               border-radius:4px; margin-bottom:1.2rem; }
+  .q { background:#fff; border:1px solid #e1e4e8; border-radius:8px; padding:1rem 1.2rem;
+       margin-bottom:1rem; box-shadow:0 1px 2px rgba(0,0,0,.04); }
+  .q h3 { margin:.1rem 0 .2rem; font-size:1.05rem; }
+  .badge { font-size:.72rem; font-weight:600; padding:.1rem .5rem; border-radius:10px;
+           margin-left:.4rem; vertical-align:middle; }
+  .b-facile{background:#e3f4ea;color:var(--ok);} .b-moyen{background:#fdf3e0;color:#b87600;}
+  .b-difficile{background:#fbe6e6;color:var(--ko);} .b-theme{background:#eef0f3;color:#555;}
+  .enonce { margin:.4rem 0 .8rem; }
+  .opt { display:block; padding:.45rem .6rem; border:1px solid #e1e4e8; border-radius:6px;
+         margin:.35rem 0; cursor:pointer; transition:background .12s; }
+  .opt:hover { background:#f0f4f8; }
+  .opt input { margin-right:.55rem; }
+  .opt.correct { border-color:var(--ok); background:#eaf7f0; }
+  .opt.wrong   { border-color:var(--ko); background:#fbecec; }
+  .just { font-size:.86rem; color:#555; margin:.2rem 0 0 1.7rem; display:none; }
+  .just.show { display:block; }
+  .src { font-size:.78rem; color:#888; margin-top:.5rem; display:none; }
+  .src.show { display:block; }
+  .bar { position:sticky; bottom:0; background:var(--bg); padding:.8rem 0; }
+  button { background:var(--accent); color:#fff; border:0; padding:.6rem 1.3rem;
+           font-size:1rem; border-radius:6px; cursor:pointer; }
+  button.ghost { background:#fff; color:var(--accent); border:1px solid var(--accent); margin-left:.5rem; }
+  #score { font-size:1.2rem; font-weight:700; margin-left:1rem; }
+  .qmark { float:right; font-weight:700; display:none; }
+  .qmark.show{display:inline;}
+</style>
+</head>
+<body>
+<h1>QCM — TP4 : Orchestration d'agents LangChain</h1>
+<div class="meta">Source : site/docs/ia-generative/tp4-agents.md — 11 questions</div>
+<div class="consignes">Cochez la ou les bonnes réponses. Sauf mention « plusieurs réponses possibles », une seule réponse est correcte.</div>
+<form id="qcm"></form>
+<div class="bar">
+  <button type="button" onclick="grade()">Valider mes réponses</button>
+  <button type="button" class="ghost" onclick="location.reload()">Réinitialiser</button>
+  <span id="score"></span>
+</div>
+<script>
+const DATA = {"questions": [{"_enonce": "Selon le rappel de l'étape 0, qu'est-ce qu'un agent piloté par un LLM ?", "_multiple": false, "difficulte": "facile", "theme": "Notion d'agent", "source_fichier": "tp4-agents.md", "_source": "tp4-agents.md", "options": [{"_texte": "Un système autonome propulsé par un modèle de langage qui reçoit des données en entrée et décide des actions à entreprendre en fonction de son objectif et des outils disponibles.", "correcte": true, "_justification": "Définition donnée mot pour mot à l'étape 0 : « Un agent est un système autonome propulsé par un modèle de langage qui reçoit des données en entrée et décide des actions à entreprendre... »."}, {"_texte": "Un modèle de langage entraîné spécifiquement pour ne jamais faire appel à des outils externes.", "correcte": false, "_justification": "Faux : l'agent combine au contraire l'exécution par un ou plusieurs outils ; les outils sont centraux dans tout le TP."}, {"_texte": "Une base de données vectorielle utilisée uniquement pour le RAG.", "correcte": false, "_justification": "Faux : le vector store relève du RAG évoqué seulement dans « Pour aller plus loin », ce n'est pas la définition d'un agent."}, {"_texte": "Un simple script de formatage et de linting du code.", "correcte": false, "_justification": "Faux : le formatage/linting renvoie à pre-commit (exercice 1.2), sans rapport avec la définition d'un agent."}]}, {"_enonce": "D'après l'étape 0, quelles sont les composantes que combine un agent ?", "_multiple": true, "difficulte": "moyen", "theme": "Notion d'agent", "source_fichier": "tp4-agents.md", "_source": "tp4-agents.md", "options": [{"_texte": "La prise de décision : le LLM planifie les actions.", "correcte": true, "_justification": "Listé à l'étape 0 : « la prise de décision (le LLM planifie les actions) »."}, {"_texte": "L'exécution : un ou plusieurs outils réalisent l'action demandée.", "correcte": true, "_justification": "Listé à l'étape 0 : « l'exécution (un ou plusieurs outils réalisent l'action demandée) »."}, {"_texte": "La boucle de rétroaction : l'exécuteur transmet les résultats au LLM pour la suite du raisonnement.", "correcte": true, "_justification": "Listé à l'étape 0 : « la boucle de rétroaction (l'exécuteur d'agent transmet les résultats au LLM...) »."}, {"_texte": "Le réentraînement automatique des poids du modèle à chaque requête.", "correcte": false, "_justification": "Faux : aucun réentraînement n'est mentionné ; un agent orchestre un LLM existant, il ne le ré-entraîne pas."}]}, {"_enonce": "Quel outil LangChain est utilisé à l'étape 2 pour interroger Wikipedia ?", "_multiple": false, "difficulte": "facile", "theme": "Outils — Wikipedia", "source_fichier": "tp4-agents.md", "_source": "tp4-agents.md", "options": [{"_texte": "<code>WikipediaQueryRun<\/code>, instancié avec un <code>WikipediaAPIWrapper<\/code>.", "correcte": true, "_justification": "À l'étape 2 : <code>wikipedia = WikipediaQueryRun(api_wrapper=WikipediaAPIWrapper())<\/code>."}, {"_texte": "<code>TavilySearchResults<\/code>.", "correcte": false, "_justification": "Faux : <code>TavilySearchResults<\/code> est l'outil de recherche web des étapes 3 et 4, pas celui de Wikipedia."}, {"_texte": "<code>PythonREPLTool<\/code>.", "correcte": false, "_justification": "Faux : <code>PythonREPLTool<\/code> est l'outil d'exécution de code de l'étape 6."}, {"_texte": "<code>load_tools([&quot;arxiv&quot;])<\/code>.", "correcte": false, "_justification": "Faux : <code>load_tools([&quot;arxiv&quot;])<\/code> charge l'outil arXiv de l'étape 5, pas Wikipedia."}]}, {"_enonce": "Dans le sigle « agent ReAct » introduit à l'étape 3, que signifie ReAct ?", "_multiple": false, "difficulte": "facile", "theme": "Agent ReAct", "source_fichier": "tp4-agents.md", "_source": "tp4-agents.md", "options": [{"_texte": "Reasoning + Acting (raisonnement et action).", "correcte": true, "_justification": "L'étape 3 précise explicitement : « un agent ReAct (Reasoning + Acting) »."}, {"_texte": "Reactive Architecture, une bibliothèque JavaScript.", "correcte": false, "_justification": "Faux : aucun rapport avec le framework JavaScript React ; ReAct désigne ici Reasoning + Acting."}, {"_texte": "Retrieval + Activation, une variante du RAG.", "correcte": false, "_justification": "Faux : invention ; le RAG n'est évoqué que dans « Pour aller plus loin », et ReAct signifie Reasoning + Acting."}, {"_texte": "Recursive Action, un mode d'auto-appel illimité de l'agent.", "correcte": false, "_justification": "Faux : ce terme n'apparaît pas dans le TP ; ReAct = Reasoning + Acting."}]}, {"_enonce": "À l'étape 3, comment l'agent ReAct est-il assemblé puis exécuté ?", "_multiple": false, "difficulte": "moyen", "theme": "Construction d'agent ReAct", "source_fichier": "tp4-agents.md", "_source": "tp4-agents.md", "options": [{"_texte": "On crée l'agent avec <code>create_react_agent(llm, tools, prompt)<\/code>, puis on l'enveloppe dans un <code>AgentExecutor(agent=agent, tools=tools, verbose=True)<\/code>.", "correcte": true, "_justification": "Code de l'étape 3 : <code>agent = create_react_agent(llm, tools, prompt)<\/code> puis <code>agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)<\/code>."}, {"_texte": "On appelle directement <code>llm.invoke(...)<\/code> sans passer par un exécuteur.", "correcte": false, "_justification": "Faux : c'est l'<code>AgentExecutor<\/code> qui pilote la boucle d'actions ; un appel direct au LLM ne donne pas un agent."}, {"_texte": "On utilise <code>create_openai_functions_agent<\/code> avec le template <code>langchain-ai/openai-functions-template<\/code>.", "correcte": false, "_justification": "Faux : cette fonction et ce template sont ceux de l'étape 6 (agent Python REPL), pas de l'étape 3."}, {"_texte": "On charge l'agent uniquement via <code>load_tools<\/code> sans construire de prompt.", "correcte": false, "_justification": "Faux : <code>load_tools<\/code> charge des outils ; il faut tout de même un prompt (ici récupéré via <code>hub.pull<\/code>) et un agent."}]}, {"_enonce": "Aux étapes 3 et 4, quel élément distingue principalement la configuration de l'agent Mistral de celle de l'agent OpenAI ?", "_multiple": false, "difficulte": "moyen", "theme": "Comparaison de fournisseurs LLM", "source_fichier": "tp4-agents.md", "_source": "tp4-agents.md", "options": [{"_texte": "Le LLM (<code>ChatMistralAI(model=&quot;mistral-large-latest&quot;)<\/code> vs <code>ChatOpenAI(model_name=&quot;gpt-4.1&quot;)<\/code>) et le prompt tiré du hub (<code>amalnuaimi/react-mistral<\/code> vs <code>hwchase17/react<\/code>).", "correcte": true, "_justification": "L'étape 3 utilise <code>ChatMistralAI<\/code> avec <code>hub.pull(&quot;amalnuaimi/react-mistral&quot;)<\/code> ; l'étape 4 utilise <code>ChatOpenAI(model_name=&quot;gpt-4.1&quot;)<\/code> avec <code>hub.pull(&quot;hwchase17/react&quot;)<\/code>."}, {"_texte": "L'étape 4 abandonne complètement l'outil Tavily au profit d'arXiv.", "correcte": false, "_justification": "Faux : les deux étapes utilisent <code>TavilySearchResults(max_results=2)<\/code> ; arXiv n'apparaît qu'à l'étape 5."}, {"_texte": "Seule la version Mistral utilise un <code>AgentExecutor<\/code> ; la version OpenAI s'en passe.", "correcte": false, "_justification": "Faux : les deux étapes construisent un <code>AgentExecutor<\/code>."}, {"_texte": "La version OpenAI fixe <code>temperature=0<\/code> alors que la version Mistral ne fixe aucune température.", "correcte": false, "_justification": "Faux : c'est l'inverse : <code>ChatMistralAI(..., temperature=0)<\/code> à l'étape 3, et aucune température explicite dans l'extrait de l'étape 4."}]}, {"_enonce": "À l'étape 5, comment l'outil arXiv est-il mis à disposition de l'agent ?", "_multiple": false, "difficulte": "facile", "theme": "Outils — arXiv", "source_fichier": "tp4-agents.md", "_source": "tp4-agents.md", "options": [{"_texte": "Via <code>load_tools([&quot;arxiv&quot;])<\/code>.", "correcte": true, "_justification": "Code de l'étape 5 : <code>tools = load_tools([&quot;arxiv&quot;])<\/code>."}, {"_texte": "Via <code>WikipediaQueryRun(api_wrapper=...)<\/code>.", "correcte": false, "_justification": "Faux : c'est l'outil Wikipedia de l'étape 2."}, {"_texte": "Via le décorateur <code>@tool<\/code> appliqué à une fonction <code>arxiv()<\/code>.", "correcte": false, "_justification": "Faux : le décorateur <code>@tool<\/code> sert à créer ses propres outils à l'étape 8, pas à charger arXiv."}, {"_texte": "Via <code>TavilySearchResults(max_results=2)<\/code>.", "correcte": false, "_justification": "Faux : Tavily est l'outil de recherche web généraliste, distinct de l'outil arXiv."}]}, {"_enonce": "À l'étape 6, quel type d'agent est construit pour exécuter du code Python avec le <code>PythonREPLTool<\/code> ?", "_multiple": false, "difficulte": "moyen", "theme": "Agent développeur — Python REPL", "source_fichier": "tp4-agents.md", "_source": "tp4-agents.md", "options": [{"_texte": "Un agent de type fonctions OpenAI, créé avec <code>create_openai_functions_agent<\/code>, à partir du template <code>langchain-ai/openai-functions-template<\/code> complété par des <code>instructions<\/code>.", "correcte": true, "_justification": "Étape 6 : <code>base_prompt = hub.pull(&quot;langchain-ai/openai-functions-template&quot;)<\/code> puis <code>agent = create_openai_functions_agent(ChatOpenAI(temperature=0), tools, prompt)<\/code>."}, {"_texte": "Un agent ReAct créé avec <code>create_react_agent<\/code> et le prompt <code>hwchase17/react<\/code>.", "correcte": false, "_justification": "Faux : <code>create_react_agent<\/code> est utilisé aux étapes 3, 4, 5 et 7, mais l'étape 6 emploie <code>create_openai_functions_agent<\/code>."}, {"_texte": "Un agent de type tool calling créé avec <code>create_tool_calling_agent<\/code>.", "correcte": false, "_justification": "Faux : <code>create_tool_calling_agent<\/code> est utilisé à l'étape 8 pour les outils maison, pas à l'étape 6."}, {"_texte": "Aucun agent : on appelle <code>PythonREPLTool().run(...)<\/code> directement.", "correcte": false, "_justification": "Faux : l'étape 6 construit bien un agent et un <code>AgentExecutor<\/code> autour de l'outil."}]}, {"_enonce": "À l'étape 7, comment l'agent est-il rendu robuste aux erreurs d'analyse de la sortie du LLM, et quels outils combine-t-il ?", "_multiple": false, "difficulte": "moyen", "theme": "Combinaison d'outils et gestion d'erreurs", "source_fichier": "tp4-agents.md", "_source": "tp4-agents.md", "options": [{"_texte": "On passe <code>handle_parsing_errors=True<\/code> à l'<code>AgentExecutor<\/code>, qui combine les outils <code>llm-math<\/code> et <code>wikipedia<\/code> chargés via <code>load_tools<\/code>.", "correcte": true, "_justification": "Étape 7 : <code>tools = load_tools([&quot;llm-math&quot;, &quot;wikipedia&quot;], llm=llm)<\/code> et <code>AgentExecutor(..., handle_parsing_errors=True, verbose=True)<\/code>. L'exercice 7.2 invite à désactiver ce champ pour constater l'erreur."}, {"_texte": "On passe <code>return_intermediate_steps=True<\/code>, qui combine <code>arxiv<\/code> et <code>tavily<\/code>.", "correcte": false, "_justification": "Faux : <code>return_intermediate_steps<\/code> concerne l'inspection des étapes (exercice 4.1) ; les outils de l'étape 7 sont <code>llm-math<\/code> et <code>wikipedia<\/code>."}, {"_texte": "On fixe <code>temperature=0<\/code> sur le LLM, ce qui suffit à éviter toute erreur d'analyse.", "correcte": false, "_justification": "Faux : la température ne traite pas les erreurs de parsing ; c'est <code>handle_parsing_errors<\/code> qui le fait."}, {"_texte": "On enveloppe l'appel dans un <code>try/except<\/code> manuel autour de <code>agent_executor.invoke<\/code>.", "correcte": false, "_justification": "Faux : le TP utilise le paramètre intégré <code>handle_parsing_errors<\/code>, pas un try/except manuel."}]}, {"_enonce": "À l'étape 8, comment expose-t-on de simples fonctions Python comme outils, et quel type d'agent les utilise ensuite ?", "_multiple": false, "difficulte": "difficile", "theme": "Conception d'outils personnalisés", "source_fichier": "tp4-agents.md", "_source": "tp4-agents.md", "options": [{"_texte": "On décore chaque fonction avec <code>@tool<\/code> (importé de <code>langchain_core.tools<\/code>), puis on crée l'agent avec <code>create_tool_calling_agent<\/code> et le prompt <code>hwchase17/openai-tools-agent<\/code>.", "correcte": true, "_justification": "Étape 8 : <code>from langchain_core.tools import tool<\/code> avec <code>@tool<\/code> sur <code>multiply<\/code>/<code>add<\/code>/<code>exponentiate<\/code>, puis <code>create_tool_calling_agent(llm, tools, prompt)<\/code> avec <code>hub.pull(&quot;hwchase17/openai-tools-agent&quot;)<\/code>."}, {"_texte": "On hérite de la classe <code>WikipediaAPIWrapper<\/code> pour chaque fonction, puis on crée un agent ReAct.", "correcte": false, "_justification": "Faux : <code>WikipediaAPIWrapper<\/code> sert à l'outil Wikipedia (étape 2) ; les outils maison passent par le décorateur <code>@tool<\/code>."}, {"_texte": "On enregistre les fonctions via <code>load_tools([&quot;multiply&quot;, &quot;add&quot;])<\/code>, puis on crée l'agent avec <code>create_react_agent<\/code>.", "correcte": false, "_justification": "Faux : <code>load_tools<\/code> charge des outils prédéfinis par leur nom, pas des fonctions maison ; l'étape 8 utilise <code>@tool<\/code> et <code>create_tool_calling_agent<\/code>."}, {"_texte": "On convertit les fonctions en <code>PythonREPLTool<\/code>, puis on crée un <code>create_openai_functions_agent<\/code>.", "correcte": false, "_justification": "Faux : <code>PythonREPLTool<\/code> exécute du code arbitraire (étape 6) ; il ne sert pas à exposer une fonction précise comme outil."}]}, {"_enonce": "À l'étape 9 (assemblage multi-agents), quelles propositions correspondent à l'architecture décrite dans le TP ?", "_multiple": true, "difficulte": "difficile", "theme": "Assemblage multi-agents", "source_fichier": "tp4-agents.md", "_source": "tp4-agents.md", "options": [{"_texte": "Un agent <code>chercheur<\/code> spécialisé en recherche documentaire s'appuie sur Tavily et arXiv.", "correcte": true, "_justification": "Étape 9, point 1 : « Définissez un agent chercheur spécialisé en recherche documentaire (Tavily + arXiv) »."}, {"_texte": "Un agent <code>analyste<\/code> résume et compare les informations à l'aide du Python REPL et d'outils mathématiques.", "correcte": true, "_justification": "Étape 9, point 2 : « Créez un agent analyste qui résume et compare les informations (Python REPL + outils mathématiques) »."}, {"_texte": "Un contrôleur (script Python ou LangGraph) orchestre les appels successifs entre agents.", "correcte": true, "_justification": "Étape 9, point 3 : « Utilisez un contrôleur (script Python ou LangGraph) pour orchestrer les appels successifs » ; LangGraph est aussi cité à l'exercice 9.3."}, {"_texte": "Un seul agent généraliste doit obligatoirement remplacer tous les agents spécialisés.", "correcte": false, "_justification": "Faux : l'étape 9 recommande au contraire d'orchestrer plusieurs agents spécialisés quand les besoins deviennent complexes."}]}]};
+const form = document.getElementById('qcm');
+DATA.questions.forEach((q, i) => {
+  const multi = q._multiple;
+  const div = document.createElement('div');
+  div.className = 'q'; div.id = 'q'+i;
+  let badges = '';
+  if (q.difficulte) badges += `<span class="badge b-${q.difficulte}">${q.difficulte}</span>`;
+  if (q.theme) badges += `<span class="badge b-theme">${q.theme}</span>`;
+  const hint = multi ? ' <small>(plusieurs réponses)</small>' : '';
+  let html = `<span class="qmark" id="m${i}"></span><h3>Question ${i+1}${hint}${badges}</h3>`;
+  html += `<div class="enonce">${q._enonce}</div>`;
+  q.options.forEach((o, j) => {
+    const type = multi ? 'checkbox' : 'radio';
+    html += `<label class="opt" id="o${i}_${j}">`
+          + `<input type="${type}" name="q${i}" value="${j}">${o._texte}</label>`;
+    html += `<div class="just" id="j${i}_${j}">${o._justification||''}</div>`;
+  });
+  if (q.source_fichier) html += `<div class="src" id="s${i}">Source : ${q._source}</div>`;
+  div.innerHTML = html;
+  form.appendChild(div);
+});
+function grade(){
+  let correct = 0;
+  DATA.questions.forEach((q, i) => {
+    const chosen = [...form.querySelectorAll(`input[name=q${i}]:checked`)].map(e=>+e.value);
+    const good = q.options.map((o,j)=>o.correcte?j:-1).filter(j=>j>=0);
+    const ok = chosen.length===good.length && chosen.every(j=>good.includes(j));
+    if (ok) correct++;
+    q.options.forEach((o,j)=>{
+      const lab = document.getElementById(`o${i}_${j}`);
+      lab.classList.remove('correct','wrong');
+      if (o.correcte) lab.classList.add('correct');
+      else if (chosen.includes(j)) lab.classList.add('wrong');
+      const ju = document.getElementById(`j${i}_${j}`);
+      if (ju && o._justification) ju.classList.add('show');
+    });
+    const m = document.getElementById('m'+i);
+    m.textContent = ok ? '✓' : '✗';
+    m.style.color = ok ? 'var(--ok)' : 'var(--ko)';
+    m.classList.add('show');
+    const s = document.getElementById('s'+i); if (s) s.classList.add('show');
+  });
+  const n = DATA.questions.length;
+  const pct = Math.round(100*correct/n);
+  const sc = document.getElementById('score');
+  sc.textContent = `Score : ${correct} / ${n}  (${pct} %)`;
+  sc.style.color = pct>=50 ? 'var(--ok)' : 'var(--ko)';
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+</script>
+</body>
+</html>

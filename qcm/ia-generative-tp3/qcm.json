@@ -1,0 +1,292 @@
+{
+  "titre": "QCM — TP3 : Systèmes RAG et bases vectorielles",
+  "source": "site/docs/ia-generative/tp3-rag-vecteurs.md",
+  "langue": "fr",
+  "consignes": "Cochez la ou les bonnes réponses. Sauf mention contraire, une seule réponse est correcte.",
+  "questions": [
+    {
+      "id": 1,
+      "enonce": "Selon l'introduction du TP, que produit un *embedding* à partir d'un texte ?",
+      "type": "unique",
+      "difficulte": "facile",
+      "theme": "Notion d'embedding",
+      "source_fichier": "tp3-rag-vecteurs.md",
+      "points": 1,
+      "options": [
+        {
+          "texte": "Un vecteur numérique tel que deux textes proches sémantiquement deviennent deux vecteurs proches dans l'espace vectoriel",
+          "correcte": true,
+          "justification": "L'étape 1 énonce : « Un embedding transforme un texte en vecteur numérique. Deux textes proches sémantiquement deviennent deux vecteurs proches dans l'espace vectoriel. »"
+        },
+        {
+          "texte": "Une chaîne de caractères compressée sans perte qui peut être reconstruite à l'identique",
+          "correcte": false,
+          "justification": "Le TP ne présente pas l'embedding comme une compression réversible du texte, mais comme une représentation vectorielle de la sémantique."
+        },
+        {
+          "texte": "Une probabilité d'appartenance du texte à une catégorie prédéfinie",
+          "correcte": false,
+          "justification": "Aucune notion de classification probabiliste n'est associée à l'embedding dans le TP ; l'embedding est un vecteur numérique."
+        },
+        {
+          "texte": "Un résumé en langage naturel généré par le LLM",
+          "correcte": false,
+          "justification": "Le résumé en langage naturel relève de la génération (RAG, étape 6), pas de l'embedding qui produit un vecteur numérique."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "enonce": "Dans l'étape 2, quelle classe de scikit-learn est utilisée pour construire la représentation *Bag of Words* ?",
+      "type": "unique",
+      "difficulte": "facile",
+      "theme": "Bag of Words",
+      "source_fichier": "tp3-rag-vecteurs.md",
+      "points": 1,
+      "options": [
+        {
+          "texte": "`CountVectorizer`",
+          "correcte": true,
+          "justification": "Le code de l'étape 2 importe `from sklearn.feature_extraction.text import CountVectorizer` puis appelle `vectorizer.fit_transform(corpus)`."
+        },
+        {
+          "texte": "`TfidfVectorizer`",
+          "correcte": false,
+          "justification": "Le TP utilise `CountVectorizer` ; `TfidfVectorizer` n'apparaît pas dans le code de l'étape 2."
+        },
+        {
+          "texte": "`SentenceTransformer`",
+          "correcte": false,
+          "justification": "`SentenceTransformer` est utilisé à l'étape 3 pour les embeddings par Transformers, pas pour le Bag of Words."
+        },
+        {
+          "texte": "`HuggingFaceEmbeddings`",
+          "correcte": false,
+          "justification": "`HuggingFaceEmbeddings` sert à construire le vector store FAISS (étape 7), pas la représentation Bag of Words."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "enonce": "À l'étape 3, le modèle `sentence-transformers/all-MiniLM-L6-v2` est instancié avec l'argument `device=\"cpu\"`. Selon l'exercice 3.2, pourquoi forcer ce paramètre ?",
+      "type": "unique",
+      "difficulte": "moyen",
+      "theme": "Embeddings par Transformers",
+      "source_fichier": "tp3-rag-vecteurs.md",
+      "points": 1,
+      "options": [
+        {
+          "texte": "Pour éviter une erreur remontée sur certaines machines lorsqu'on exécute le code sans cette option",
+          "correcte": true,
+          "justification": "L'exercice 3.2 demande : « Pourquoi force-t-on `device=\"cpu\"` ? Essayez sans cette option et observez l'erreur remontée sur votre machine. » Le but est d'éviter cette erreur."
+        },
+        {
+          "texte": "Pour augmenter la dimension des vecteurs produits",
+          "correcte": false,
+          "justification": "Le choix du `device` n'influe pas sur la taille des vecteurs ; celle-ci dépend du modèle (cf. exercice 3.1)."
+        },
+        {
+          "texte": "Pour activer le support multilingue du modèle",
+          "correcte": false,
+          "justification": "Le support multilingue dépend du choix d'un modèle multilingue (note de l'étape 3), pas du paramètre `device`."
+        },
+        {
+          "texte": "Pour chiffrer les calculs et protéger les données",
+          "correcte": false,
+          "justification": "Le paramètre `device` sélectionne le matériel de calcul (CPU/GPU), il n'a aucun rôle de chiffrement."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "enonce": "L'étape 4 définit `cosine_similarity(A, B)` comme le produit scalaire de A et B divisé par le produit de leurs normes. Quelle valeur attend-on, selon l'exercice 4.1, pour deux phrases très différentes ?",
+      "type": "unique",
+      "difficulte": "moyen",
+      "theme": "Similarité cosinus",
+      "source_fichier": "tp3-rag-vecteurs.md",
+      "points": 1,
+      "options": [
+        {
+          "texte": "Une similarité plus faible que pour deux phrases proches sémantiquement",
+          "correcte": true,
+          "justification": "La similarité cosinus mesure la proximité sémantique (étape 1) ; l'exercice 4.1 invite à observer ce comportement : deux phrases très différentes donnent un score plus bas que deux phrases proches."
+        },
+        {
+          "texte": "Une similarité exactement égale à 1",
+          "correcte": false,
+          "justification": "Une valeur proche de 1 traduit deux vecteurs alignés, donc des textes très proches, ce qui est l'inverse de phrases très différentes."
+        },
+        {
+          "texte": "Une valeur strictement supérieure à 1",
+          "correcte": false,
+          "justification": "Par construction (division par le produit des normes), la similarité cosinus est bornée et ne dépasse pas 1 ; elle ne peut être supérieure à 1."
+        },
+        {
+          "texte": "Une erreur de division par zéro systématique",
+          "correcte": false,
+          "justification": "La division par zéro ne survient que si une norme est nulle (vecteur nul), pas du simple fait que les phrases diffèrent."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "enonce": "À l'étape 5, la fonction `embed` appelle l'API OpenAI avec `model=\"text-embedding-3-large\"` et `dimensions=3072`. Que demande l'exercice 5.2 et quel paramètre y est concerné ?",
+      "type": "unique",
+      "difficulte": "moyen",
+      "theme": "Embeddings OpenAI",
+      "source_fichier": "tp3-rag-vecteurs.md",
+      "points": 1,
+      "options": [
+        {
+          "texte": "Réduire `dimensions` à 256 et observer empiriquement l'impact sur la qualité",
+          "correcte": true,
+          "justification": "L'exercice 5.2 dit : « Réduisez `dimensions` à 256. Quel impact sur la qualité (à tester empiriquement) ? »"
+        },
+        {
+          "texte": "Changer le modèle pour `all-MiniLM-L6-v2` et comparer",
+          "correcte": false,
+          "justification": "La comparaison avec sentence-transformers relève de l'exercice 5.1 ; l'exercice 5.2 porte sur la réduction du paramètre `dimensions` à 256."
+        },
+        {
+          "texte": "Augmenter `dimensions` à 6144 pour doubler la précision",
+          "correcte": false,
+          "justification": "Le TP demande de réduire `dimensions` à 256, pas de l'augmenter."
+        },
+        {
+          "texte": "Fixer un quota dans le tableau de bord OpenAI",
+          "correcte": false,
+          "justification": "Fixer un quota est l'objet de l'encadré « Attention » (l'API est payante), pas de l'exercice 5.2 portant sur le paramètre `dimensions`."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "enonce": "Dans l'étape 6, le prompt impose : « Answer the question using ONLY the context provided. » Quels objectifs pédagogiques sont visés par cette étape et ses exercices ? (plusieurs réponses possibles)",
+      "type": "multiple",
+      "difficulte": "difficile",
+      "theme": "Pipeline RAG de base",
+      "source_fichier": "tp3-rag-vecteurs.md",
+      "points": 2,
+      "options": [
+        {
+          "texte": "Contraindre le modèle à répondre uniquement à partir du contexte fourni",
+          "correcte": true,
+          "justification": "Le prompt de l'étape 6 contient explicitement « Answer the question using ONLY the context provided. »"
+        },
+        {
+          "texte": "Modifier la consigne pour forcer une réponse en français",
+          "correcte": true,
+          "justification": "L'exercice 6.1 demande : « Modifiez la consigne pour forcer l'IA à répondre en français. »"
+        },
+        {
+          "texte": "Faire répondre « Je ne sais pas » lorsque le contexte ne contient pas l'information",
+          "correcte": true,
+          "justification": "L'exercice 6.2 demande d'ajouter une validation : « si le contexte ne contient pas l'information, le modèle doit répondre « Je ne sais pas ». »"
+        },
+        {
+          "texte": "Indexer automatiquement le PDF `Guyeux_2024.pdf` dans un vector store",
+          "correcte": false,
+          "justification": "L'indexation du PDF dans FAISS est l'objet des étapes 7 et 8, pas de l'étape 6 qui passe le contexte « en dur » dans le prompt."
+        },
+        {
+          "texte": "Entraîner un nouveau modèle d'embeddings sur le corpus",
+          "correcte": false,
+          "justification": "Le TP utilise des modèles d'embeddings préexistants ; aucun entraînement de modèle n'est demandé."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "enonce": "À l'étape 7, quelle combinaison d'outils est utilisée pour indexer le PDF `images/Guyeux_2024.pdf` et y faire une recherche ?",
+      "type": "unique",
+      "difficulte": "moyen",
+      "theme": "Vector store FAISS",
+      "source_fichier": "tp3-rag-vecteurs.md",
+      "points": 1,
+      "options": [
+        {
+          "texte": "`PyPDFLoader` pour charger/découper le PDF, `HuggingFaceEmbeddings` pour les vecteurs, puis `FAISS.from_documents` et `similarity_search`",
+          "correcte": true,
+          "justification": "Le code de l'étape 7 charge le PDF via `PyPDFLoader(...).load_and_split()`, crée les embeddings avec `HuggingFaceEmbeddings(...)`, indexe via `FAISS.from_documents(pages, embeddings)` et interroge avec `faiss_index.similarity_search(...)`."
+        },
+        {
+          "texte": "`CountVectorizer` pour les vecteurs, puis une recherche par mots-clés exacts",
+          "correcte": false,
+          "justification": "`CountVectorizer` est l'outil Bag of Words de l'étape 2 ; l'étape 7 utilise des embeddings HuggingFace et une recherche par similarité, pas une recherche par mots-clés."
+        },
+        {
+          "texte": "`YoutubeLoader` pour charger le document, puis `OpenAIEmbeddings`",
+          "correcte": false,
+          "justification": "`YoutubeLoader` apparaît à l'étape 10 (autres loaders) ; l'étape 7 charge un PDF avec `PyPDFLoader`."
+        },
+        {
+          "texte": "`RecursiveCharacterTextSplitter` seul, sans aucun modèle d'embeddings",
+          "correcte": false,
+          "justification": "Le text splitter est introduit à l'étape 9 ; un vector store FAISS nécessite des embeddings, fournis ici par `HuggingFaceEmbeddings`."
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "enonce": "Aux étapes 7 et 8, quelle est la principale différence de code entre les deux constructions du vector store FAISS ?",
+      "type": "unique",
+      "difficulte": "moyen",
+      "theme": "FAISS : embeddings HuggingFace vs OpenAI",
+      "source_fichier": "tp3-rag-vecteurs.md",
+      "points": 1,
+      "options": [
+        {
+          "texte": "L'étape 8 remplace `HuggingFaceEmbeddings` par `OpenAIEmbeddings()` lors de l'appel à `FAISS.from_documents`",
+          "correcte": true,
+          "justification": "L'étape 8 écrit `FAISS.from_documents(pages, OpenAIEmbeddings())`, là où l'étape 7 passait `embeddings = HuggingFaceEmbeddings(...)`. L'exercice 8.1 invite d'ailleurs à comparer les temps d'indexation OpenAI vs HuggingFace."
+        },
+        {
+          "texte": "L'étape 8 remplace FAISS par Milvus comme vector store",
+          "correcte": false,
+          "justification": "Les deux étapes utilisent FAISS ; Milvus n'est évoqué qu'en astuce/comparaison, pas employé dans le code."
+        },
+        {
+          "texte": "L'étape 8 abandonne `PyPDFLoader` au profit de `YoutubeLoader`",
+          "correcte": false,
+          "justification": "Les deux étapes chargent le PDF avec `PyPDFLoader` ; `YoutubeLoader` relève de l'étape 10."
+        },
+        {
+          "texte": "L'étape 8 supprime l'appel à `similarity_search`",
+          "correcte": false,
+          "justification": "L'étape 8 conserve `faiss_index.similarity_search(\"Is there a lineage 10 in M.tuberculosis?\", k=2)` ; seule la classe d'embeddings change."
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "enonce": "À l'étape 9, le `RecursiveCharacterTextSplitter` est instancié avec `chunk_size=500`, `chunk_overlap=200` et `separators=[\"\\n\\n\", \"\\n\", \". \"]`. Que demande l'exercice 9.1 à propos de ces paramètres ?",
+      "type": "unique",
+      "difficulte": "moyen",
+      "theme": "Splitting et nettoyage des textes",
+      "source_fichier": "tp3-rag-vecteurs.md",
+      "points": 1,
+      "options": [
+        {
+          "texte": "Tester différents couples `chunk_size` / `chunk_overlap` et observer l'évolution de la cohérence des réponses",
+          "correcte": true,
+          "justification": "L'exercice 9.1 dit : « Testez différents couples `chunk_size` / `chunk_overlap`. Comment évolue la cohérence des réponses ? »"
+        },
+        {
+          "texte": "Supprimer tout chevauchement en fixant `chunk_overlap=0` de manière définitive",
+          "correcte": false,
+          "justification": "L'exercice invite à faire varier le chevauchement, pas à l'annuler définitivement."
+        },
+        {
+          "texte": "Remplacer les separators par une expression régulière unique",
+          "correcte": false,
+          "justification": "L'exercice 9.1 porte sur `chunk_size`/`chunk_overlap`, pas sur la réécriture des `separators` en regex."
+        },
+        {
+          "texte": "Indexer directement le PDF sans découpage",
+          "correcte": false,
+          "justification": "C'est l'inverse : l'exercice 9.2 propose justement d'impliquer le splitter dans le pipeline FAISS, donc de re-splitter le PDF avant indexation."
+        }
+      ]
+    }
+  ]
+}
