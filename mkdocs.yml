@@ -59,6 +59,11 @@ nav:
       - TP5. Synthèse: outils-fondamentaux/tp5-synthese.md
       - TP6. Géométrie du plan: outils-fondamentaux/tp6-geometrie-plan.md
       - Mémento Python: outils-fondamentaux/memento.md
+  - IA générative (BUT3):
+      - Le module: ia-generative/index.md
+      - Mise en route BUT3: ia-generative/demarrage.md
+      - TP1. Premiers pas: ia-generative/tp1-premiers-pas.md
+      - TP2. Sorties structurées: ia-generative/tp2-sorties-structurees.md
   - À propos: a-propos.md
 
 markdown_extensions:

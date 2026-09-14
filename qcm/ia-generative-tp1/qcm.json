@@ -1,0 +1,323 @@
+{
+  "titre": "QCM — TP1 : Premiers pas LangChain & Mistral",
+  "source": "site/docs/ia-generative/tp1-premiers-pas.md",
+  "langue": "fr",
+  "consignes": "Cochez la ou les bonnes réponses. Sauf mention contraire, une seule réponse est correcte.",
+  "questions": [
+    {
+      "id": 1,
+      "enonce": "D'après le TP, comment qualifie-t-on LangChain vis-à-vis des modèles de langage ?",
+      "type": "unique",
+      "difficulte": "facile",
+      "theme": "Notions LangChain",
+      "source_fichier": "tp1-premiers-pas.md",
+      "points": 1,
+      "options": [
+        {
+          "texte": "Un framework agnostique vis-à-vis des modèles",
+          "correcte": true,
+          "justification": "L'étape 2 précise que « LangChain est un framework agnostique vis-à-vis des modèles » et facilite l'invocation de différents LLM (Mistral, OpenAI, etc.)."
+        },
+        {
+          "texte": "Un modèle de langage propriétaire développé par Mistral AI",
+          "correcte": false,
+          "justification": "LangChain n'est pas un modèle ni un produit de Mistral : c'est un framework d'orchestration qui sait piloter plusieurs LLM."
+        },
+        {
+          "texte": "Une bibliothèque liée exclusivement à OpenAI",
+          "correcte": false,
+          "justification": "Le TP indique au contraire qu'il facilite l'invocation de différents LLM, pas seulement OpenAI ; il est agnostique."
+        },
+        {
+          "texte": "Un fournisseur de clés API pour les LLM",
+          "correcte": false,
+          "justification": "Les clés API proviennent des fournisseurs de modèles (Mistral, OpenAI) ; LangChain orchestre l'usage de ces modèles."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "enonce": "Quelle commande le TP propose-t-il pour installer les bibliothèques nécessaires à l'étape de préparation de l'environnement ?",
+      "type": "unique",
+      "difficulte": "facile",
+      "theme": "Environnement Python",
+      "source_fichier": "tp1-premiers-pas.md",
+      "points": 1,
+      "options": [
+        {
+          "texte": "`pip install langchain langchain-mistralai langchain-openai python-dotenv`",
+          "correcte": true,
+          "justification": "C'est exactement la commande d'installation donnée à l'étape 1 du TP."
+        },
+        {
+          "texte": "`pip install mistral openai dotenv`",
+          "correcte": false,
+          "justification": "Les noms de paquets sont incorrects : le TP utilise `langchain-mistralai`, `langchain-openai` et `python-dotenv`."
+        },
+        {
+          "texte": "`conda install langchain mistralai`",
+          "correcte": false,
+          "justification": "Le TP utilise `pip`, pas `conda`, et le paquet d'intégration s'appelle `langchain-mistralai`."
+        },
+        {
+          "texte": "`pip install langchain-core langgraph`",
+          "correcte": false,
+          "justification": "Ces paquets ne sont pas ceux listés à l'étape 1 ; LangGraph n'est cité que dans « Pour aller plus loin »."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "enonce": "À quoi sert le paquet `python-dotenv` selon le TP ?",
+      "type": "unique",
+      "difficulte": "facile",
+      "theme": "Environnement Python",
+      "source_fichier": "tp1-premiers-pas.md",
+      "points": 1,
+      "options": [
+        {
+          "texte": "Charger les variables d'environnement sans les écrire dans le code",
+          "correcte": true,
+          "justification": "Le TP précise : « `python-dotenv` permet de charger vos variables d'environnement sans les écrire dans le code »."
+        },
+        {
+          "texte": "Créer automatiquement l'environnement virtuel `mon_env`",
+          "correcte": false,
+          "justification": "L'environnement virtuel se crée avec `python -m venv mon_env`, pas avec `python-dotenv`."
+        },
+        {
+          "texte": "Chiffrer la clé API Mistral sur le serveur",
+          "correcte": false,
+          "justification": "Le TP ne mentionne aucun chiffrement ; dotenv charge des variables depuis un fichier `.env`."
+        },
+        {
+          "texte": "Installer les dépendances LangChain",
+          "correcte": false,
+          "justification": "L'installation des dépendances se fait via `pip install`, pas via `python-dotenv`."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "enonce": "Dans le premier script d'invocation (`tp1_mistral.py`), quel modèle et quelle température sont utilisés pour instancier `ChatMistralAI` ?",
+      "type": "unique",
+      "difficulte": "moyen",
+      "theme": "Invocation Mistral",
+      "source_fichier": "tp1-premiers-pas.md",
+      "points": 1,
+      "options": [
+        {
+          "texte": "`model=\"mistral-large-latest\"` et `temperature=0`",
+          "correcte": true,
+          "justification": "Le script de l'étape 3 instancie `ChatMistralAI(model=\"mistral-large-latest\", temperature=0)`."
+        },
+        {
+          "texte": "`model=\"gpt-4.1\"` et `temperature=0.7`",
+          "correcte": false,
+          "justification": "`gpt-4.1` n'est évoqué que pour une comparaison optionnelle avec `ChatOpenAI` ; `temperature=0.7` est suggérée dans l'exercice 3.2, pas dans le script initial."
+        },
+        {
+          "texte": "`model=\"mistral-small\"` et `temperature=1`",
+          "correcte": false,
+          "justification": "Ce nom de modèle n'apparaît pas dans le TP, et la température initiale est 0."
+        },
+        {
+          "texte": "`model=\"mistral-large-latest\"` et `temperature=0.7`",
+          "correcte": false,
+          "justification": "Le bon modèle, mais la température initiale du script est 0 ; 0.7 n'est testée qu'à l'exercice 3.2."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "enonce": "Le TP recommande, pour sécuriser la récupération de la clé API dans le script, d'utiliser :",
+      "type": "unique",
+      "difficulte": "moyen",
+      "theme": "Gestion de la clé API",
+      "source_fichier": "tp1-premiers-pas.md",
+      "points": 1,
+      "options": [
+        {
+          "texte": "`os.environ[\"MISTRAL_API_KEY\"]` ou `os.getenv` après avoir ajouté `import os`",
+          "correcte": true,
+          "justification": "L'étape 3 demande explicitement d'ajouter `import os` et d'utiliser `os.environ[\"MISTRAL_API_KEY\"]` (ou `os.getenv`) pour sécuriser la récupération de la clé."
+        },
+        {
+          "texte": "Écrire la clé en clair directement dans le paramètre `api_key`",
+          "correcte": false,
+          "justification": "C'est l'inverse de la recommandation : le TP rappelle de ne pas partager la clé et privilégie la variable d'environnement ; `api_key=\"...\"` est seulement noté comme facultatif."
+        },
+        {
+          "texte": "Stocker la clé dans une variable globale nommée `KEY`",
+          "correcte": false,
+          "justification": "Le TP ne mentionne aucune variable globale `KEY` ; il s'appuie sur les variables d'environnement."
+        },
+        {
+          "texte": "La saisir au clavier via `input()` à chaque exécution",
+          "correcte": false,
+          "justification": "Aucune saisie par `input()` de la clé n'est proposée dans le TP pour la sécurisation."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "enonce": "Dans le script `tp1_chain.py`, la chaîne est construite par `chain = prompt | model | output_parser`. Que représente l'opérateur `|` et l'ordre des composants ?",
+      "type": "unique",
+      "difficulte": "moyen",
+      "theme": "Chaînes et prompts",
+      "source_fichier": "tp1-premiers-pas.md",
+      "points": 1,
+      "options": [
+        {
+          "texte": "Une composition d'étapes prompt → modèle → parser, exécutées dans cet ordre",
+          "correcte": true,
+          "justification": "Le TP indique que LangChain facilite « la composition d'étapes (prompt → modèle → parser) », exactement ce qu'exprime `prompt | model | output_parser`."
+        },
+        {
+          "texte": "Un OU logique entre trois invocations indépendantes du modèle",
+          "correcte": false,
+          "justification": "L'opérateur `|` ici n'est pas un OU logique : il chaîne les composants en pipeline séquentiel."
+        },
+        {
+          "texte": "Une exécution en parallèle des trois composants",
+          "correcte": false,
+          "justification": "Les composants ne s'exécutent pas en parallèle mais en séquence : la sortie de l'un alimente l'entrée du suivant."
+        },
+        {
+          "texte": "Un simple commentaire sans effet sur l'exécution",
+          "correcte": false,
+          "justification": "C'est une construction fonctionnelle qui définit la chaîne réellement invoquée via `chain.invoke(...)`."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "enonce": "À l'étape 5, comment le prompt hiérarchisé est-il construit avec `ChatPromptTemplate.from_messages([...])` ?",
+      "type": "unique",
+      "difficulte": "moyen",
+      "theme": "Prompt hiérarchisé",
+      "source_fichier": "tp1-premiers-pas.md",
+      "points": 1,
+      "options": [
+        {
+          "texte": "En combinant un message `\"system\"` et un message `\"user\"` contenant `{input}`",
+          "correcte": true,
+          "justification": "Le code de l'étape 5 combine `(\"system\", \"Vous êtes un rédacteur...\")` et `(\"user\", \"{input}\")`, illustrant la combinaison d'un message système et d'un message utilisateur."
+        },
+        {
+          "texte": "Uniquement avec un message `\"assistant\"` prérempli",
+          "correcte": false,
+          "justification": "Aucun message de rôle `assistant` n'est utilisé ; le TP combine les rôles `system` et `user`."
+        },
+        {
+          "texte": "Avec trois messages `\"user\"` successifs",
+          "correcte": false,
+          "justification": "Le prompt ne contient pas trois messages utilisateur : un message système et un message utilisateur."
+        },
+        {
+          "texte": "Sans variable de substitution, le texte étant entièrement figé",
+          "correcte": false,
+          "justification": "Le message utilisateur contient bien la variable `{input}`, substituée lors de `chain.invoke({\"input\": ...})`."
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "enonce": "Quel attribut le TP fait-il afficher pour inspecter la consommation de tokens et estimer un coût (exercices 3.1, 5.1 et 5.2) ?",
+      "type": "unique",
+      "difficulte": "moyen",
+      "theme": "Métadonnées et coûts",
+      "source_fichier": "tp1-premiers-pas.md",
+      "points": 1,
+      "options": [
+        {
+          "texte": "`usage_metadata` (avec `input_tokens` et `output_tokens`)",
+          "correcte": true,
+          "justification": "L'exercice 3.1 demande d'afficher `response.usage_metadata` et de calculer un coût à partir d'`input_tokens` et `output_tokens` ; l'étape 5 réutilise `result.usage_metadata`."
+        },
+        {
+          "texte": "`response.cost`",
+          "correcte": false,
+          "justification": "Aucun attribut `cost` n'est mentionné : le coût est calculé manuellement à partir des tokens de `usage_metadata`."
+        },
+        {
+          "texte": "`response.tokens_total`",
+          "correcte": false,
+          "justification": "Cet attribut n'apparaît pas dans le TP ; l'inspection passe par `usage_metadata`."
+        },
+        {
+          "texte": "`response.metadata.price`",
+          "correcte": false,
+          "justification": "Le TP ne fournit pas de prix automatique ; il faut estimer le coût en s'appuyant sur le tarif public et les tokens."
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "enonce": "Parmi les usages suivants, lesquels le TP cite-t-il comme facilités par LangChain ? (plusieurs réponses possibles)",
+      "type": "multiple",
+      "difficulte": "moyen",
+      "theme": "Notions LangChain",
+      "source_fichier": "tp1-premiers-pas.md",
+      "points": 2,
+      "options": [
+        {
+          "texte": "L'automatisation des prompts via des chaînes",
+          "correcte": true,
+          "justification": "L'étape 2 liste « l'automatisation des prompts via des chaînes »."
+        },
+        {
+          "texte": "La gestion d'agents (raisonnement multi-étapes)",
+          "correcte": true,
+          "justification": "L'étape 2 mentionne « la gestion d'agents (raisonnement multi-étapes) »."
+        },
+        {
+          "texte": "L'intégration de vector stores et d'embeddings pour les applications RAG",
+          "correcte": true,
+          "justification": "L'étape 2 cite « l'intégration de vector stores et d'embeddings pour les applications RAG »."
+        },
+        {
+          "texte": "L'entraînement (fine-tuning) de nouveaux modèles de langage",
+          "correcte": false,
+          "justification": "Le TP ne présente pas LangChain comme un outil d'entraînement de modèles ; il sert à orchestrer des LLM existants."
+        },
+        {
+          "texte": "La création de comptes Mistral AI et la facturation",
+          "correcte": false,
+          "justification": "La création de compte se fait sur le site Mistral (étape 0) ; ce n'est pas une fonction de LangChain."
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "enonce": "L'exercice 4.2 demande de produire des réponses au format JSON avec les clés `setup` et `punchline`. Quelle approche est cohérente avec ce que propose le TP ?",
+      "type": "unique",
+      "difficulte": "difficile",
+      "theme": "Chaînes et prompts",
+      "source_fichier": "tp1-premiers-pas.md",
+      "points": 1,
+      "options": [
+        {
+          "texte": "Adapter le prompt pour imposer la structure JSON, puis utiliser un `StrOutputParser()` ou un parser JSON",
+          "correcte": true,
+          "justification": "L'exercice 4.2 indique explicitement d'« adapter le prompt » et d'« utiliser `StrOutputParser()` ou un parser JSON » pour obtenir le format JSON."
+        },
+        {
+          "texte": "Modifier la température à 0.7 pour que le modèle renvoie automatiquement du JSON",
+          "correcte": false,
+          "justification": "La température (exercices 3.2 et 4.3) influence la créativité des réponses, pas leur format de sortie."
+        },
+        {
+          "texte": "Changer le modèle pour `gpt-4.1` car Mistral ne sait pas produire de JSON",
+          "correcte": false,
+          "justification": "Le TP n'impose aucun changement de modèle pour le JSON ; il agit sur le prompt et le parser, et `mistral-large-latest` reste utilisé."
+        },
+        {
+          "texte": "Remplacer la chaîne par une boucle `for` qui parse manuellement chaque caractère",
+          "correcte": false,
+          "justification": "Le TP ne propose pas de parsing caractère par caractère ; il s'appuie sur un parser (StrOutputParser ou parser JSON) et le prompt."
+        }
+      ]
+    }
+  ]
+}
