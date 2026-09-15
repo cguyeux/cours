@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QCM — TP5 : Multimodalité et IA générative</title>
+<style>
+  :root { --ok:#1b8a5a; --ko:#c0392b; --accent:#2c5f8a; --bg:#f6f7f9; }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, "Segoe UI", Roboto, sans-serif; line-height:1.5;
+         max-width: 820px; margin: 0 auto; padding: 1.5rem; color:#1a1a1a; background:var(--bg); }
+  h1 { color: var(--accent); margin-bottom:.2rem; }
+  .meta { color:#666; font-size:.9rem; margin-bottom:1rem; }
+  .consignes { background:#eef3f8; border-left:4px solid var(--accent); padding:.6rem .9rem;
+               border-radius:4px; margin-bottom:1.2rem; }
+  .q { background:#fff; border:1px solid #e1e4e8; border-radius:8px; padding:1rem 1.2rem;
+       margin-bottom:1rem; box-shadow:0 1px 2px rgba(0,0,0,.04); }
+  .q h3 { margin:.1rem 0 .2rem; font-size:1.05rem; }
+  .badge { font-size:.72rem; font-weight:600; padding:.1rem .5rem; border-radius:10px;
+           margin-left:.4rem; vertical-align:middle; }
+  .b-facile{background:#e3f4ea;color:var(--ok);} .b-moyen{background:#fdf3e0;color:#b87600;}
+  .b-difficile{background:#fbe6e6;color:var(--ko);} .b-theme{background:#eef0f3;color:#555;}
+  .enonce { margin:.4rem 0 .8rem; }
+  .opt { display:block; padding:.45rem .6rem; border:1px solid #e1e4e8; border-radius:6px;
+         margin:.35rem 0; cursor:pointer; transition:background .12s; }
+  .opt:hover { background:#f0f4f8; }
+  .opt input { margin-right:.55rem; }
+  .opt.correct { border-color:var(--ok); background:#eaf7f0; }
+  .opt.wrong   { border-color:var(--ko); background:#fbecec; }
+  .just { font-size:.86rem; color:#555; margin:.2rem 0 0 1.7rem; display:none; }
+  .just.show { display:block; }
+  .src { font-size:.78rem; color:#888; margin-top:.5rem; display:none; }
+  .src.show { display:block; }
+  .bar { position:sticky; bottom:0; background:var(--bg); padding:.8rem 0; }
+  button { background:var(--accent); color:#fff; border:0; padding:.6rem 1.3rem;
+           font-size:1rem; border-radius:6px; cursor:pointer; }
+  button.ghost { background:#fff; color:var(--accent); border:1px solid var(--accent); margin-left:.5rem; }
+  #score { font-size:1.2rem; font-weight:700; margin-left:1rem; }
+  .qmark { float:right; font-weight:700; display:none; }
+  .qmark.show{display:inline;}
+</style>
+</head>
+<body>
+<h1>QCM — TP5 : Multimodalité et IA générative</h1>
+<div class="meta">Source : site/docs/ia-generative/tp5-multimodalite.md — 10 questions</div>
+<div class="consignes">Cochez la ou les bonnes réponses. Sauf mention « plusieurs réponses possibles », une seule réponse est attendue.</div>
+<form id="qcm"></form>
+<div class="bar">
+  <button type="button" onclick="grade()">Valider mes réponses</button>
+  <button type="button" class="ghost" onclick="location.reload()">Réinitialiser</button>
+  <span id="score"></span>
+</div>
+<script>
+const DATA = {"questions": [{"_enonce": "Selon l'étape 0 du TP, que recouvre la notion de multimodalité ?", "_multiple": false, "difficulte": "facile", "theme": "Notion de multimodalité", "source_fichier": "tp5-multimodalite.md", "_source": "tp5-multimodalite.md", "options": [{"_texte": "La capacité d'un modèle à comprendre ou produire plusieurs types de données (texte, image, audio, vidéo).", "correcte": true, "_justification": "L'étape 0 indique : « La multimodalité permet à un modèle de comprendre ou de produire plusieurs types de données (texte, image, audio, vidéo). »"}, {"_texte": "La possibilité d'exécuter un même modèle sur plusieurs systèmes d'exploitation.", "correcte": false, "_justification": "Le TP ne parle jamais de portabilité système ; la multimodalité concerne les types de données, pas les OS."}, {"_texte": "L'entraînement simultané de plusieurs modèles sur un même jeu de données.", "correcte": false, "_justification": "Le TP porte sur l'usage des API, pas sur l'entraînement de modèles."}, {"_texte": "L'utilisation de plusieurs clés d'API pour répartir la charge.", "correcte": false, "_justification": "Aucune mention de répartition de charge ou de clés multiples dans le TP ; ce n'est pas la définition de la multimodalité."}]}, {"_enonce": "D'après l'étape 0, quelles sont les combinaisons de modalités les plus courantes en production ?", "_multiple": true, "difficulte": "facile", "theme": "Notion de multimodalité", "source_fichier": "tp5-multimodalite.md", "_source": "tp5-multimodalite.md", "options": [{"_texte": "Texte ↔ image", "correcte": true, "_justification": "L'étape 0 cite « texte ↔ image » comme l'une des deux combinaisons les plus courantes en production."}, {"_texte": "Texte ↔ audio", "correcte": true, "_justification": "L'étape 0 cite « texte ↔ audio » comme l'autre combinaison la plus courante en production."}, {"_texte": "Audio ↔ vidéo", "correcte": false, "_justification": "Le TP mentionne la vidéo comme type de donnée possible, mais ne la présente pas comme une combinaison courante en production."}, {"_texte": "Image ↔ vidéo", "correcte": false, "_justification": "Cette combinaison n'est pas citée dans le TP ; seules texte↔image et texte↔audio sont présentées comme les plus courantes."}]}, {"_enonce": "Pourquoi le TP exige-t-il l'installation de <code>ffmpeg<\/code> et son ajout au PATH ?", "_multiple": false, "difficulte": "facile", "theme": "Environnement et prérequis", "source_fichier": "tp5-multimodalite.md", "_source": "tp5-multimodalite.md", "options": [{"_texte": "Parce qu'il est requis par <code>pydub<\/code> pour manipuler l'audio.", "correcte": true, "_justification": "Les prérequis précisent : « un shell avec <code>ffmpeg<\/code> installé (requis par <code>pydub<\/code> pour l'audio) »."}, {"_texte": "Parce que l'API OpenAII refuse les requêtes sans <code>ffmpeg<\/code> détecté.", "correcte": false, "_justification": "L'API OpenAI n'impose pas <code>ffmpeg<\/code> ; c'est la bibliothèque locale <code>pydub<\/code> qui en a besoin pour lire/exporter l'audio."}, {"_texte": "Parce qu'il sert à encoder les images en base64 pour la vision.", "correcte": false, "_justification": "L'encodage base64 des images se fait avec le module <code>base64<\/code> de Python (étape 4), pas avec <code>ffmpeg<\/code>."}, {"_texte": "Parce qu'il génère les fichiers <code>.env<\/code> contenant la clé d'API.", "correcte": false, "_justification": "Le fichier <code>.env<\/code> est créé manuellement et lu via <code>python-dotenv<\/code> ; <code>ffmpeg<\/code> n'a aucun rôle ici."}]}, {"_enonce": "À l'étape 2 (Text-to-Speech), quel modèle est utilisé dans la fonction <code>synthesize_message<\/code> et via quel client OpenAI ?", "_multiple": false, "difficulte": "moyen", "theme": "Synthèse vocale (TTS)", "source_fichier": "tp5-multimodalite.md", "_source": "tp5-multimodalite.md", "options": [{"_texte": "Le modèle <code>gpt-4o-mini-tts<\/code> via <code>client.audio.speech<\/code>.", "correcte": true, "_justification": "Le code de l'étape 2 appelle <code>client.audio.speech.with_streaming_response.create(model=&quot;gpt-4o-mini-tts&quot;, ...)<\/code>."}, {"_texte": "Le modèle <code>gpt-4o-mini-transcribe<\/code> via <code>client.audio.transcriptions<\/code>.", "correcte": false, "_justification": "Ce modèle et ce client servent à la transcription (étape 3), pas à la synthèse vocale."}, {"_texte": "Le modèle <code>gpt-image-1<\/code> via <code>client.images.generate<\/code>.", "correcte": false, "_justification": "<code>gpt-image-1<\/code> et <code>images.generate<\/code> concernent la génération d'images (étape 5)."}, {"_texte": "Le modèle <code>gpt-4.1-mini<\/code> via <code>client.responses.create<\/code>.", "correcte": false, "_justification": "<code>gpt-4.1-mini<\/code> et <code>responses.create<\/code> sont employés pour la vision (étape 4), pas pour le TTS."}]}, {"_enonce": "À l'étape 3, comment la fonction <code>transcribe_mp3<\/code> traite-t-elle un fichier MP3 long, et que fait-elle des fragments très courts ?", "_multiple": false, "difficulte": "moyen", "theme": "Transcription (STT)", "source_fichier": "tp5-multimodalite.md", "_source": "tp5-multimodalite.md", "options": [{"_texte": "Elle découpe l'audio en blocs (par défaut de 2 minutes) et ignore les segments de moins de 1000 ms.", "correcte": true, "_justification": "Le code découpe par <code>chunk_minutes=2<\/code> et contient <code>if len(segment) &lt; 1_000: continue<\/code> pour ignorer les fragments trop courts."}, {"_texte": "Elle envoie le fichier entier en une seule requête et tronque ce qui dépasse 2 minutes.", "correcte": false, "_justification": "Au contraire, le TP recommande de découper les fichiers longs en segments manipulables ; rien n'est tronqué."}, {"_texte": "Elle découpe par blocs de 2 secondes et concatène tous les fragments sans exception.", "correcte": false, "_justification": "Le découpage est en minutes (<code>chunk_minutes=2<\/code>), et les fragments de moins de 1000 ms sont écartés, pas tous concaténés."}, {"_texte": "Elle convertit d'abord le MP3 en WAV avec <code>ffmpeg<\/code> avant de tout transcrire en un seul appel.", "correcte": false, "_justification": "Aucune conversion en WAV ni appel unique : <code>pydub<\/code> lit le MP3, on exporte chaque bloc en MP3 et on transcrit bloc par bloc."}]}, {"_enonce": "À l'étape 4 (Vision), comment une image locale est-elle transmise au modèle <code>gpt-4.1-mini<\/code> ?", "_multiple": false, "difficulte": "moyen", "theme": "Vision (interroger une image)", "source_fichier": "tp5-multimodalite.md", "_source": "tp5-multimodalite.md", "options": [{"_texte": "Elle est encodée en base64 puis transmise comme data URL dans un contenu <code>input_image<\/code>.", "correcte": true, "_justification": "La fonction <code>encode_image_to_data_url<\/code> renvoie <code>f&quot;data:{mime_type};base64,{b64}&quot;<\/code>, passée ensuite via <code>{&quot;type&quot;: &quot;input_image&quot;, &quot;image_url&quot;: data_url}<\/code>."}, {"_texte": "Elle est téléversée sur un bucket public dont l'URL HTTP est envoyée au modèle.", "correcte": false, "_justification": "Le TP convertit l'image locale en data URL base64 ; il n'y a pas d'hébergement public."}, {"_texte": "Elle est transformée en texte par OCR local puis seul ce texte est envoyé.", "correcte": false, "_justification": "C'est le modèle de vision qui interprète les pixels ; aucun OCR local n'est réalisé avant l'envoi."}, {"_texte": "Elle est convertie en tableau NumPy et sérialisée en JSON dans le champ <code>input_text<\/code>.", "correcte": false, "_justification": "L'image va dans <code>input_image<\/code> sous forme de data URL, pas dans <code>input_text<\/code> ni en tableau NumPy."}]}, {"_enonce": "À l'étape 5, sous quelle forme l'API <code>images.generate<\/code> renvoie-t-elle l'image, et comment le code la sauvegarde-t-il ?", "_multiple": false, "difficulte": "moyen", "theme": "Génération d'images", "source_fichier": "tp5-multimodalite.md", "_source": "tp5-multimodalite.md", "options": [{"_texte": "Elle renvoie du base64 (<code>b64_json<\/code>) que l'on décode avec <code>base64.b64decode<\/code> avant d'écrire les octets sur disque.", "correcte": true, "_justification": "Le TP dit « renvoie du base64 qu'il suffit de sauvegarder » ; le code fait <code>image_b64 = result.data[0].b64_json<\/code> puis <code>output.write_bytes(base64.b64decode(image_b64))<\/code>."}, {"_texte": "Elle renvoie une URL temporaire que le code télécharge avec <code>requests.get<\/code>.", "correcte": false, "_justification": "Le code utilise directement le champ base64 <code>b64_json<\/code> ; aucun téléchargement par URL n'est effectué."}, {"_texte": "Elle renvoie directement un objet <code>PIL.Image<\/code> enregistré via <code>.save()<\/code>.", "correcte": false, "_justification": "L'API renvoie du base64 ; le code écrit des octets bruts avec <code>write_bytes<\/code>, sans passer par un objet PIL."}, {"_texte": "Elle écrit elle-même le fichier sur le chemin <code>out_path<\/code> sans retour exploitable.", "correcte": false, "_justification": "C'est le code utilisateur qui écrit le fichier après décodage du base64 retourné par l'API."}]}, {"_enonce": "À l'étape 6, quel est l'enchaînement de modalités réalisé par la fonction <code>analyse_visuelle_vers_audio<\/code> ?", "_multiple": false, "difficulte": "moyen", "theme": "Pipeline multimodal", "source_fichier": "tp5-multimodalite.md", "_source": "tp5-multimodalite.md", "options": [{"_texte": "Vision → texte → audio : <code>describe_image<\/code> produit un résumé, puis <code>synthesize_message<\/code> le transforme en audio.", "correcte": true, "_justification": "La docstring annonce « Chaîne complète vision → texte → audio » et le code appelle <code>describe_image<\/code> puis <code>synthesize_message<\/code>."}, {"_texte": "Audio → texte → image : transcription puis génération d'une illustration.", "correcte": false, "_justification": "Cet ordre inverse les modalités ; la fonction part d'une image et finit par de l'audio, pas l'inverse."}, {"_texte": "Texte → image → audio sans aucune étape de vision.", "correcte": false, "_justification": "La fonction commence par analyser une image avec <code>describe_image<\/code> (vision), elle ne génère pas d'image."}, {"_texte": "Texte → texte → texte : trois appels successifs au modèle de langage.", "correcte": false, "_justification": "Le pipeline combine vision et audio ; il ne se limite pas à des transformations textuelles."}]}, {"_enonce": "Dans la fonction <code>describe_image<\/code> (étape 4), comment le texte de réponse est-il extrait de l'objet retourné par <code>responses.create<\/code> ?", "_multiple": false, "difficulte": "difficile", "theme": "Vision (interroger une image)", "source_fichier": "tp5-multimodalite.md", "_source": "tp5-multimodalite.md", "options": [{"_texte": "En parcourant <code>response.output<\/code>, puis le <code>content<\/code> de chaque item, et en gardant les éléments dont <code>content.type == &quot;output_text&quot;<\/code>.", "correcte": true, "_justification": "Le code itère <code>for item in response.output: for content in item.content:<\/code> et ne conserve <code>content.text<\/code> que si <code>content.type == &quot;output_text&quot;<\/code>."}, {"_texte": "En lisant directement <code>response.text<\/code> qui contient la réponse complète.", "correcte": false, "_justification": "Le code ne lit pas un attribut <code>response.text<\/code> ; il parcourt la structure <code>output<\/code>/<code>content<\/code> pour filtrer les blocs de type <code>output_text<\/code>."}, {"_texte": "En appelant <code>response.choices[0].message.content<\/code> comme dans l'API chat classique.", "correcte": false, "_justification": "Le TP utilise l'API <code>responses<\/code> avec une structure <code>output<\/code>, pas <code>choices[...].message.content<\/code>."}, {"_texte": "En désérialisant <code>response.body<\/code> avec <code>json.loads<\/code>.", "correcte": false, "_justification": "L'objet est déjà structuré ; on itère sur <code>response.output<\/code>, sans désérialisation JSON manuelle."}]}, {"_enonce": "Parmi les propositions suivantes, lesquelles sont effectivement suggérées dans la section « Pour aller plus loin » ou les exercices du TP ?", "_multiple": true, "difficulte": "difficile", "theme": "Pour aller plus loin et exercices", "source_fichier": "tp5-multimodalite.md", "_source": "tp5-multimodalite.md", "options": [{"_texte": "Implémenter un chatbot vocal en temps réel (micro → transcription → réponse texte → synthèse vocale → restitution).", "correcte": true, "_justification": "La section « Pour aller plus loin » propose exactement ce chatbot vocal en streaming temps réel."}, {"_texte": "Comparer OpenAI avec un fournisseur alternatif comme Deepgram (transcription) ou Stability AI (image).", "correcte": true, "_justification": "La section « Pour aller plus loin » suggère de comparer OpenAI avec Deepgram pour la transcription ou Stability AI pour l'image."}, {"_texte": "Industrialiser le pipeline via une CLI <code>argparse<\/code> ou une API FastAPI minimale.", "correcte": true, "_justification": "L'exercice 6.2 propose d'industrialiser le pipeline « via une CLI (<code>argparse<\/code>) ou une API FastAPI minimale »."}, {"_texte": "Entraîner soi-même un modèle de diffusion pour remplacer <code>gpt-image-1<\/code>.", "correcte": false, "_justification": "Le TP ne propose aucun entraînement de modèle ; il reste centré sur l'usage des API existantes."}, {"_texte": "Héberger les modèles en local pour fonctionner totalement hors ligne.", "correcte": false, "_justification": "Le TP repose sur l'API OpenAI distante (clé <code>OPENAI_API_KEY<\/code>) et ne mentionne pas d'hébergement local hors ligne."}]}]};
+const form = document.getElementById('qcm');
+DATA.questions.forEach((q, i) => {
+  const multi = q._multiple;
+  const div = document.createElement('div');
+  div.className = 'q'; div.id = 'q'+i;
+  let badges = '';
+  if (q.difficulte) badges += `<span class="badge b-${q.difficulte}">${q.difficulte}</span>`;
+  if (q.theme) badges += `<span class="badge b-theme">${q.theme}</span>`;
+  const hint = multi ? ' <small>(plusieurs réponses)</small>' : '';
+  let html = `<span class="qmark" id="m${i}"></span><h3>Question ${i+1}${hint}${badges}</h3>`;
+  html += `<div class="enonce">${q._enonce}</div>`;
+  q.options.forEach((o, j) => {
+    const type = multi ? 'checkbox' : 'radio';
+    html += `<label class="opt" id="o${i}_${j}">`
+          + `<input type="${type}" name="q${i}" value="${j}">${o._texte}</label>`;
+    html += `<div class="just" id="j${i}_${j}">${o._justification||''}</div>`;
+  });
+  if (q.source_fichier) html += `<div class="src" id="s${i}">Source : ${q._source}</div>`;
+  div.innerHTML = html;
+  form.appendChild(div);
+});
+function grade(){
+  let correct = 0;
+  DATA.questions.forEach((q, i) => {
+    const chosen = [...form.querySelectorAll(`input[name=q${i}]:checked`)].map(e=>+e.value);
+    const good = q.options.map((o,j)=>o.correcte?j:-1).filter(j=>j>=0);
+    const ok = chosen.length===good.length && chosen.every(j=>good.includes(j));
+    if (ok) correct++;
+    q.options.forEach((o,j)=>{
+      const lab = document.getElementById(`o${i}_${j}`);
+      lab.classList.remove('correct','wrong');
+      if (o.correcte) lab.classList.add('correct');
+      else if (chosen.includes(j)) lab.classList.add('wrong');
+      const ju = document.getElementById(`j${i}_${j}`);
+      if (ju && o._justification) ju.classList.add('show');
+    });
+    const m = document.getElementById('m'+i);
+    m.textContent = ok ? '✓' : '✗';
+    m.style.color = ok ? 'var(--ok)' : 'var(--ko)';
+    m.classList.add('show');
+    const s = document.getElementById('s'+i); if (s) s.classList.add('show');
+  });
+  const n = DATA.questions.length;
+  const pct = Math.round(100*correct/n);
+  const sc = document.getElementById('score');
+  sc.textContent = `Score : ${correct} / ${n}  (${pct} %)`;
+  sc.style.color = pct>=50 ? 'var(--ok)' : 'var(--ko)';
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+</script>
+</body>
+</html>
