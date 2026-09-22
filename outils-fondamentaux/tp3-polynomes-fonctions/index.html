@@ -1,0 +1,2753 @@
+
+<!doctype html>
+<html lang="fr" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Supports de travaux pratiques du département informatique de l'IUT Nord Franche-Comté. Accessibles sans VPN et sans compte.">
+      
+      
+        <meta name="author" content="Christophe Guyeux">
+      
+      
+        <link rel="canonical" href="https://cours.gclab.fr/outils-fondamentaux/tp3-polynomes-fonctions/">
+      
+      
+        <link rel="prev" href="../tp2-arithmetique/">
+      
+      
+        <link rel="next" href="../tp4-matrices-gauss/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>TP3. Polynômes et fonctions - Cours de Christophe Guyeux</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#tp3-polynomes-et-fonctions" class="md-skip">
+          Aller au contenu
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="En-tête">
+    <a href="../.." title="Cours de Christophe Guyeux" class="md-header__button md-logo" aria-label="Cours de Christophe Guyeux" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12.42 5.29c-1.1-.1-2.07.71-2.17 1.82L10 10h2.82v2h-3l-.44 5.07A4.001 4.001 0 0 1 2 18.83l1.5-1.5c.33 1.05 1.46 1.64 2.5 1.3.78-.24 1.33-.93 1.4-1.74L7.82 12h-3v-2H8l.27-3.07a4.01 4.01 0 0 1 4.33-3.65c1.26.11 2.4.81 3.06 1.89l-1.5 1.5c-.25-.77-.93-1.31-1.74-1.38M22 13.65l-1.41-1.41-2.83 2.83-2.83-2.83-1.43 1.41 2.85 2.85-2.85 2.81 1.43 1.41 2.83-2.83 2.83 2.83L22 19.31l-2.83-2.81z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Cours de Christophe Guyeux
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              TP3. Polynômes et fonctions
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Passer au thème sombre"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Passer au thème sombre" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Passer au thème clair"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Passer au thème clair" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Rechercher" placeholder="Rechercher" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Recherche">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Effacer" aria-label="Effacer" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initialisation de la recherche
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Cours de Christophe Guyeux" class="md-nav__button md-logo" aria-label="Cours de Christophe Guyeux" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12.42 5.29c-1.1-.1-2.07.71-2.17 1.82L10 10h2.82v2h-3l-.44 5.07A4.001 4.001 0 0 1 2 18.83l1.5-1.5c.33 1.05 1.46 1.64 2.5 1.3.78-.24 1.33-.93 1.4-1.74L7.82 12h-3v-2H8l.27-3.07a4.01 4.01 0 0 1 4.33-3.65c1.26.11 2.4.81 3.06 1.89l-1.5 1.5c-.25-.77-.93-1.31-1.74-1.38M22 13.65l-1.41-1.41-2.83 2.83-2.83-2.83-1.43 1.41 2.85 2.85-2.85 2.81 1.43 1.41 2.83-2.83 2.83 2.83L22 19.31l-2.83-2.81z"/></svg>
+
+    </a>
+    Cours de Christophe Guyeux
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Accueil
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Outils fondamentaux
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Outils fondamentaux
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Le module
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../demarrage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mise en route
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tp1-calcul-numerique/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TP1. Calcul numérique
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tp2-arithmetique/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TP2. Arithmétique
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TP3. Polynômes et fonctions
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TP3. Polynômes et fonctions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#objectifs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objectifs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prérequis
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ressources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ressources
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#etape-1-un-polynome-est-une-liste-20-min" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Étape 1. Un polynôme est une liste (20 min)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#etape-2-le-schema-de-horner-25-min" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Étape 2. Le schéma de Horner (25 min)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#etape-3-deriver-un-polynome-15-min" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Étape 3. Dériver un polynôme (15 min)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#etape-4-trouver-une-racine-30-min" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Étape 4. Trouver une racine (30 min)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Étape 4. Trouver une racine (30 min)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#la-dichotomie-lente-mais-elle-ne-rate-jamais" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        La dichotomie : lente, mais elle ne rate jamais
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#la-methode-de-newton-rapide-mais-elle-peut-segarer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        La méthode de Newton : rapide, mais elle peut s'égarer
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#etape-5-voir-la-fonction-15-min" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Étape 5. Voir la fonction (15 min)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entrainement-et-approfondissement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entraînement et approfondissement
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Entraînement et approfondissement">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#etape-6-lalgebre-des-polynomes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Étape 6. L'algèbre des polynômes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#etape-7-deriver-numeriquement-et-le-mur-des-flottants" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Étape 7. Dériver numériquement, et le mur des flottants
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#etape-8-integrer-numeriquement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Étape 8. Intégrer numériquement
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ce-quil-faut-retenir" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ce qu'il faut retenir
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#auto-evaluation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Auto-évaluation
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tp4-matrices-gauss/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TP4. Matrices et systèmes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tp5-synthese/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TP5. Synthèse
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tp6-geometrie-plan/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TP6. Géométrie du plan
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../memento/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mémento Python
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../evaluation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Projet et évaluation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IA générative (BUT3)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    IA générative (BUT3)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ia-generative/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Le module
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ia-generative/demarrage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mise en route BUT3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ia-generative/tp1-premiers-pas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TP1. Premiers pas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ia-generative/tp2-sorties-structurees/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TP2. Sorties structurées
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ia-generative/tp3-rag-vecteurs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TP3. RAG et bases vectorielles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ia-generative/tp4-agents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TP4. Agents
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ia-generative/tp5-multimodalite/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TP5. Multimodalité
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ia/evaluation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Projet et évaluation (IA)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modélisations mathématiques (BUT3)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Modélisations mathématiques (BUT3)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../modelisation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Le module
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../modelisation/tp1-matrice-svd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TP1. Ce qu'une matrice sait faire
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../modelisation/tp2-marche-aleatoire/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TP2. La marche aléatoire
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../modelisation/tp3-gradient-bifurcation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TP3. Dériver, descendre, diverger
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../modelisation/evaluation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Projet et évaluation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IA prédictive (BUT3)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    IA prédictive (BUT3)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ia-predictive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Le module
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ia-predictive/tp1-pandas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TP1. Pandas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ia-predictive/tp1bis-geopandas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TP1bis. GeoPandas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ia-predictive/tp2-clustering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TP2. Clustering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ia-predictive/tp2bis-reduction-dimension/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TP2bis. Réduction de dimension
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ia-predictive/tp3-classification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TP3. Classification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ia-predictive/tp5-regression/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TP5. Régression et validation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ia-predictive/tp4-xgboost/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TP4. XGBoost
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ia-predictive/tp6-series-temporelles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TP6. Séries temporelles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ia-predictive/tp7-xgboost-objectifs-metriques/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TP7. XGBoost, objectifs et métriques
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ia-predictive/tp8-pretraitement/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TP8. Prétraitement des variables
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ia-predictive/tp9-xgboost-explicabilite-causalite/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TP9. XGBoost, explicabilité et causalité
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ia-predictive/tp10-theorie-information/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TP10. Théorie de l'information
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ia/evaluation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Projet et évaluation (IA)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../a-propos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    À propos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#objectifs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objectifs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prérequis
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ressources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ressources
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#etape-1-un-polynome-est-une-liste-20-min" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Étape 1. Un polynôme est une liste (20 min)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#etape-2-le-schema-de-horner-25-min" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Étape 2. Le schéma de Horner (25 min)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#etape-3-deriver-un-polynome-15-min" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Étape 3. Dériver un polynôme (15 min)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#etape-4-trouver-une-racine-30-min" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Étape 4. Trouver une racine (30 min)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Étape 4. Trouver une racine (30 min)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#la-dichotomie-lente-mais-elle-ne-rate-jamais" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        La dichotomie : lente, mais elle ne rate jamais
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#la-methode-de-newton-rapide-mais-elle-peut-segarer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        La méthode de Newton : rapide, mais elle peut s'égarer
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#etape-5-voir-la-fonction-15-min" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Étape 5. Voir la fonction (15 min)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entrainement-et-approfondissement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entraînement et approfondissement
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Entraînement et approfondissement">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#etape-6-lalgebre-des-polynomes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Étape 6. L'algèbre des polynômes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#etape-7-deriver-numeriquement-et-le-mur-des-flottants" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Étape 7. Dériver numériquement, et le mur des flottants
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#etape-8-integrer-numeriquement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Étape 8. Intégrer numériquement
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ce-quil-faut-retenir" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ce qu'il faut retenir
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#auto-evaluation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Auto-évaluation
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="tp3-polynomes-et-fonctions">TP3. Polynômes et fonctions<a class="headerlink" href="#tp3-polynomes-et-fonctions" title="Lien vers cette section">&para;</a></h1>
+<p><strong>Durée : 1 h 45.</strong></p>
+<h2 id="objectifs">Objectifs<a class="headerlink" href="#objectifs" title="Lien vers cette section">&para;</a></h2>
+<ul>
+<li>Représenter un polynôme en machine et l'évaluer, naïvement puis intelligemment.</li>
+<li>Dériver un polynôme, chercher ses racines par dichotomie et par la méthode de Newton.</li>
+<li>Tracer une fonction, et lire le graphique pour comprendre un algorithme.</li>
+</ul>
+<h2 id="prerequis">Prérequis<a class="headerlink" href="#prerequis" title="Lien vers cette section">&para;</a></h2>
+<p>Les <a href="../tp1-calcul-numerique/">TP1</a> et <a href="../tp2-arithmetique/">TP2</a> : fonctions, boucles,
+listes, mesure de temps.</p>
+<h2 id="ressources">Ressources<a class="headerlink" href="#ressources" title="Lien vers cette section">&para;</a></h2>
+<ul>
+<li>Le <a href="../memento/">mémento Python</a>, section listes et section matplotlib.</li>
+<li><a href="/lite/notebooks/index.html?path=tp3.ipynb" target="_blank">Le carnet de ce TP</a>.</li>
+<li><a href="../qcm/qcm_tp3.html" target="_blank">Le QCM d'auto-évaluation de ce TP</a>, à faire après la séance.</li>
+</ul>
+<hr />
+<h2 id="etape-1-un-polynome-est-une-liste-20-min">Étape 1. Un polynôme est une liste (20 min)<a class="headerlink" href="#etape-1-un-polynome-est-une-liste-20-min" title="Lien vers cette section">&para;</a></h2>
+<p>Un polynôme <span class="arithmatex">\( P(x) = 2 + 3x + 5x^{3} \)</span> est entièrement déterminé par ses coefficients.
+La convention que nous prenons, et qui est celle de la plupart des bibliothèques, place le
+coefficient constant en premier :</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">P</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>   <span class="c1"># 2 + 3x + 0x^2 + 5x^3</span>
+</span></code></pre></div>
+<p>Le coefficient de <span class="arithmatex">\( x^{i} \)</span> est donc <code>P[i]</code>, et le degré du polynôme est
+<code>len(P) - 1</code>. Évaluer le polynôme en un point, c'est faire la somme des <span class="arithmatex">\( P_i x^{i} \)</span>.</p>
+<div class="admonition question">
+<p class="admonition-title">Exercice 1.1 : évaluation naïve</p>
+<p>Écrivez <code>evaluer_naif(P, x)</code> qui calcule <span class="arithmatex">\( P(x) \)</span> en suivant la définition, avec une
+puissance par terme.</p>
+<p><strong>Résultat attendu :</strong> <code>evaluer_naif([2, 3, 0, 5], 2)</code> vaut <code>48</code>, car
+<span class="arithmatex">\( 2 + 6 + 40 = 48 \)</span>.</p>
+<details class="success">
+<summary>Corrigé</summary>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">evaluer_naif</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">    </span><span class="sd">"""Évalue le polynôme P au point x, terme par terme."""</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="n">total</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">P</span><span class="p">)):</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>        <span class="n">total</span> <span class="o">=</span> <span class="n">total</span> <span class="o">+</span> <span class="n">P</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">x</span> <span class="o">**</span> <span class="n">i</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="k">return</span> <span class="n">total</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nb">print</span><span class="p">(</span><span class="n">evaluer_naif</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="mi">2</span><span class="p">))</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="nb">print</span><span class="p">(</span><span class="n">evaluer_naif</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="mi">0</span><span class="p">))</span>
+</span></code></pre></div>
+<p>En <code>x = 0</code>, on retrouve le coefficient constant, <code>2</code> : un bon test rapide, car
+toute erreur d'indice se voit immédiatement.</p>
+</details>
+</div>
+<hr />
+<h2 id="etape-2-le-schema-de-horner-25-min">Étape 2. Le schéma de Horner (25 min)<a class="headerlink" href="#etape-2-le-schema-de-horner-25-min" title="Lien vers cette section">&para;</a></h2>
+<p>L'évaluation naïve recalcule les puissances de <span class="arithmatex">\( x \)</span> à chaque terme, ce qui est du
+gaspillage. Horner remarque qu'on peut factoriser :</p>
+<div class="arithmatex">\[ 2 + 3x + 0x^{2} + 5x^{3} = 2 + x\,(3 + x\,(0 + x \cdot 5)) \]</div>
+<p>Il ne reste que des multiplications et des additions, une de chaque par degré, et plus
+aucune puissance. On part du coefficient de plus haut degré et on remonte.</p>
+<div class="admonition question">
+<p class="admonition-title">Exercice 2.1 : Horner</p>
+<p>Écrivez <code>evaluer(P, x)</code> par le schéma de Horner, et vérifiez qu'elle donne le même
+résultat que la version naïve sur plusieurs points.</p>
+<p><strong>Résultat attendu :</strong> les deux fonctions coïncident, et Horner est plus rapide sur un
+polynôme de degré élevé.</p>
+<details class="success">
+<summary>Corrigé</summary>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">evaluer</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">    </span><span class="sd">"""Évalue le polynôme P au point x par le schéma de Horner."""</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="n">total</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="k">for</span> <span class="n">coefficient</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">P</span><span class="p">):</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>        <span class="n">total</span> <span class="o">=</span> <span class="n">total</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">coefficient</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="k">return</span> <span class="n">total</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="n">P</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">evaluer_naif</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">x</span><span class="p">),</span> <span class="n">evaluer</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">x</span><span class="p">))</span>
+</span></code></pre></div>
+<p><code>reversed(P)</code> parcourt la liste de la fin vers le début : on commence donc par le
+coefficient dominant, et chaque tour multiplie l'accumulateur par <code>x</code> avant
+d'ajouter le coefficient suivant. Trois lignes, et c'est optimal : on démontre
+qu'aucune méthode ne peut évaluer un polynôme général avec moins de
+multiplications.</p>
+</details>
+</div>
+<div class="admonition question">
+<p class="admonition-title">Exercice 2.2 : mesurer, et se méfier de ses prévisions</p>
+<p>Construisez des polynômes dont tous les coefficients valent 1, de degrés 1 000, 5 000
+et 20 000, et comparez le temps des deux méthodes en <code>x = 1.0001</code>. Avant de lancer la
+mesure, écrivez votre prévision : de combien Horner devrait-il être plus rapide ?</p>
+<p><strong>Résultat attendu :</strong> un rapport d'environ 2, <strong>constant</strong> quand le degré augmente.
+Ce n'est probablement pas ce que vous aviez prévu.</p>
+<details class="success">
+<summary>Corrigé</summary>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">for</span> <span class="n">degre</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">5000</span><span class="p">,</span> <span class="mi">20000</span><span class="p">):</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="n">P</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">degre</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="n">debut</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    <span class="n">a</span> <span class="o">=</span> <span class="n">evaluer_naif</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="mf">1.0001</span><span class="p">)</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    <span class="n">t_naif</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">debut</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>    <span class="n">debut</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>    <span class="n">b</span> <span class="o">=</span> <span class="n">evaluer</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="mf">1.0001</span><span class="p">)</span>
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>    <span class="n">t_horner</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">debut</span>
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"degre </span><span class="si">{</span><span class="n">degre</span><span class="si">:</span><span class="s2">&gt;6</span><span class="si">}</span><span class="s2"> : naif </span><span class="si">{</span><span class="n">t_naif</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2"> s | horner </span><span class="si">{</span><span class="n">t_horner</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2"> s "</span>
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>          <span class="sa">f</span><span class="s2">"| rapport </span><span class="si">{</span><span class="n">t_naif</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">t_horner</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> | ecart des valeurs </span><span class="si">{</span><span class="nb">abs</span><span class="p">(</span><span class="n">a</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="si">:</span><span class="s2">.2e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Beaucoup s'attendent à ce que l'écart se creuse avec le degré, en raisonnant ainsi :
+la méthode naïve calcule <span class="arithmatex">\( x^{i} \)</span> pour chaque terme, donc elle ferait
+<span class="arithmatex">\( 1 + 2 + \dots + n \)</span> multiplications, soit un coût quadratique. <strong>Ce
+raisonnement est faux</strong>, et la mesure le montre : le rapport reste à 2 environ,
+que le degré soit mille ou vingt mille. Les deux méthodes sont donc linéaires.</p>
+<p>La raison est que <code>x ** i</code> sur un flottant n'est pas une boucle de <code>i</code>
+multiplications : c'est une opération unique, calculée par le processeur à partir
+du logarithme et de l'exponentielle, en temps essentiellement constant. La méthode
+naïve fait donc <span class="arithmatex">\( n \)</span> exponentiations et <span class="arithmatex">\( n \)</span> multiplications, Horner fait
+<span class="arithmatex">\( n \)</span> multiplications et <span class="arithmatex">\( n \)</span> additions. D'où un facteur constant, et non
+un changement d'ordre de grandeur.</p>
+<p><strong>La leçon vaut plus que le résultat</strong> : on ne devine pas le coût d'un programme,
+on le mesure. Un raisonnement de complexité s'appuie toujours sur des hypothèses
+concernant le coût des opérations élémentaires, et ces hypothèses peuvent être
+fausses dans le langage que vous utilisez.</p>
+<p>Regardez enfin la dernière colonne. Au degré 20 000, les deux méthodes ne donnent
+plus tout à fait le même nombre : l'écart est de l'ordre de <span class="arithmatex">\( 10^{-12} \)</span>.
+Accumuler vingt mille puissances de flottants n'est pas la même opération
+qu'enchaîner vingt mille multiplications, et chaque arrondi laisse une trace.
+Horner est donc, à égalité d'ordre de grandeur, un peu plus rapide et surtout plus
+stable numériquement. C'est pour cette dernière raison qu'il est employé partout.</p>
+</details>
+</div>
+<div class="admonition question">
+<p class="admonition-title">Exercice 2.3 : le cas où l'écart explose vraiment</p>
+<p>Refaites la mesure en évaluant en <code>x = 3</code>, un <strong>entier</strong>, sur des degrés 200, 400
+et 800. Le rapport reste-t-il constant ?</p>
+<p><strong>Résultat attendu :</strong> cette fois le rapport grandit avec le degré, d'environ 4 à
+environ 6.</p>
+<details class="success">
+<summary>Corrigé</summary>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">for</span> <span class="n">degre</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">400</span><span class="p">,</span> <span class="mi">800</span><span class="p">):</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="n">P</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">degre</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="n">debut</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="n">a</span> <span class="o">=</span> <span class="n">evaluer_naif</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="n">t_naif</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">debut</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    <span class="n">debut</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>    <span class="n">b</span> <span class="o">=</span> <span class="n">evaluer</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>    <span class="n">t_horner</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">debut</span>
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"degre </span><span class="si">{</span><span class="n">degre</span><span class="si">:</span><span class="s2">&gt;4</span><span class="si">}</span><span class="s2"> : rapport </span><span class="si">{</span><span class="n">t_naif</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">t_horner</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> | resultats egaux : </span><span class="si">{</span><span class="n">a</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">b</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Avec un entier, <code>3 ** 800</code> est un nombre de trois cent quatre-vingts chiffres, que
+Python calcule exactement, comme au TP1. L'exponentiation n'est plus une opération
+à coût constant : elle manipule des entiers de plus en plus grands, et le coût
+croît réellement avec le degré. Le raisonnement écarté à l'exercice précédent
+redevient valable ici.</p>
+<p>Deux mesures, deux conclusions opposées, pour le même code : tout dépend du type
+des données. Retenez-le, c'est l'une des différences les plus profondes entre
+Python et un langage où un entier fait toujours 64 bits.</p>
+<p>Notez enfin que les deux résultats sont <strong>exactement</strong> égaux cette fois, puisqu'on
+ne manipule que des entiers, donc aucun arrondi.</p>
+</details>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">L'IA vous le donne en trois secondes</p>
+<p>Demandez « une fonction Python qui évalue un polynôme donné par ses coefficients ».
+Vous obtiendrez presque toujours la version naïve avec <code>x ** i</code>, parce que c'est celle
+qui ressemble le plus à la définition écrite dans les manuels. Elle est juste.
+Demandez ensuite explicitement Horner.</p>
+<p>Puis posez la vraie question : « de combien Horner est-il plus rapide que la version
+naïve, en Python, sur un polynôme de degré 20 000 évalué en un flottant ? » Comparez
+sa réponse à votre mesure de l'exercice 2.2. Si elle vous annonce un gain quadratique
+ou un facteur considérable, elle se trompe, pour exactement la même raison que la
+moitié de la promotion. Un assistant reproduit les raisonnements les plus répandus,
+y compris les raisonnements faux ; seule la mesure tranche.</p>
+</div>
+<hr />
+<h2 id="etape-3-deriver-un-polynome-15-min">Étape 3. Dériver un polynôme (15 min)<a class="headerlink" href="#etape-3-deriver-un-polynome-15-min" title="Lien vers cette section">&para;</a></h2>
+<p>La dérivée de <span class="arithmatex">\( \sum_i a_i x^{i} \)</span> est <span class="arithmatex">\( \sum_{i \ge 1} i\,a_i x^{i-1} \)</span>. Sur la
+représentation par liste, cela se lit directement : le coefficient d'indice <code>i</code> devient le
+coefficient d'indice <code>i - 1</code>, multiplié par <code>i</code>.</p>
+<div class="admonition question">
+<p class="admonition-title">Exercice 3.1 : la dérivée</p>
+<p>Écrivez <code>deriver(P)</code> qui renvoie la liste des coefficients du polynôme dérivé.</p>
+<p><strong>Résultat attendu :</strong> <code>deriver([2, 3, 0, 5])</code> vaut <code>[3, 0, 15]</code>, c'est-à-dire
+<span class="arithmatex">\( 3 + 15x^{2} \)</span>.</p>
+<details class="success">
+<summary>Corrigé</summary>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">deriver</span><span class="p">(</span><span class="n">P</span><span class="p">):</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">    </span><span class="sd">"""Coefficients du polynôme dérivé de P."""</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="k">return</span> <span class="p">[</span><span class="n">i</span> <span class="o">*</span> <span class="n">P</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">P</span><span class="p">))]</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nb">print</span><span class="p">(</span><span class="n">deriver</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">]))</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="nb">print</span><span class="p">(</span><span class="n">deriver</span><span class="p">([</span><span class="mi">7</span><span class="p">]))</span>
+</span></code></pre></div>
+<p>La dérivée d'une constante est le polynôme nul, représenté ici par la liste vide
+<code>[]</code>. Vérifiez que votre fonction <code>evaluer</code> renvoie bien <code>0</code> sur une liste vide,
+sans quoi le cas se propagera en erreur plus loin. Avec le schéma de Horner, c'est
+automatique : la boucle ne fait aucun tour et l'accumulateur reste à zéro.</p>
+</details>
+</div>
+<hr />
+<h2 id="etape-4-trouver-une-racine-30-min">Étape 4. Trouver une racine (30 min)<a class="headerlink" href="#etape-4-trouver-une-racine-30-min" title="Lien vers cette section">&para;</a></h2>
+<p>Résoudre <span class="arithmatex">\( f(x) = 0 \)</span> est le problème numérique le plus courant qui soit. Deux méthodes,
+d'esprits opposés.</p>
+<h3 id="la-dichotomie-lente-mais-elle-ne-rate-jamais">La dichotomie : lente, mais elle ne rate jamais<a class="headerlink" href="#la-dichotomie-lente-mais-elle-ne-rate-jamais" title="Lien vers cette section">&para;</a></h3>
+<p>Si <span class="arithmatex">\( f \)</span> est continue et si <span class="arithmatex">\( f(a) \)</span> et <span class="arithmatex">\( f(b) \)</span> sont de signes contraires, alors une
+racine se trouve entre les deux. On coupe l'intervalle en deux, on garde la moitié où le
+changement de signe persiste, et on recommence. À chaque tour la précision double.</p>
+<div class="admonition question">
+<p class="admonition-title">Exercice 4.1 : dichotomie</p>
+<p>Écrivez <code>dichotomie(f, a, b, tolerance)</code> qui renvoie une racine de <code>f</code> entre <code>a</code> et
+<code>b</code>. Appliquez-la à <span class="arithmatex">\( x^{2} - 2 \)</span> sur <span class="arithmatex">\( [0, 2] \)</span>.</p>
+<p><strong>Résultat attendu :</strong> une valeur proche de <span class="arithmatex">\( \sqrt{2} \approx 1{,}414214 \)</span>.</p>
+<details class="success">
+<summary>Corrigé</summary>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">dichotomie</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">tolerance</span><span class="o">=</span><span class="mf">1e-12</span><span class="p">):</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">    </span><span class="sd">"""Racine de f dans [a, b], par bissection. Exige f(a) et f(b) de signes opposés."""</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="n">fa</span><span class="p">,</span> <span class="n">fb</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="n">f</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    <span class="k">if</span> <span class="n">fa</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>        <span class="k">return</span> <span class="n">a</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    <span class="k">if</span> <span class="n">fb</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>        <span class="k">return</span> <span class="n">b</span>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>    <span class="k">if</span> <span class="n">fa</span> <span class="o">*</span> <span class="n">fb</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"f(a) et f(b) doivent etre de signes opposes"</span><span class="p">)</span>
+</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>    <span class="k">while</span> <span class="n">b</span> <span class="o">-</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="n">tolerance</span><span class="p">:</span>
+</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>        <span class="n">milieu</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>        <span class="k">if</span> <span class="n">f</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">*</span> <span class="n">f</span><span class="p">(</span><span class="n">milieu</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>            <span class="n">b</span> <span class="o">=</span> <span class="n">milieu</span>
+</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>        <span class="k">else</span><span class="p">:</span>
+</span><span id="__span-6-15"><a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>            <span class="n">a</span> <span class="o">=</span> <span class="n">milieu</span>
+</span><span id="__span-6-16"><a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>    <span class="k">return</span> <span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+</span><span id="__span-6-17"><a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>
+</span><span id="__span-6-18"><a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="k">def</span><span class="w"> </span><span class="nf">carre_moins_deux</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+</span><span id="__span-6-19"><a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>    <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">x</span> <span class="o">-</span> <span class="mi">2</span>
+</span><span id="__span-6-20"><a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>
+</span><span id="__span-6-21"><a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="n">racine</span> <span class="o">=</span> <span class="n">dichotomie</span><span class="p">(</span><span class="n">carre_moins_deux</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+</span><span id="__span-6-22"><a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a><span class="nb">print</span><span class="p">(</span><span class="n">racine</span><span class="p">)</span>
+</span><span id="__span-6-23"><a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a><span class="nb">print</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">racine</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">**</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-9</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Le test <code>fa * fb &gt; 0</code> refuse un intervalle où la méthode n'a aucun sens, plutôt
+que de renvoyer un résultat arbitraire. C'est le même réflexe qu'au TP1 avec la
+racine carrée d'un nombre négatif : une fonction sérieuse refuse les entrées
+qu'elle ne sait pas traiter.</p>
+</details>
+</div>
+<h3 id="la-methode-de-newton-rapide-mais-elle-peut-segarer">La méthode de Newton : rapide, mais elle peut s'égarer<a class="headerlink" href="#la-methode-de-newton-rapide-mais-elle-peut-segarer" title="Lien vers cette section">&para;</a></h3>
+<p>Newton part d'un point, remplace la courbe par sa tangente, et prend le point où cette
+tangente coupe l'axe :</p>
+<div class="arithmatex">\[ x_{n+1} = x_n - \frac{f(x_n)}{f'(x_n)} \]</div>
+<p>Quand elle converge, elle double le nombre de décimales exactes à chaque tour, là où la
+dichotomie n'en gagne qu'un tous les trois tours. Vous l'avez déjà rencontrée : la méthode
+de Héron du TP1 est exactement Newton appliqué à <span class="arithmatex">\( x^{2} - a \)</span>.</p>
+<div class="admonition question">
+<p class="admonition-title">Exercice 4.2 : Newton sur un polynôme</p>
+<p>Écrivez <code>newton(P, depart, tolerance)</code> qui cherche une racine du polynôme <code>P</code> en
+utilisant <code>evaluer</code> et <code>deriver</code>. Appliquez-la à <span class="arithmatex">\( x^{3} - 2x - 5 \)</span>, en partant de 2.</p>
+<p><strong>Résultat attendu :</strong> environ <code>2.0945515</code>, atteint en cinq tours ou moins.</p>
+<details class="success">
+<summary>Corrigé</summary>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">newton</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">depart</span><span class="p">,</span> <span class="n">tolerance</span><span class="o">=</span><span class="mf">1e-12</span><span class="p">,</span> <span class="n">tours_max</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">    </span><span class="sd">"""Racine du polynôme P par la méthode de Newton, à partir de depart."""</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    <span class="n">derivee</span> <span class="o">=</span> <span class="n">deriver</span><span class="p">(</span><span class="n">P</span><span class="p">)</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    <span class="n">x</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">depart</span><span class="p">)</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    <span class="k">for</span> <span class="n">tour</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">tours_max</span><span class="p">):</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>        <span class="n">valeur</span> <span class="o">=</span> <span class="n">evaluer</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>        <span class="n">pente</span> <span class="o">=</span> <span class="n">evaluer</span><span class="p">(</span><span class="n">derivee</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>        <span class="k">if</span> <span class="n">pente</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>            <span class="k">raise</span> <span class="ne">ZeroDivisionError</span><span class="p">(</span><span class="s2">"tangente horizontale, Newton ne peut pas continuer"</span><span class="p">)</span>
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>        <span class="n">suivant</span> <span class="o">=</span> <span class="n">x</span> <span class="o">-</span> <span class="n">valeur</span> <span class="o">/</span> <span class="n">pente</span>
+</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">suivant</span> <span class="o">-</span> <span class="n">x</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">tolerance</span> <span class="o">*</span> <span class="nb">max</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">suivant</span><span class="p">)):</span>
+</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>            <span class="k">return</span> <span class="n">suivant</span><span class="p">,</span> <span class="n">tour</span> <span class="o">+</span> <span class="mi">1</span>
+</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>        <span class="n">x</span> <span class="o">=</span> <span class="n">suivant</span>
+</span><span id="__span-7-14"><a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"pas de convergence en </span><span class="si">{}</span><span class="s2"> tours"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tours_max</span><span class="p">))</span>
+</span><span id="__span-7-15"><a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>
+</span><span id="__span-7-16"><a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="c1"># x^3 - 2x - 5</span>
+</span><span id="__span-7-17"><a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="n">Q</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+</span><span id="__span-7-18"><a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="n">racine</span><span class="p">,</span> <span class="n">tours</span> <span class="o">=</span> <span class="n">newton</span><span class="p">(</span><span class="n">Q</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+</span><span id="__span-7-19"><a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="nb">print</span><span class="p">(</span><span class="n">racine</span><span class="p">,</span> <span class="s2">"en"</span><span class="p">,</span> <span class="n">tours</span><span class="p">,</span> <span class="s2">"tours"</span><span class="p">)</span>
+</span><span id="__span-7-20"><a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a><span class="nb">print</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">evaluer</span><span class="p">(</span><span class="n">Q</span><span class="p">,</span> <span class="n">racine</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mf">1e-10</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Trois protections méritent d'être remarquées. La tangente horizontale est
+détectée au lieu de provoquer une division par zéro incompréhensible. Le nombre
+de tours est plafonné, sans quoi une divergence donnerait une boucle infinie. Et
+le critère d'arrêt est relatif, comme au TP1.</p>
+</details>
+</div>
+<div class="admonition question">
+<p class="admonition-title">Exercice 4.3 : faire échouer Newton</p>
+<p>Appliquez <code>newton</code> au polynôme <span class="arithmatex">\( x^{3} - 2x + 2 \)</span>, c'est-à-dire <code>[2, -2, 0, 1]</code>, en
+partant de <code>0</code>. Affichez le trajet des premiers itérés pour comprendre ce qui se passe.</p>
+<p><strong>Résultat attendu :</strong> aucune convergence, et un trajet qui alterne entre <code>0</code> et <code>1</code>
+indéfiniment.</p>
+<details class="success">
+<summary>Corrigé</summary>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">newton_trace</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">depart</span><span class="p">,</span> <span class="n">tours</span><span class="p">):</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">    </span><span class="sd">"""Renvoie la liste des premiers itérés de Newton, sans test d'arrêt."""</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>    <span class="n">derivee</span> <span class="o">=</span> <span class="n">deriver</span><span class="p">(</span><span class="n">P</span><span class="p">)</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>    <span class="n">x</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">depart</span><span class="p">)</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>    <span class="n">trajet</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">]</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">tours</span><span class="p">):</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>        <span class="n">pente</span> <span class="o">=</span> <span class="n">evaluer</span><span class="p">(</span><span class="n">derivee</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>        <span class="k">if</span> <span class="n">pente</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>            <span class="k">break</span>
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">-</span> <span class="n">evaluer</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="n">pente</span>
+</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>        <span class="n">trajet</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>    <span class="k">return</span> <span class="n">trajet</span>
+</span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>
+</span><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="n">R</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>          <span class="c1"># x^3 - 2x + 2</span>
+</span><span id="__span-8-15"><a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="nb">print</span><span class="p">(</span><span class="n">newton_trace</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+</span><span id="__span-8-16"><a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>
+</span><span id="__span-8-17"><a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="k">try</span><span class="p">:</span>
+</span><span id="__span-8-18"><a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">newton</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+</span><span id="__span-8-19"><a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="k">except</span> <span class="ne">RuntimeError</span> <span class="k">as</span> <span class="n">erreur</span><span class="p">:</span>
+</span><span id="__span-8-20"><a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">"echec :"</span><span class="p">,</span> <span class="n">erreur</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Le trajet est <code>[0.0, 1.0, 0.0, 1.0, 0.0, 1.0, ...]</code> : la tangente en 0 renvoie en
+1, celle en 1 renvoie en 0, et la méthode tourne en rond pour toujours. On parle
+d'un <strong>cycle</strong> de la méthode de Newton. Sans le plafond <code>tours_max</code> que nous avons
+mis dans la fonction, votre programme ne s'arrêterait jamais, et c'est là toute
+l'utilité de ce garde-fou.</p>
+<p>Essayez aussi de partir de <code>math.sqrt(2 / 3)</code> sur le polynôme
+<span class="arithmatex">\( x^{3} - 2x - 5 \)</span> de l'exercice précédent : c'est un point où la dérivée
+s'annule, la tangente est presque horizontale, et le premier pas projette le
+calcul à environ <span class="arithmatex">\( -2{,}7 \times 10^{16} \)</span>. La méthode met ensuite des
+dizaines de tours à revenir, sans converger dans le budget imparti.</p>
+</details>
+</div>
+<div class="admonition question">
+<p class="admonition-title">Exercice 4.4 : le prix d'un mauvais point de départ</p>
+<p>Reprenez <span class="arithmatex">\( x^{3} - 2x - 5 \)</span> et comparez le nombre de tours de <code>newton</code> en partant
+de <code>2</code>, puis de <code>0</code>.</p>
+<p><strong>Résultat attendu :</strong> cinq tours depuis <code>2</code>, une vingtaine depuis <code>0</code>.</p>
+<details class="success">
+<summary>Corrigé</summary>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="n">Q</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="k">for</span> <span class="n">depart</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">):</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>    <span class="n">racine</span><span class="p">,</span> <span class="n">tours</span> <span class="o">=</span> <span class="n">newton</span><span class="p">(</span><span class="n">Q</span><span class="p">,</span> <span class="n">depart</span><span class="p">)</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"depart </span><span class="si">{</span><span class="n">depart</span><span class="si">:</span><span class="s2">&gt;2</span><span class="si">}</span><span class="s2"> : </span><span class="si">{</span><span class="n">tours</span><span class="si">:</span><span class="s2">&gt;2</span><span class="si">}</span><span class="s2"> tours, racine </span><span class="si">{</span><span class="n">racine</span><span class="si">:</span><span class="s2">.9f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Les trois appels trouvent la même racine, donc les trois sont « justes ». Mais
+depuis <code>0</code>, la méthode commence par s'éloigner, passe par <code>-2.5</code>, <code>-1.57</code>,
+<code>-3.82</code>, erre un moment, puis finit par tomber dans la zone où la convergence
+quadratique s'enclenche. Newton n'est rapide que <strong>près</strong> de la racine : loin
+d'elle, son comportement n'a aucune garantie.</p>
+<p>C'est pourquoi, en pratique, on encadre d'abord la racine par quelques
+dichotomies avant de passer à Newton. Les bibliothèques sérieuses, comme
+<code>scipy.optimize.brentq</code>, font exactement cela.</p>
+</details>
+</div>
+<hr />
+<h2 id="etape-5-voir-la-fonction-15-min">Étape 5. Voir la fonction (15 min)<a class="headerlink" href="#etape-5-voir-la-fonction-15-min" title="Lien vers cette section">&para;</a></h2>
+<p>Un graphique explique en une seconde ce qu'un tableau de nombres cache. La bibliothèque
+<code>matplotlib</code> trace des courbes ; elle est disponible dans votre navigateur comme sur votre
+machine.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="n">Q</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>          <span class="c1"># x^3 - 2x - 5</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="n">xs</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="o">/</span> <span class="mi">100</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="mi">300</span><span class="p">,</span> <span class="mi">301</span><span class="p">)]</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="n">ys</span> <span class="o">=</span> <span class="p">[</span><span class="n">evaluer</span><span class="p">(</span><span class="n">Q</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">xs</span><span class="p">]</span>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"x^3 - 2x - 5"</span><span class="p">)</span>
+</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
+</span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
+</span><span id="__span-10-11"><a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+</span><span id="__span-10-12"><a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">"x"</span><span class="p">)</span>
+</span><span id="__span-10-13"><a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">"P(x)"</span><span class="p">)</span>
+</span><span id="__span-10-14"><a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+</span><span id="__span-10-15"><a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"Un polynome et son unique racine reelle"</span><span class="p">)</span>
+</span><span id="__span-10-16"><a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</span></code></pre></div>
+<div class="admonition question">
+<p class="admonition-title">Exercice 5.1 : lire le graphique</p>
+<p>Sur le tracé, repérez la racine trouvée par Newton. Combien de fois la courbe
+coupe-t-elle l'axe des abscisses ? Ce polynôme est de degré 3 : que dire de ses autres
+racines ?</p>
+<details class="success">
+<summary>Corrigé</summary>
+<p>La courbe ne coupe l'axe qu'une seule fois, près de <code>2.0945</code>. Un polynôme de
+degré 3 possède toujours trois racines dans les nombres complexes ; ici les deux
+autres sont complexes conjuguées, donc invisibles sur un tracé réel. Un graphique
+montre ce qui existe dans les réels, jamais ce qui n'y est pas : c'est une limite
+à connaître avant de conclure « il n'y a pas d'autre solution ».</p>
+</details>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Pour aller plus loin</p>
+<p>Tracez la suite des itérés de Newton sur la même figure, en marquant chaque <span class="arithmatex">\( x_n \)</span>
+par un point. Vous verrez la convergence quadratique de vos yeux : les points se
+rapprochent d'abord lentement, puis s'écrasent sur la racine. Refaites le même tracé
+en partant de <code>0</code>, et vous verrez la divergence.</p>
+</div>
+<hr />
+<h2 id="entrainement-et-approfondissement">Entraînement et approfondissement<a class="headerlink" href="#entrainement-et-approfondissement" title="Lien vers cette section">&para;</a></h2>
+<p>À faire après la séance, ou en séance si vous avez terminé. Ces exercices sont au programme
+de l'évaluation, sauf ceux marqués « pour aller plus loin ». Ils complètent le TP sur deux
+points du programme que la séance n'a fait qu'effleurer : le calcul algébrique sur les
+polynômes, et le calcul numérique d'une dérivée et d'une intégrale.</p>
+<h3 id="etape-6-lalgebre-des-polynomes">Étape 6. L'algèbre des polynômes<a class="headerlink" href="#etape-6-lalgebre-des-polynomes" title="Lien vers cette section">&para;</a></h3>
+<p>Additionner ou multiplier deux polynômes, c'est manipuler leurs listes de coefficients.
+La multiplication est la plus instructive : le coefficient de <span class="arithmatex">\( x^{k} \)</span> dans <span class="arithmatex">\( PQ \)</span>
+est la somme des <span class="arithmatex">\( p_i q_j \)</span> pour tous les couples tels que <span class="arithmatex">\( i + j = k \)</span>.</p>
+<div class="admonition question">
+<p class="admonition-title">Exercice 6.1 : somme et produit</p>
+<p>Écrivez <code>somme(P, Q)</code> et <code>produit_poly(P, Q)</code>. Attention, les deux listes n'ont pas
+forcément la même longueur.</p>
+<p><strong>Résultat attendu :</strong> <code>produit_poly([1, 1], [1, 1])</code> vaut <code>[1, 2, 1]</code>, c'est-à-dire
+<span class="arithmatex">\( (1 + x)^{2} = 1 + 2x + x^{2} \)</span>, et <code>produit_poly([-1, 1], [1, 1])</code> vaut
+<code>[-1, 0, 1]</code>, l'identité <span class="arithmatex">\( (x - 1)(x + 1) = x^{2} - 1 \)</span>.</p>
+<details class="success">
+<summary>Corrigé</summary>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">somme</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">Q</span><span class="p">):</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">    </span><span class="sd">"""Somme de deux polynômes donnés par leurs coefficients."""</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>    <span class="n">longueur</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">P</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">Q</span><span class="p">))</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>    <span class="n">P</span> <span class="o">=</span> <span class="n">P</span> <span class="o">+</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">longueur</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">P</span><span class="p">))</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>    <span class="n">Q</span> <span class="o">=</span> <span class="n">Q</span> <span class="o">+</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">longueur</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">Q</span><span class="p">))</span>
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>    <span class="k">return</span> <span class="p">[</span><span class="n">P</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">Q</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">longueur</span><span class="p">)]</span>
+</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>
+</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="k">def</span><span class="w"> </span><span class="nf">produit_poly</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">Q</span><span class="p">):</span>
+</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="w">    </span><span class="sd">"""Produit de deux polynômes donnés par leurs coefficients."""</span>
+</span><span id="__span-11-10"><a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">P</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">Q</span><span class="p">:</span>
+</span><span id="__span-11-11"><a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>        <span class="k">return</span> <span class="p">[]</span>
+</span><span id="__span-11-12"><a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>    <span class="n">R</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">P</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">Q</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+</span><span id="__span-11-13"><a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">P</span><span class="p">)):</span>
+</span><span id="__span-11-14"><a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">Q</span><span class="p">)):</span>
+</span><span id="__span-11-15"><a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>            <span class="n">R</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">R</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="n">P</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">Q</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+</span><span id="__span-11-16"><a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>    <span class="k">return</span> <span class="n">R</span>
+</span><span id="__span-11-17"><a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>
+</span><span id="__span-11-18"><a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a><span class="nb">print</span><span class="p">(</span><span class="n">somme</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">]))</span>
+</span><span id="__span-11-19"><a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a><span class="nb">print</span><span class="p">(</span><span class="n">produit_poly</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>
+</span><span id="__span-11-20"><a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a><span class="nb">print</span><span class="p">(</span><span class="n">produit_poly</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>
+</span></code></pre></div>
+<p>Le degré du produit est la somme des degrés, d'où la longueur
+<code>len(P) + len(Q) - 1</code>. Vérifiez la fonction autrement qu'en lisant le résultat :
+évaluez <code>P</code>, <code>Q</code> et leur produit en un même point, et contrôlez que
+<code>evaluer(produit_poly(P, Q), x)</code> vaut <code>evaluer(P, x) * evaluer(Q, x)</code>. C'est le
+même réflexe que la vérification de la division euclidienne au TP1.</p>
+</details>
+</div>
+<div class="admonition question">
+<p class="admonition-title">Exercice 6.2 : le triangle de Pascal, par les polynômes</p>
+<p>Calculez <span class="arithmatex">\( (1 + x)^{10} \)</span> en multipliant dix fois <code>[1, 1]</code> par lui-même. Que
+reconnaissez-vous dans la liste obtenue ?</p>
+<p><strong>Résultat attendu :</strong> <code>[1, 10, 45, 120, 210, 252, 210, 120, 45, 10, 1]</code>.</p>
+<details class="success">
+<summary>Corrigé</summary>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="n">binome</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>    <span class="n">binome</span> <span class="o">=</span> <span class="n">produit_poly</span><span class="p">(</span><span class="n">binome</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="nb">print</span><span class="p">(</span><span class="n">binome</span><span class="p">)</span>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="nb">print</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">binome</span><span class="p">),</span> <span class="mi">2</span> <span class="o">**</span> <span class="mi">10</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Ce sont les coefficients binomiaux <span class="arithmatex">\( \binom{10}{k} \)</span>, la dixième ligne du
+triangle de Pascal. Leur somme vaut <span class="arithmatex">\( 2^{10} \)</span>, ce qui est la formule du binôme
+évaluée en <span class="arithmatex">\( x = 1 \)</span>. Une identité algébrique que vous avez apprise par cœur
+devient ici une vérification en deux lignes.</p>
+</details>
+</div>
+<h3 id="etape-7-deriver-numeriquement-et-le-mur-des-flottants">Étape 7. Dériver numériquement, et le mur des flottants<a class="headerlink" href="#etape-7-deriver-numeriquement-et-le-mur-des-flottants" title="Lien vers cette section">&para;</a></h3>
+<p>Quand on ne connaît pas la formule de la dérivée, on l'approche par un taux de variation :</p>
+<div class="arithmatex">\[ f'(x) \approx \frac{f(x + h) - f(x)}{h} \qquad \text{ou, mieux,} \qquad
+   f'(x) \approx \frac{f(x + h) - f(x - h)}{2h} \]</div>
+<p>On se dit que plus <span class="arithmatex">\( h \)</span> est petit, meilleure est l'approximation. C'est vrai en
+mathématiques, et faux sur une machine.</p>
+<div class="admonition question">
+<p class="admonition-title">Exercice 7.1 : trouver le meilleur pas</p>
+<p>Écrivez <code>derivee_avant(f, x, h)</code> et <code>derivee_centree(f, x, h)</code>. Calculez l'erreur de
+chacune sur <span class="arithmatex">\( \sin \)</span> en <span class="arithmatex">\( x = 1 \)</span>, dont la dérivée exacte est <span class="arithmatex">\( \cos 1 \)</span>, pour
+<code>h</code> valant <span class="arithmatex">\( 10^{-1}, 10^{-2}, 10^{-4}, 10^{-6}, 10^{-8}, 10^{-10}, 10^{-12} \)</span>.</p>
+<p><strong>Résultat attendu :</strong> l'erreur diminue puis <strong>remonte</strong>. Le meilleur pas est de
+l'ordre de <span class="arithmatex">\( 10^{-8} \)</span> pour la formule avant, <span class="arithmatex">\( 10^{-6} \)</span> pour la formule centrée,
+et à <span class="arithmatex">\( h = 10^{-12} \)</span> l'erreur est remontée de quatre à six ordres de grandeur
+par rapport à ce meilleur pas.</p>
+<details class="success">
+<summary>Corrigé</summary>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="k">def</span><span class="w"> </span><span class="nf">derivee_avant</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">h</span><span class="p">):</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>    <span class="k">return</span> <span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">h</span><span class="p">)</span> <span class="o">-</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="o">/</span> <span class="n">h</span>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="k">def</span><span class="w"> </span><span class="nf">derivee_centree</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">h</span><span class="p">):</span>
+</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>    <span class="k">return</span> <span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">h</span><span class="p">)</span> <span class="o">-</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">h</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">h</span><span class="p">)</span>
+</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>
+</span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="n">exacte</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
+</span><span id="__span-13-10"><a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="p">(</span><span class="mf">1e-1</span><span class="p">,</span> <span class="mf">1e-2</span><span class="p">,</span> <span class="mf">1e-4</span><span class="p">,</span> <span class="mf">1e-6</span><span class="p">,</span> <span class="mf">1e-8</span><span class="p">,</span> <span class="mf">1e-10</span><span class="p">,</span> <span class="mf">1e-12</span><span class="p">):</span>
+</span><span id="__span-13-11"><a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>    <span class="n">e_avant</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">derivee_avant</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span> <span class="o">-</span> <span class="n">exacte</span><span class="p">)</span>
+</span><span id="__span-13-12"><a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>    <span class="n">e_centree</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">derivee_centree</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span> <span class="o">-</span> <span class="n">exacte</span><span class="p">)</span>
+</span><span id="__span-13-13"><a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"h = </span><span class="si">{</span><span class="n">h</span><span class="si">:</span><span class="s2">.0e</span><span class="si">}</span><span class="s2"> : avant </span><span class="si">{</span><span class="n">e_avant</span><span class="si">:</span><span class="s2">.1e</span><span class="si">}</span><span class="s2"> | centree </span><span class="si">{</span><span class="n">e_centree</span><span class="si">:</span><span class="s2">.1e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Deux erreurs se disputent le résultat. L'erreur <strong>de méthode</strong>, due au fait qu'un
+taux de variation n'est pas une dérivée, diminue avec <span class="arithmatex">\( h \)</span> : proportionnelle à
+<span class="arithmatex">\( h \)</span> pour la formule avant, à <span class="arithmatex">\( h^{2} \)</span> pour la formule centrée, ce qui se
+lit dans les premières lignes, où l'erreur centrée perd deux zéros quand <code>h</code> en
+perd un. L'erreur <strong>d'arrondi</strong>, due à la soustraction de deux valeurs presque
+égales, est celle de l'exercice 7.1 du TP1 : elle vaut environ
+<span class="arithmatex">\( 10^{-16} / h \)</span> et <strong>grandit</strong> quand <span class="arithmatex">\( h \)</span> diminue. Le meilleur pas est celui
+où les deux se croisent.</p>
+<p>La formule centrée est meilleure sur toute la ligne : à même coût, deux
+évaluations de <span class="arithmatex">\( f \)</span>, elle gagne quatre à cinq chiffres. Retenez-la, et retenez
+surtout qu'en calcul numérique « plus fin » ne veut pas dire « plus juste ».</p>
+</details>
+</div>
+<h3 id="etape-8-integrer-numeriquement">Étape 8. Intégrer numériquement<a class="headerlink" href="#etape-8-integrer-numeriquement" title="Lien vers cette section">&para;</a></h3>
+<p>Calculer <span class="arithmatex">\( \int_a^b f(x)\,dx \)</span> quand on n'a pas de primitive, c'est approcher l'aire sous
+la courbe par des morceaux simples. Trois méthodes, de plus en plus fines, découpent
+<span class="arithmatex">\( [a, b] \)</span> en <span class="arithmatex">\( n \)</span> tranches de largeur <span class="arithmatex">\( h = (b - a)/n \)</span> :</p>
+<ul>
+<li><strong>rectangles</strong> : chaque tranche est un rectangle de hauteur <span class="arithmatex">\( f \)</span> à son bord gauche ;</li>
+<li><strong>trapèzes</strong> : chaque tranche est un trapèze qui relie <span class="arithmatex">\( f \)</span> aux deux bords ;</li>
+<li><strong>Simpson</strong> : on remplace <span class="arithmatex">\( f \)</span> par une parabole sur chaque paire de tranches.</li>
+</ul>
+<div class="admonition question">
+<p class="admonition-title">Exercice 8.1 : les trois méthodes</p>
+<p>Écrivez <code>rectangles(f, a, b, n)</code>, <code>trapezes(f, a, b, n)</code> et <code>simpson(f, a, b, n)</code>.
+Testez-les sur <span class="arithmatex">\( \int_0^1 x^{2}\,dx = 1/3 \)</span> pour <code>n</code> valant 10, 100 et 1000.</p>
+<p><strong>Résultat attendu :</strong> l'erreur des rectangles est divisée par 10 quand <code>n</code> est
+multiplié par 10, celle des trapèzes par 100, et Simpson donne le résultat exact, à
+un arrondi de <span class="arithmatex">\( 10^{-17} \)</span> près.</p>
+<details class="success">
+<summary>Corrigé</summary>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">rectangles</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">    </span><span class="sd">"""Intégrale de f sur [a, b] par n rectangles à gauche."""</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>    <span class="n">h</span> <span class="o">=</span> <span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="n">a</span><span class="p">)</span> <span class="o">/</span> <span class="n">n</span>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>    <span class="k">return</span> <span class="n">h</span> <span class="o">*</span> <span class="nb">sum</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">h</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>
+</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="k">def</span><span class="w"> </span><span class="nf">trapezes</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="w">    </span><span class="sd">"""Intégrale de f sur [a, b] par n trapèzes."""</span>
+</span><span id="__span-14-8"><a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>    <span class="n">h</span> <span class="o">=</span> <span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="n">a</span><span class="p">)</span> <span class="o">/</span> <span class="n">n</span>
+</span><span id="__span-14-9"><a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>    <span class="n">interieur</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">h</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
+</span><span id="__span-14-10"><a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>    <span class="k">return</span> <span class="n">h</span> <span class="o">*</span> <span class="p">((</span><span class="n">f</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">+</span> <span class="n">f</span><span class="p">(</span><span class="n">b</span><span class="p">))</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">interieur</span><span class="p">)</span>
+</span><span id="__span-14-11"><a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>
+</span><span id="__span-14-12"><a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a><span class="k">def</span><span class="w"> </span><span class="nf">simpson</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+</span><span id="__span-14-13"><a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a><span class="w">    </span><span class="sd">"""Intégrale de f sur [a, b] par la méthode de Simpson, n pair."""</span>
+</span><span id="__span-14-14"><a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>    <span class="k">if</span> <span class="n">n</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+</span><span id="__span-14-15"><a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>        <span class="n">n</span> <span class="o">=</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span>
+</span><span id="__span-14-16"><a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a>    <span class="n">h</span> <span class="o">=</span> <span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="n">a</span><span class="p">)</span> <span class="o">/</span> <span class="n">n</span>
+</span><span id="__span-14-17"><a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a>    <span class="n">impairs</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">h</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+</span><span id="__span-14-18"><a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a>    <span class="n">pairs</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">h</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+</span><span id="__span-14-19"><a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a>    <span class="k">return</span> <span class="n">h</span> <span class="o">/</span> <span class="mi">3</span> <span class="o">*</span> <span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">+</span> <span class="n">f</span><span class="p">(</span><span class="n">b</span><span class="p">)</span> <span class="o">+</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">impairs</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pairs</span><span class="p">)</span>
+</span><span id="__span-14-20"><a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a>
+</span><span id="__span-14-21"><a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a><span class="k">def</span><span class="w"> </span><span class="nf">carre</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+</span><span id="__span-14-22"><a id="__codelineno-14-22" name="__codelineno-14-22" href="#__codelineno-14-22"></a>    <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">x</span>
+</span><span id="__span-14-23"><a id="__codelineno-14-23" name="__codelineno-14-23" href="#__codelineno-14-23"></a>
+</span><span id="__span-14-24"><a id="__codelineno-14-24" name="__codelineno-14-24" href="#__codelineno-14-24"></a><span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">1000</span><span class="p">):</span>
+</span><span id="__span-14-25"><a id="__codelineno-14-25" name="__codelineno-14-25" href="#__codelineno-14-25"></a>    <span class="n">e_rect</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">rectangles</span><span class="p">(</span><span class="n">carre</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span>
+</span><span id="__span-14-26"><a id="__codelineno-14-26" name="__codelineno-14-26" href="#__codelineno-14-26"></a>    <span class="n">e_trap</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">trapezes</span><span class="p">(</span><span class="n">carre</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span>
+</span><span id="__span-14-27"><a id="__codelineno-14-27" name="__codelineno-14-27" href="#__codelineno-14-27"></a>    <span class="n">e_simp</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">simpson</span><span class="p">(</span><span class="n">carre</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span>
+</span><span id="__span-14-28"><a id="__codelineno-14-28" name="__codelineno-14-28" href="#__codelineno-14-28"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"n = </span><span class="si">{</span><span class="n">n</span><span class="si">:</span><span class="s2">&gt;4</span><span class="si">}</span><span class="s2"> : rectangles </span><span class="si">{</span><span class="n">e_rect</span><span class="si">:</span><span class="s2">.1e</span><span class="si">}</span><span class="s2"> | trapezes </span><span class="si">{</span><span class="n">e_trap</span><span class="si">:</span><span class="s2">.1e</span><span class="si">}</span><span class="s2"> | simpson </span><span class="si">{</span><span class="n">e_simp</span><span class="si">:</span><span class="s2">.1e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span></code></pre></div>
+<p>On dit que les rectangles sont d'<strong>ordre 1</strong>, les trapèzes d'<strong>ordre 2</strong> : l'erreur
+est proportionnelle à <span class="arithmatex">\( h \)</span>, puis à <span class="arithmatex">\( h^{2} \)</span>. Simpson est d'ordre 4, et il
+est même <strong>exact</strong> sur tout polynôme de degré au plus 3, ce qui explique le zéro
+de la dernière colonne. Pour le voir travailler, essayez une fonction qui n'est
+pas un polynôme : <span class="arithmatex">\( \int_0^{\pi} \sin x\,dx = 2 \)</span>, où l'erreur de Simpson est
+divisée par <span class="arithmatex">\( 10^{4} \)</span> chaque fois que <code>n</code> est multiplié par 10.</p>
+</details>
+</div>
+<div class="admonition question">
+<p class="admonition-title">Exercice 8.2 : calculer π</p>
+<p>On a <span class="arithmatex">\( \int_0^1 \frac{4}{1 + x^{2}}\,dx = \pi \)</span>. Calculez cette intégrale par les
+trapèzes et par Simpson avec <code>n = 1000</code>, et comparez à <code>math.pi</code>.</p>
+<p><strong>Résultat attendu :</strong> une erreur de l'ordre de <span class="arithmatex">\( 10^{-7} \)</span> pour les trapèzes, et
+un résultat indistinguable de <code>math.pi</code> pour Simpson.</p>
+<details class="success">
+<summary>Corrigé</summary>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">arctangente_derivee</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>    <span class="k">return</span> <span class="mi">4</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">x</span> <span class="o">*</span> <span class="n">x</span><span class="p">)</span>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="n">approx_trap</span> <span class="o">=</span> <span class="n">trapezes</span><span class="p">(</span><span class="n">arctangente_derivee</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="n">approx_simp</span> <span class="o">=</span> <span class="n">simpson</span><span class="p">(</span><span class="n">arctangente_derivee</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="nb">print</span><span class="p">(</span><span class="n">approx_trap</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">approx_trap</span> <span class="o">-</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">))</span>
+</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="nb">print</span><span class="p">(</span><span class="n">approx_simp</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">approx_simp</span> <span class="o">-</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">))</span>
+</span></code></pre></div>
+<p>Mille évaluations d'une fraction, et l'on obtient toutes les décimales de π que
+la machine sait écrire. Avec les rectangles, il en faudrait des milliards. Comme
+au TP2, changer de méthode rapporte infiniment plus qu'augmenter <code>n</code>.</p>
+</details>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Pour aller plus loin : Newton sur une fonction quelconque</p>
+<p>La fonction <code>newton</code> de l'étape 4 exige un polynôme, parce qu'elle a besoin de la
+dérivée. Avec <code>derivee_centree</code>, écrivez une version <code>newton_general(f, depart)</code> qui
+accepte n'importe quelle fonction. Appliquez-la à <span class="arithmatex">\( \cos x - x = 0 \)</span>, dont la
+solution vaut environ <code>0.7390851332</code>. Puis trouvez un point de départ pour lequel elle
+diverge, et expliquez pourquoi à l'aide d'un tracé.</p>
+</div>
+<hr />
+<h2 id="ce-quil-faut-retenir">Ce qu'il faut retenir<a class="headerlink" href="#ce-quil-faut-retenir" title="Lien vers cette section">&para;</a></h2>
+<p>Un polynôme se représente par la liste de ses coefficients, s'évalue par le schéma de
+Horner, plus rapide et plus stable que la formule naïve, et se multiplie en sommant les
+produits de coefficients d'indices <span class="arithmatex">\( i + j = k \)</span>. Dériver revient à décaler et multiplier
+la liste. Pour trouver une racine, la dichotomie ne rate jamais mais avance lentement ;
+Newton va vite mais peut diverger, et il faut donc toujours borner le nombre de tours. En
+calcul numérique, dériver ou intégrer plus finement n'est pas toujours plus juste, et
+changer de méthode vaut mieux qu'augmenter le nombre de points. Enfin, tracer la fonction
+avant de la traiter fait gagner un temps considérable.</p>
+<h2 id="auto-evaluation">Auto-évaluation<a class="headerlink" href="#auto-evaluation" title="Lien vers cette section">&para;</a></h2>
+<p>Avant de passer au TP4, vous devez pouvoir, sans regarder le corrigé :</p>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> écrire le schéma de Horner en trois lignes et dire ce qu'il évite ;</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> expliquer pourquoi la version naïve n'est pas quadratique sur des flottants, mais
+  l'est sur des entiers ;</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> écrire la dichotomie et dire quelle hypothèse elle exige sur <code>f(a)</code> et <code>f(b)</code> ;</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> citer deux façons dont Newton peut échouer, et les deux garde-fous correspondants ;</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> dire pourquoi l'erreur d'une dérivée numérique remonte quand <code>h</code> devient trop petit ;</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> classer rectangles, trapèzes et Simpson par ordre de précision.</li>
+</ul>
+<p><a class="md-button" href="../qcm/qcm_tp3.html" target="_blank">Le QCM du TP3</a>
+<a class="md-button md-button--primary" href="../tp4-matrices-gauss/">Passer au TP4</a></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Retour en haut de la page
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Pied de page" >
+        
+          
+          <a href="../tp2-arithmetique/" class="md-footer__link md-footer__link--prev" aria-label="Précédent: TP2. Arithmétique">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Précédent
+              </span>
+              <div class="md-ellipsis">
+                TP2. Arithmétique
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../tp4-matrices-gauss/" class="md-footer__link md-footer__link--next" aria-label="Suivant: TP4. Matrices et systèmes">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Suivant
+              </span>
+              <div class="md-ellipsis">
+                TP4. Matrices et systèmes
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Christophe Guyeux, IUT Nord Franche-Comté — contenu sous licence CC BY-NC-SA 4.0
+    </div>
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/cguyeux" target="_blank" rel="noopener" title="GitHub" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.sections", "navigation.top", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate", "content.tabs.link"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copi\u00e9 dans le presse-papier", "clipboard.copy": "Copier dans le presse-papier", "search.result.more.one": "1 de plus sur cette page", "search.result.more.other": "# de plus sur cette page", "search.result.none": "Aucun document trouv\u00e9", "search.result.one": "1 document trouv\u00e9", "search.result.other": "# documents trouv\u00e9s", "search.result.placeholder": "Taper pour d\u00e9marrer la recherche", "search.result.term.missing": "Non trouv\u00e9", "select.version": "S\u00e9lectionner la version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../assets/javascripts/mathjax-config.js"></script>
+      
+        <script src="../../assets/vendor/mathjax/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

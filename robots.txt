@@ -1,0 +1,14 @@
+# https://cours.gclab.fr
+#
+# Le site de cours a vocation à être trouvé : les pages restent indexables, pour
+# que les étudiants les retrouvent depuis un moteur de recherche.
+#
+# En revanche /lite/ est l'environnement Python du navigateur : plusieurs milliers
+# de fichiers JavaScript et 26 Mo de Pyodide, sans aucun intérêt pour un index, et
+# c'est précisément ce qu'un robot d'aspiration téléchargerait en entier. On le
+# ferme, ce qui évite de réveiller le conteneur pour rien.
+
+User-agent: *
+Disallow: /lite/
+
+Sitemap: https://cours.gclab.fr/sitemap.xml

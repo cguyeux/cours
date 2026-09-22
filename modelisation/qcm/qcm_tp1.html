@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QCM — TP1 : Ce qu'une matrice sait faire</title>
+<style>
+  :root { --ok:#1b8a5a; --ko:#c0392b; --accent:#2c5f8a; --bg:#f6f7f9; }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, "Segoe UI", Roboto, sans-serif; line-height:1.5;
+         max-width: 820px; margin: 0 auto; padding: 1.5rem; color:#1a1a1a; background:var(--bg); }
+  h1 { color: var(--accent); margin-bottom:.2rem; }
+  .meta { color:#666; font-size:.9rem; margin-bottom:1rem; }
+  .consignes { background:#eef3f8; border-left:4px solid var(--accent); padding:.6rem .9rem;
+               border-radius:4px; margin-bottom:1.2rem; }
+  .q { background:#fff; border:1px solid #e1e4e8; border-radius:8px; padding:1rem 1.2rem;
+       margin-bottom:1rem; box-shadow:0 1px 2px rgba(0,0,0,.04); }
+  .q h3 { margin:.1rem 0 .2rem; font-size:1.05rem; }
+  .badge { font-size:.72rem; font-weight:600; padding:.1rem .5rem; border-radius:10px;
+           margin-left:.4rem; vertical-align:middle; }
+  .b-facile{background:#e3f4ea;color:var(--ok);} .b-moyen{background:#fdf3e0;color:#b87600;}
+  .b-difficile{background:#fbe6e6;color:var(--ko);} .b-theme{background:#eef0f3;color:#555;}
+  .enonce { margin:.4rem 0 .8rem; }
+  .opt { display:block; padding:.45rem .6rem; border:1px solid #e1e4e8; border-radius:6px;
+         margin:.35rem 0; cursor:pointer; transition:background .12s; }
+  .opt:hover { background:#f0f4f8; }
+  .opt input { margin-right:.55rem; }
+  .opt.correct { border-color:var(--ok); background:#eaf7f0; }
+  .opt.wrong   { border-color:var(--ko); background:#fbecec; }
+  .just { font-size:.86rem; color:#555; margin:.2rem 0 0 1.7rem; display:none; }
+  .just.show { display:block; }
+  .src { font-size:.78rem; color:#888; margin-top:.5rem; display:none; }
+  .src.show { display:block; }
+  .bar { position:sticky; bottom:0; background:var(--bg); padding:.8rem 0; }
+  button { background:var(--accent); color:#fff; border:0; padding:.6rem 1.3rem;
+           font-size:1rem; border-radius:6px; cursor:pointer; }
+  button.ghost { background:#fff; color:var(--accent); border:1px solid var(--accent); margin-left:.5rem; }
+  #score { font-size:1.2rem; font-weight:700; margin-left:1rem; }
+  .qmark { float:right; font-weight:700; display:none; }
+  .qmark.show{display:inline;}
+</style>
+</head>
+<body>
+<h1>QCM — TP1 : Ce qu'une matrice sait faire</h1>
+<div class="meta">Source : site/docs/modelisation/tp1-matrice-svd.md — 10 questions</div>
+<div class="consignes">Cochez la bonne réponse. Une seule réponse est correcte par question. Toutes les valeurs numériques citées sont celles mesurées pendant le TP.</div>
+<form id="qcm"></form>
+<div class="bar">
+  <button type="button" onclick="grade()">Valider mes réponses</button>
+  <button type="button" class="ghost" onclick="location.reload()">Réinitialiser</button>
+  <span id="score"></span>
+</div>
+<script>
+const DATA = {"questions": [{"_enonce": "Que contient la troisième valeur renvoyée par <code>U, S, Vt = np.linalg.svd(A)<\/code> ?", "_multiple": false, "difficulte": "facile", "theme": "Décomposition en valeurs singulières", "source_fichier": "tp1-matrice-svd.md", "_source": "tp1-matrice-svd.md", "options": [{"_texte": "La matrice <code>V<\/code> déjà transposée, c'est-à-dire <code>Vᵀ<\/code>", "correcte": true, "_justification": "L'étape 2 le signale explicitement : numpy renvoie <code>Vᵀ<\/code>, pas <code>V<\/code>. C'est la source d'erreur numéro un sur cette fonction."}, {"_texte": "La matrice <code>V<\/code>, qu'il faut transposer avant de reconstruire", "correcte": false, "_justification": "C'est exactement l'erreur que l'encadré du TP fait commettre : transposer une matrice déjà transposée donne une reconstruction fausse."}, {"_texte": "La matrice diagonale des valeurs singulières", "correcte": false, "_justification": "Les valeurs singulières sont dans la deuxième valeur de retour, <code>S<\/code>, et sous forme de vecteur, pas de matrice diagonale."}, {"_texte": "L'inverse de <code>U<\/code>", "correcte": false, "_justification": "<code>U<\/code> et <code>V<\/code> sont deux matrices distinctes, chacune à colonnes orthonormées ; aucune des deux n'est l'inverse de l'autre."}]}, {"_enonce": "Le rang de la photographie utilisée dans le TP vaut 512, c'est-à-dire le maximum possible pour une matrice 600 × 512. Qu'est-ce que cela implique ?", "_multiple": false, "difficulte": "moyen", "theme": "Rang et approximation", "source_fichier": "tp1-matrice-svd.md", "_source": "tp1-matrice-svd.md", "options": [{"_texte": "Aucune reconstruction exacte à partir de moins de 512 colonnes indépendantes n'est possible, mais une reconstruction approchée le reste", "correcte": true, "_justification": "C'est le corrigé de l'exercice 1.1 : le rang maximal ferme la question de l'exactitude et ouvre celle de l'approximation, qui est l'objet du TP."}, {"_texte": "L'image ne peut être ni comprimée ni approchée d'aucune façon", "correcte": false, "_justification": "Le rang mesure l'exactitude, pas la qualité d'une approximation : dix couches sur 512 portent déjà près de 93 % de l'énergie."}, {"_texte": "Les 512 valeurs singulières sont toutes de taille comparable", "correcte": false, "_justification": "Elles vont de 48 975 à moins de 2, soit quatre ordres de grandeur ; c'est ce déséquilibre qui rend la troncature utile."}, {"_texte": "La matrice est orthogonale", "correcte": false, "_justification": "Être de rang plein n'a rien à voir avec l'orthogonalité : une matrice orthogonale a toutes ses valeurs singulières égales à 1."}]}, {"_enonce": "Quelle fraction de l'énergie totale les dix plus grandes valeurs singulières de l'image portent-elles ?", "_multiple": false, "difficulte": "facile", "theme": "Spectre", "source_fichier": "tp1-matrice-svd.md", "_source": "tp1-matrice-svd.md", "options": [{"_texte": "Environ 93 %", "correcte": true, "_justification": "La mesure de l'exercice 2.1 donne 0,9297 pour les dix premières, et 0,9881 pour les cinquante premières."}, {"_texte": "Environ 10 %, puisqu'il s'agit de dix couches sur 512", "correcte": false, "_justification": "L'énergie n'est pas répartie uniformément entre les couches : elle se concentre massivement sur les premières."}, {"_texte": "Environ 50 %", "correcte": false, "_justification": "C'est à peu près ce que porte la première valeur singulière à elle seule (0,7311 exactement) ; dix en portent bien davantage."}, {"_texte": "Environ 99 %", "correcte": false, "_justification": "0,9881 est la valeur des cinquante premières, pas des dix premières."}]}, {"_enonce": "Comment connaître l'erreur relative d'une approximation de rang <code>k<\/code> sans reconstruire la matrice ?", "_multiple": false, "difficulte": "moyen", "theme": "Théorème d'Eckart-Young", "source_fichier": "tp1-matrice-svd.md", "_source": "tp1-matrice-svd.md", "options": [{"_texte": "En divisant la racine de la somme des carrés des valeurs singulières jetées par la norme de Frobenius de la matrice", "correcte": true, "_justification": "C'est la formule vérifiée à l'exercice 3.1 : la version mesurée et la version théorique coïncident sur quatre décimales pour tous les <code>k<\/code> testés."}, {"_texte": "En divisant la k-ième valeur singulière par la première", "correcte": false, "_justification": "Ce rapport mesure la décroissance locale du spectre, pas l'erreur cumulée de toutes les couches jetées."}, {"_texte": "En comptant le nombre de valeurs singulières inférieures à 1", "correcte": false, "_justification": "L'erreur dépend de la taille des valeurs jetées, pas de leur nombre, et un seuil absolu n'a aucun sens sans référence à l'échelle de la matrice."}, {"_texte": "Ce n'est pas possible : il faut reconstruire et comparer", "correcte": false, "_justification": "C'est précisément l'intérêt pratique du théorème : on choisit <code>k<\/code> en lisant le seul vecteur <code>S<\/code>, avant toute reconstruction."}]}, {"_enonce": "Combien de nombres faut-il stocker pour conserver l'approximation de rang <code>k<\/code> d'une matrice <code>m × n<\/code> ?", "_multiple": false, "difficulte": "moyen", "theme": "Coût de stockage", "source_fichier": "tp1-matrice-svd.md", "_source": "tp1-matrice-svd.md", "options": [{"_texte": "<code>k × (m + n + 1)<\/code>", "correcte": true, "_justification": "Il faut <code>k<\/code> colonnes de <code>U<\/code> (longueur <code>m<\/code>), <code>k<\/code> lignes de <code>Vᵀ<\/code> (longueur <code>n<\/code>) et les <code>k<\/code> valeurs singulières."}, {"_texte": "<code>k × m × n<\/code>", "correcte": false, "_justification": "Ce serait <code>k<\/code> fois plus que la matrice entière : la troncature ne recopie pas la matrice, elle en garde des facteurs."}, {"_texte": "<code>k<\/code> seulement, puisqu'on ne garde que <code>k<\/code> valeurs singulières", "correcte": false, "_justification": "Les valeurs singulières ne suffisent pas à reconstruire : il faut aussi les vecteurs de <code>U<\/code> et de <code>Vᵀ<\/code>, qui dominent largement le compte."}, {"_texte": "<code>m × n<\/code> quelle que soit la valeur de <code>k<\/code>", "correcte": false, "_justification": "Ce serait le coût de l'image d'origine ; l'intérêt de la troncature est justement de descendre en dessous, quand <code>k<\/code> est assez petit."}]}, {"_enonce": "Sur l'image 600 × 512 du TP, le seuil <code>k*<\/code> vaut 276. Que se passe-t-il pour <code>k = 300<\/code> ?", "_multiple": false, "difficulte": "moyen", "theme": "Coût de stockage", "source_fichier": "tp1-matrice-svd.md", "_source": "tp1-matrice-svd.md", "options": [{"_texte": "La « compression » stocke plus de nombres que l'image d'origine, avec un ratio de 1,09", "correcte": true, "_justification": "La mesure de l'étape 4 donne 333 900 nombres stockés contre 307 200 coefficients dans l'image."}, {"_texte": "La reconstruction devient exacte", "correcte": false, "_justification": "Le rang de l'image vaut 512 : il faudrait garder les 512 couches pour reconstruire exactement, et l'erreur à <code>k = 300<\/code> est encore d'environ 1 %."}, {"_texte": "L'erreur relative devient nulle et le stockage reste inférieur à l'original", "correcte": false, "_justification": "Les deux affirmations sont fausses, et elles sont d'ailleurs contradictoires avec le seuil <code>k*<\/code> qui vient d'être calculé."}, {"_texte": "Le calcul échoue, car <code>k<\/code> dépasse le nombre de colonnes", "correcte": false, "_justification": "L'image a 512 colonnes, donc <code>k = 300<\/code> reste parfaitement valide ; c'est le bilan de stockage qui devient défavorable, pas le calcul."}]}, {"_enonce": "Le TP montre qu'il faut <code>k = 307<\/code> pour descendre sous 1 % d'erreur relative. Quelle conclusion faut-il en tirer ?", "_multiple": false, "difficulte": "difficile", "theme": "Limites de la méthode", "source_fichier": "tp1-matrice-svd.md", "_source": "tp1-matrice-svd.md", "options": [{"_texte": "Sur cette photographie, atteindre 1 % d'erreur par troncature de rang coûte plus cher que de stocker l'image entière", "correcte": true, "_justification": "307 dépasse le seuil <code>k*<\/code> de 276 : le ratio de stockage vaut 1,11. C'est le résultat négatif central de la séance."}, {"_texte": "La troncature de rang est toujours une mauvaise méthode de compression", "correcte": false, "_justification": "Elle échoue sur une photographie, dont le spectre décroît trop lentement, mais reste excellente sur les matrices de rang effectif faible, comme le montre l'exercice 6.2."}, {"_texte": "Il faudrait utiliser une image plus grande pour que cela fonctionne", "correcte": false, "_justification": "Le seuil <code>k*<\/code> croît avec la taille, mais le spectre d'une photographie décroît lentement quelle que soit sa taille : le problème est la structure de l'image, pas ses dimensions."}, {"_texte": "L'algorithme de numpy est en cause et une autre implémentation ferait mieux", "correcte": false, "_justification": "Le théorème d'Eckart-Young garantit que cette troncature est la meilleure approximation de rang <code>k<\/code> possible : aucune implémentation ne peut faire mieux à rang égal."}]}, {"_enonce": "Que produit la reconstruction écrite <code>U[:, :20] @ np.diag(S[:20]) @ Vt.T[:20, :]<\/code> sur l'image du TP ?", "_multiple": false, "difficulte": "difficile", "theme": "Pièges d'implémentation", "source_fichier": "tp1-matrice-svd.md", "_source": "tp1-matrice-svd.md", "options": [{"_texte": "Une matrice de la bonne forme, sans exception, mais d'erreur relative 1,3993 au lieu de 0,1919", "correcte": true, "_justification": "C'est la mesure de l'encadré : <code>Vt<\/code> étant carrée, les formes concordent et rien ne signale l'erreur. La reconstruction est même plus éloignée de l'image qu'une matrice de zéros."}, {"_texte": "Une <code>ValueError<\/code> sur les dimensions", "correcte": false, "_justification": "C'est ce qui serait rassurant, et c'est précisément ce qui n'arrive pas ici : l'erreur est silencieuse."}, {"_texte": "Exactement la même chose que la version correcte", "correcte": false, "_justification": "Les erreurs relatives mesurées diffèrent d'un facteur sept ; les deux versions n'ont rien à voir."}, {"_texte": "Une image légèrement plus floue, mais utilisable", "correcte": false, "_justification": "Une erreur relative supérieure à 1 signifie que la reconstruction s'écarte de l'image plus que ne le ferait une matrice nulle."}]}, {"_enonce": "On fabrique une matrice de rang 3 exact, puis on lui ajoute un bruit d'écart-type 0,5. Que devient le rang, et que montre le spectre ?", "_multiple": false, "difficulte": "moyen", "theme": "Rang effectif", "source_fichier": "tp1-matrice-svd.md", "_source": "tp1-matrice-svd.md", "options": [{"_texte": "Le rang calculé passe à 150, mais le spectre garde trois valeurs élevées puis s'écrase autour de 12,5", "correcte": true, "_justification": "Mesuré à l'exercice 5.1 : les trois premières valeurs restent à 177,5, 165,5 et 138,7, et le rapport entre la troisième et la quatrième vaut 10,86."}, {"_texte": "Le rang reste 3, car le bruit est trop faible pour compter", "correcte": false, "_justification": "Le rang au sens algébrique est binaire : la moindre perturbation le fait sauter au maximum, ici 150."}, {"_texte": "Le rang passe à 150 et le spectre devient plat, la structure est perdue", "correcte": false, "_justification": "La structure est parfaitement visible dans le spectre : c'est exactement le point de l'exercice."}, {"_texte": "Le rang devient impossible à calculer", "correcte": false, "_justification": "<code>np.linalg.matrix_rank<\/code> rend un résultat sans difficulté ; le problème est que ce résultat est trompeur, pas qu'il manque."}]}, {"_enonce": "Pour obtenir seulement la plus grande valeur singulière, le TP compare <code>np.linalg.svd<\/code> à la puissance itérée. Que conclut la mesure ?", "_multiple": false, "difficulte": "moyen", "theme": "Choisir sa méthode", "source_fichier": "tp1-matrice-svd.md", "_source": "tp1-matrice-svd.md", "options": [{"_texte": "Dix itérations suffisent pour atteindre la précision machine, pour un coût plusieurs fois moindre que la décomposition complète", "correcte": true, "_justification": "L'écart relatif vaut 3,9e-03 après une itération, 1,1e-12 après cinq, et 1,5e-16 après dix ; les quarante itérations suivantes n'apportent rien."}, {"_texte": "La puissance itérée est plus rapide mais nettement moins précise", "correcte": false, "_justification": "Elle atteint la précision des flottants : l'écart relatif final est de l'ordre de 1e-16, c'est-à-dire indiscernable de l'exact."}, {"_texte": "La décomposition complète est toujours préférable, car elle donne tout", "correcte": false, "_justification": "Elle donne tout, y compris ce dont on n'a pas besoin, et le paie en temps. Choisir la méthode selon le besoin est l'objet même de la ressource."}, {"_texte": "Il faut au moins cent itérations pour que la puissance itérée converge", "correcte": false, "_justification": "C'est la valeur par défaut du paramètre dans le TP, mais la mesure montre que dix suffisent largement."}]}]};
+const form = document.getElementById('qcm');
+DATA.questions.forEach((q, i) => {
+  const multi = q._multiple;
+  const div = document.createElement('div');
+  div.className = 'q'; div.id = 'q'+i;
+  let badges = '';
+  if (q.difficulte) badges += `<span class="badge b-${q.difficulte}">${q.difficulte}</span>`;
+  if (q.theme) badges += `<span class="badge b-theme">${q.theme}</span>`;
+  const hint = multi ? ' <small>(plusieurs réponses)</small>' : '';
+  let html = `<span class="qmark" id="m${i}"></span><h3>Question ${i+1}${hint}${badges}</h3>`;
+  html += `<div class="enonce">${q._enonce}</div>`;
+  q.options.forEach((o, j) => {
+    const type = multi ? 'checkbox' : 'radio';
+    html += `<label class="opt" id="o${i}_${j}">`
+          + `<input type="${type}" name="q${i}" value="${j}">${o._texte}</label>`;
+    html += `<div class="just" id="j${i}_${j}">${o._justification||''}</div>`;
+  });
+  if (q.source_fichier) html += `<div class="src" id="s${i}">Source : ${q._source}</div>`;
+  div.innerHTML = html;
+  form.appendChild(div);
+});
+function grade(){
+  let correct = 0;
+  DATA.questions.forEach((q, i) => {
+    const chosen = [...form.querySelectorAll(`input[name=q${i}]:checked`)].map(e=>+e.value);
+    const good = q.options.map((o,j)=>o.correcte?j:-1).filter(j=>j>=0);
+    const ok = chosen.length===good.length && chosen.every(j=>good.includes(j));
+    if (ok) correct++;
+    q.options.forEach((o,j)=>{
+      const lab = document.getElementById(`o${i}_${j}`);
+      lab.classList.remove('correct','wrong');
+      if (o.correcte) lab.classList.add('correct');
+      else if (chosen.includes(j)) lab.classList.add('wrong');
+      const ju = document.getElementById(`j${i}_${j}`);
+      if (ju && o._justification) ju.classList.add('show');
+    });
+    const m = document.getElementById('m'+i);
+    m.textContent = ok ? '✓' : '✗';
+    m.style.color = ok ? 'var(--ok)' : 'var(--ko)';
+    m.classList.add('show');
+    const s = document.getElementById('s'+i); if (s) s.classList.add('show');
+  });
+  const n = DATA.questions.length;
+  const pct = Math.round(100*correct/n);
+  const sc = document.getElementById('score');
+  sc.textContent = `Score : ${correct} / ${n}  (${pct} %)`;
+  sc.style.color = pct>=50 ? 'var(--ok)' : 'var(--ko)';
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+</script>
+</body>
+</html>

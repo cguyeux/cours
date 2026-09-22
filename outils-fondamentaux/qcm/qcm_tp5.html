@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QCM du TP5 : Chiffrer, déchiffrer, casser</title>
+<style>
+  :root { --ok:#1b8a5a; --ko:#c0392b; --accent:#2c5f8a; --bg:#f6f7f9; }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, "Segoe UI", Roboto, sans-serif; line-height:1.5;
+         max-width: 820px; margin: 0 auto; padding: 1.5rem; color:#1a1a1a; background:var(--bg); }
+  h1 { color: var(--accent); margin-bottom:.2rem; }
+  .meta { color:#666; font-size:.9rem; margin-bottom:1rem; }
+  .consignes { background:#eef3f8; border-left:4px solid var(--accent); padding:.6rem .9rem;
+               border-radius:4px; margin-bottom:1.2rem; }
+  .q { background:#fff; border:1px solid #e1e4e8; border-radius:8px; padding:1rem 1.2rem;
+       margin-bottom:1rem; box-shadow:0 1px 2px rgba(0,0,0,.04); }
+  .q h3 { margin:.1rem 0 .2rem; font-size:1.05rem; }
+  .badge { font-size:.72rem; font-weight:600; padding:.1rem .5rem; border-radius:10px;
+           margin-left:.4rem; vertical-align:middle; }
+  .b-facile{background:#e3f4ea;color:var(--ok);} .b-moyen{background:#fdf3e0;color:#b87600;}
+  .b-difficile{background:#fbe6e6;color:var(--ko);} .b-theme{background:#eef0f3;color:#555;}
+  .enonce { margin:.4rem 0 .8rem; }
+  .opt { display:block; padding:.45rem .6rem; border:1px solid #e1e4e8; border-radius:6px;
+         margin:.35rem 0; cursor:pointer; transition:background .12s; }
+  .opt:hover { background:#f0f4f8; }
+  .opt input { margin-right:.55rem; }
+  .opt.correct { border-color:var(--ok); background:#eaf7f0; }
+  .opt.wrong   { border-color:var(--ko); background:#fbecec; }
+  .just { font-size:.86rem; color:#555; margin:.2rem 0 0 1.7rem; display:none; }
+  .just.show { display:block; }
+  .src { font-size:.78rem; color:#888; margin-top:.5rem; display:none; }
+  .src.show { display:block; }
+  .bar { position:sticky; bottom:0; background:var(--bg); padding:.8rem 0; }
+  button { background:var(--accent); color:#fff; border:0; padding:.6rem 1.3rem;
+           font-size:1rem; border-radius:6px; cursor:pointer; }
+  button.ghost { background:#fff; color:var(--accent); border:1px solid var(--accent); margin-left:.5rem; }
+  #score { font-size:1.2rem; font-weight:700; margin-left:1rem; }
+  .qmark { float:right; font-weight:700; display:none; }
+  .qmark.show{display:inline;}
+</style>
+</head>
+<body>
+<h1>QCM du TP5 : Chiffrer, déchiffrer, casser</h1>
+<div class="meta">Source : docs/outils-fondamentaux/tp5-synthese.md — 10 questions</div>
+<div class="consignes">Une seule bonne réponse par question, sauf mention contraire.</div>
+<form id="qcm"></form>
+<div class="bar">
+  <button type="button" onclick="grade()">Valider mes réponses</button>
+  <button type="button" class="ghost" onclick="location.reload()">Réinitialiser</button>
+  <span id="score"></span>
+</div>
+<script>
+const DATA = {"questions": [{"_enonce": "Comment obtient-on le numéro de 0 à 25 d'une lettre majuscule <code>c<\/code> ?", "_multiple": false, "difficulte": "facile", "theme": "Lettres et nombres", "source_fichier": "tp5-synthese.md", "_source": "tp5-synthese.md", "options": [{"_texte": "<code>ord(c) - ord(&quot;A&quot;)<\/code>", "correcte": true, "_justification": "Les majuscules se suivent dans la table des caractères, donc la différence donne le rang."}, {"_texte": "<code>ord(c)<\/code>", "correcte": false, "_justification": "Cela donne le code du caractère, soit 65 pour la lettre A."}, {"_texte": "<code>chr(c) - chr(&quot;A&quot;)<\/code>", "correcte": false, "_justification": "<code>chr<\/code> fait la conversion inverse, d'un nombre vers un caractère."}, {"_texte": "<code>int(c)<\/code>", "correcte": false, "_justification": "Une lettre n'est pas convertible en entier de cette façon."}]}, {"_enonce": "Le chiffrement affine avec a = 1 et b = 3 correspond à quel chiffrement classique ?", "_multiple": false, "difficulte": "moyen", "theme": "Chiffrement affine", "source_fichier": "tp5-synthese.md", "_source": "tp5-synthese.md", "options": [{"_texte": "Le chiffre de César", "correcte": true, "_justification": "Chaque lettre est simplement décalée de trois rangs, ce que Suétone attribue à Jules César."}, {"_texte": "Le chiffre de Vigenère", "correcte": false, "_justification": "Vigenère utilise une clé de plusieurs lettres et un décalage variable."}, {"_texte": "Le chiffre de Vernam", "correcte": false, "_justification": "Vernam utilise une clé aléatoire aussi longue que le message."}, {"_texte": "Le carré de Polybe", "correcte": false, "_justification": "Polybe remplace chaque lettre par un couple de coordonnées."}]}, {"_enonce": "Pourquoi la clé a = 4 est-elle inutilisable pour un chiffrement affine sur 26 lettres ?", "_multiple": false, "difficulte": "difficile", "theme": "Inversibilité", "source_fichier": "tp5-synthese.md", "_source": "tp5-synthese.md", "options": [{"_texte": "Parce que 4 et 26 ne sont pas premiers entre eux : plusieurs lettres sont chiffrées en la même, et l'information est détruite", "correcte": true, "_justification": "L'inverse de 4 modulo 26 n'existe pas, donc aucun déchiffrement n'est possible."}, {"_texte": "Parce que 4 est pair et que le chiffrement exige un nombre premier", "correcte": false, "_justification": "La condition porte sur le PGCD avec 26, pas sur la primalité de a : 9, 15, 21 et 25 conviennent sans être premiers."}, {"_texte": "Parce que 4 est plus petit que 26", "correcte": false, "_justification": "Toutes les clés valides sont plus petites que 26."}, {"_texte": "Parce que le chiffrement échouerait avec une erreur", "correcte": false, "_justification": "Le chiffrement fonctionne sans broncher, et c'est précisément ce qui rend l'erreur dangereuse."}]}, {"_enonce": "Combien de clés distinctes le chiffrement affine sur 26 lettres admet-il ?", "_multiple": false, "difficulte": "moyen", "theme": "Espace des clés", "source_fichier": "tp5-synthese.md", "_source": "tp5-synthese.md", "options": [{"_texte": "312, soit 12 valeurs de a multipliées par 26 valeurs de b", "correcte": true, "_justification": "Douze valeurs de a sont premières avec 26, et b peut prendre les 26 valeurs."}, {"_texte": "676, soit 26 fois 26", "correcte": false, "_justification": "Toutes les valeurs de a ne conviennent pas : celles qui partagent un facteur avec 26 sont exclues."}, {"_texte": "26, une par décalage", "correcte": false, "_justification": "Ce serait le compte du seul chiffre de César, où a vaut toujours 1."}, {"_texte": "128 bits", "correcte": false, "_justification": "C'est l'ordre de grandeur d'une clé moderne, sans rapport avec ce chiffrement."}]}, {"_enonce": "Qu'est-ce qui condamne définitivement ce chiffrement, indépendamment de son élégance ?", "_multiple": false, "difficulte": "moyen", "theme": "Attaque", "source_fichier": "tp5-synthese.md", "_source": "tp5-synthese.md", "options": [{"_texte": "La petitesse de son espace de clés : 312 essais sont instantanés pour une machine", "correcte": true, "_justification": "La sécurité d'un chiffrement tient d'abord à la taille de son espace de clés."}, {"_texte": "Le fait qu'il utilise l'arithmétique modulaire", "correcte": false, "_justification": "L'arithmétique modulaire est au cœur de la cryptographie moderne, RSA compris."}, {"_texte": "Le fait qu'il ne traite que les majuscules", "correcte": false, "_justification": "C'est une limitation de mise en œuvre, pas une faiblesse cryptographique."}, {"_texte": "Sa lenteur au chiffrement", "correcte": false, "_justification": "Il est au contraire extrêmement rapide."}]}, {"_enonce": "Sur quelle propriété du chiffrement affine repose l'attaque par analyse de fréquences ?", "_multiple": false, "difficulte": "difficile", "theme": "Analyse de fréquences", "source_fichier": "tp5-synthese.md", "_source": "tp5-synthese.md", "options": [{"_texte": "Une même lettre claire est toujours chiffrée en la même lettre, ce qui laisse intactes les fréquences relatives", "correcte": true, "_justification": "La lettre la plus fréquente du chiffré est donc très probablement l'image du E."}, {"_texte": "Le chiffrement est réversible", "correcte": false, "_justification": "La réversibilité est nécessaire à tout chiffrement utilisable, y compris ceux qui résistent à cette attaque."}, {"_texte": "La clé est composée de deux nombres", "correcte": false, "_justification": "Le nombre de paramètres de la clé ne détermine pas cette faiblesse."}, {"_texte": "L'alphabet compte 26 lettres", "correcte": false, "_justification": "La taille de l'alphabet joue sur le nombre de clés, pas sur la conservation des fréquences."}]}, {"_enonce": "Pourquoi l'attaque par fréquences échoue-t-elle sur le message ATTAQUEALAUBE ?", "_multiple": false, "difficulte": "moyen", "theme": "Limites de la méthode", "source_fichier": "tp5-synthese.md", "_source": "tp5-synthese.md", "options": [{"_texte": "Parce que le texte est trop court : la lettre la plus fréquente y est le A et non le E", "correcte": true, "_justification": "L'hypothèse statistique n'a de sens que sur un texte assez long."}, {"_texte": "Parce que le message ne contient aucun E", "correcte": false, "_justification": "Il en contient deux ; c'est leur fréquence relative qui n'est pas dominante."}, {"_texte": "Parce que la clé utilisée est invalide", "correcte": false, "_justification": "La clé (5, 8) est parfaitement valide."}, {"_texte": "Parce que l'attaque ne fonctionne que sur des textes chiffrés par César", "correcte": false, "_justification": "Elle s'applique à tout chiffrement par substitution monoalphabétique."}]}, {"_enonce": "Quels comportements attend-on d'une implémentation sérieuse du chiffrement affine ? (plusieurs réponses)", "_multiple": true, "difficulte": "moyen", "theme": "Robustesse", "source_fichier": "tp5-synthese.md", "_source": "tp5-synthese.md", "options": [{"_texte": "Refuser explicitement une clé non inversible plutôt que de produire un message irrécupérable", "correcte": true, "_justification": "Un programme sérieux signale ce qu'il ne sait pas faire au lieu de le faire mal."}, {"_texte": "Vérifier son propre fonctionnement par un aller-retour chiffrer puis déchiffrer", "correcte": true, "_justification": "Ce test attrape d'un coup toutes les erreurs de signe et de modulo."}, {"_texte": "Chiffrer aussi les espaces et la ponctuation pour renforcer la sécurité", "correcte": false, "_justification": "Le TP nettoie au contraire le texte ; et cela ne changerait rien à la faiblesse de fond."}, {"_texte": "Choisir la clé au hasard à chaque appel pour plus de sûreté", "correcte": false, "_justification": "Le destinataire ne pourrait plus déchiffrer : la clé doit être partagée."}]}, {"_enonce": "Pourquoi un chiffrement affine ne change-t-il pas l'indice de coïncidence d'un texte ?", "_multiple": false, "difficulte": "moyen", "theme": "Indice de coïncidence", "source_fichier": "tp5-synthese.md", "_source": "tp5-synthese.md", "options": [{"_texte": "Parce qu'il permute les lettres sans changer les effectifs : la somme des <code>n(n - 1)<\/code> est la même", "correcte": true, "_justification": "Chaque lettre est toujours remplacée par la même autre lettre, donc la distribution des effectifs est simplement réordonnée."}, {"_texte": "Parce que l'indice ne dépend que de la longueur du texte", "correcte": false, "_justification": "Il dépend des effectifs par lettre : le hasard donne 0,039, le français environ 0,08."}, {"_texte": "Parce que <code>a<\/code> est premier avec 26", "correcte": false, "_justification": "Cette condition assure le déchiffrement, pas la conservation des fréquences, qui vaut pour toute substitution simple."}, {"_texte": "Il le change : c'est ainsi qu'on repère un texte chiffré", "correcte": false, "_justification": "Il ne le change pas, et c'est justement cette invariance qui trahit une substitution."}]}, {"_enonce": "Comment retrouve-t-on la longueur de la clé d'un chiffre de Vigenère avec l'indice de coïncidence ?", "_multiple": false, "difficulte": "difficile", "theme": "Vigenère", "source_fichier": "tp5-synthese.md", "_source": "tp5-synthese.md", "options": [{"_texte": "En découpant le chiffré en <code>L<\/code> colonnes pour chaque longueur candidate : l'indice moyen des colonnes remonte au niveau du français quand <code>L<\/code> est la longueur de la clé ou un de ses multiples", "correcte": true, "_justification": "Chaque colonne est alors un chiffre de César, qui conserve les fréquences du français."}, {"_texte": "En cherchant la lettre la plus fréquente du chiffré", "correcte": false, "_justification": "C'est l'attaque du chiffre affine ; Vigenère aplatit les fréquences globales."}, {"_texte": "En essayant les 312 clés possibles", "correcte": false, "_justification": "312 est le nombre de clés du chiffre affine ; Vigenère en a <code>26<\/code> puissance <code>L<\/code>."}, {"_texte": "En calculant le PGCD des longueurs des mots du message", "correcte": false, "_justification": "Le texte nettoyé n'a plus d'espaces, donc plus de mots."}]}]};
+const form = document.getElementById('qcm');
+DATA.questions.forEach((q, i) => {
+  const multi = q._multiple;
+  const div = document.createElement('div');
+  div.className = 'q'; div.id = 'q'+i;
+  let badges = '';
+  if (q.difficulte) badges += `<span class="badge b-${q.difficulte}">${q.difficulte}</span>`;
+  if (q.theme) badges += `<span class="badge b-theme">${q.theme}</span>`;
+  const hint = multi ? ' <small>(plusieurs réponses)</small>' : '';
+  let html = `<span class="qmark" id="m${i}"></span><h3>Question ${i+1}${hint}${badges}</h3>`;
+  html += `<div class="enonce">${q._enonce}</div>`;
+  q.options.forEach((o, j) => {
+    const type = multi ? 'checkbox' : 'radio';
+    html += `<label class="opt" id="o${i}_${j}">`
+          + `<input type="${type}" name="q${i}" value="${j}">${o._texte}</label>`;
+    html += `<div class="just" id="j${i}_${j}">${o._justification||''}</div>`;
+  });
+  if (q.source_fichier) html += `<div class="src" id="s${i}">Source : ${q._source}</div>`;
+  div.innerHTML = html;
+  form.appendChild(div);
+});
+function grade(){
+  let correct = 0;
+  DATA.questions.forEach((q, i) => {
+    const chosen = [...form.querySelectorAll(`input[name=q${i}]:checked`)].map(e=>+e.value);
+    const good = q.options.map((o,j)=>o.correcte?j:-1).filter(j=>j>=0);
+    const ok = chosen.length===good.length && chosen.every(j=>good.includes(j));
+    if (ok) correct++;
+    q.options.forEach((o,j)=>{
+      const lab = document.getElementById(`o${i}_${j}`);
+      lab.classList.remove('correct','wrong');
+      if (o.correcte) lab.classList.add('correct');
+      else if (chosen.includes(j)) lab.classList.add('wrong');
+      const ju = document.getElementById(`j${i}_${j}`);
+      if (ju && o._justification) ju.classList.add('show');
+    });
+    const m = document.getElementById('m'+i);
+    m.textContent = ok ? '✓' : '✗';
+    m.style.color = ok ? 'var(--ok)' : 'var(--ko)';
+    m.classList.add('show');
+    const s = document.getElementById('s'+i); if (s) s.classList.add('show');
+  });
+  const n = DATA.questions.length;
+  const pct = Math.round(100*correct/n);
+  const sc = document.getElementById('score');
+  sc.textContent = `Score : ${correct} / ${n}  (${pct} %)`;
+  sc.style.color = pct>=50 ? 'var(--ok)' : 'var(--ko)';
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+</script>
+</body>
+</html>

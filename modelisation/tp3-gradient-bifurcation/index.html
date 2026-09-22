@@ -1,0 +1,2569 @@
+
+<!doctype html>
+<html lang="fr" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Supports de travaux pratiques du département informatique de l'IUT Nord Franche-Comté. Accessibles sans VPN et sans compte.">
+      
+      
+        <meta name="author" content="Christophe Guyeux">
+      
+      
+        <link rel="canonical" href="https://cours.gclab.fr/modelisation/tp3-gradient-bifurcation/">
+      
+      
+        <link rel="prev" href="../tp2-marche-aleatoire/">
+      
+      
+        <link rel="next" href="../evaluation/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>TP3. Dériver, descendre, diverger - Cours de Christophe Guyeux</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#tp3-deriver-descendre-diverger" class="md-skip">
+          Aller au contenu
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="En-tête">
+    <a href="../.." title="Cours de Christophe Guyeux" class="md-header__button md-logo" aria-label="Cours de Christophe Guyeux" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12.42 5.29c-1.1-.1-2.07.71-2.17 1.82L10 10h2.82v2h-3l-.44 5.07A4.001 4.001 0 0 1 2 18.83l1.5-1.5c.33 1.05 1.46 1.64 2.5 1.3.78-.24 1.33-.93 1.4-1.74L7.82 12h-3v-2H8l.27-3.07a4.01 4.01 0 0 1 4.33-3.65c1.26.11 2.4.81 3.06 1.89l-1.5 1.5c-.25-.77-.93-1.31-1.74-1.38M22 13.65l-1.41-1.41-2.83 2.83-2.83-2.83-1.43 1.41 2.85 2.85-2.85 2.81 1.43 1.41 2.83-2.83 2.83 2.83L22 19.31l-2.83-2.81z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Cours de Christophe Guyeux
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              TP3. Dériver, descendre, diverger
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Passer au thème sombre"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Passer au thème sombre" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Passer au thème clair"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Passer au thème clair" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Rechercher" placeholder="Rechercher" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Recherche">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Effacer" aria-label="Effacer" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initialisation de la recherche
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Cours de Christophe Guyeux" class="md-nav__button md-logo" aria-label="Cours de Christophe Guyeux" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12.42 5.29c-1.1-.1-2.07.71-2.17 1.82L10 10h2.82v2h-3l-.44 5.07A4.001 4.001 0 0 1 2 18.83l1.5-1.5c.33 1.05 1.46 1.64 2.5 1.3.78-.24 1.33-.93 1.4-1.74L7.82 12h-3v-2H8l.27-3.07a4.01 4.01 0 0 1 4.33-3.65c1.26.11 2.4.81 3.06 1.89l-1.5 1.5c-.25-.77-.93-1.31-1.74-1.38M22 13.65l-1.41-1.41-2.83 2.83-2.83-2.83-1.43 1.41 2.85 2.85-2.85 2.81 1.43 1.41 2.83-2.83 2.83 2.83L22 19.31l-2.83-2.81z"/></svg>
+
+    </a>
+    Cours de Christophe Guyeux
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Accueil
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Outils fondamentaux
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Outils fondamentaux
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils-fondamentaux/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Le module
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils-fondamentaux/demarrage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mise en route
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils-fondamentaux/tp1-calcul-numerique/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TP1. Calcul numérique
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils-fondamentaux/tp2-arithmetique/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TP2. Arithmétique
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils-fondamentaux/tp3-polynomes-fonctions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TP3. Polynômes et fonctions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils-fondamentaux/tp4-matrices-gauss/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TP4. Matrices et systèmes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils-fondamentaux/tp5-synthese/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TP5. Synthèse
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils-fondamentaux/tp6-geometrie-plan/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TP6. Géométrie du plan
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils-fondamentaux/memento/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mémento Python
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils-fondamentaux/evaluation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Projet et évaluation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IA générative (BUT3)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    IA générative (BUT3)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ia-generative/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Le module
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ia-generative/demarrage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mise en route BUT3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ia-generative/tp1-premiers-pas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TP1. Premiers pas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ia-generative/tp2-sorties-structurees/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TP2. Sorties structurées
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ia-generative/tp3-rag-vecteurs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TP3. RAG et bases vectorielles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ia-generative/tp4-agents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TP4. Agents
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ia-generative/tp5-multimodalite/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TP5. Multimodalité
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ia/evaluation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Projet et évaluation (IA)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modélisations mathématiques (BUT3)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Modélisations mathématiques (BUT3)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Le module
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tp1-matrice-svd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TP1. Ce qu'une matrice sait faire
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tp2-marche-aleatoire/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TP2. La marche aléatoire
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TP3. Dériver, descendre, diverger
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TP3. Dériver, descendre, diverger
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#objectifs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objectifs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prérequis
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ressources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ressources
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#etape-1-le-pas-quon-ne-sait-pas-choisir-15-min" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Étape 1. Le pas qu'on ne sait pas choisir (15 min)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#etape-2-les-nombres-duaux-ou-deriver-sans-h-30-min" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Étape 2. Les nombres duaux, ou dériver sans h (30 min)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#etape-3-du-gradient-a-la-descente-30-min" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Étape 3. Du gradient à la descente (30 min)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#etape-4-le-seuil-exact-du-pas-20-min" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Étape 4. Le seuil exact du pas (20 min)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#etape-5-diverger-mais-pas-tout-de-suite-25-min" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Étape 5. Diverger, mais pas tout de suite (25 min)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ce-quil-faut-retenir" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ce qu'il faut retenir
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#auto-evaluation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Auto-évaluation
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../evaluation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Projet et évaluation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IA prédictive (BUT3)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    IA prédictive (BUT3)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ia-predictive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Le module
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ia-predictive/tp1-pandas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TP1. Pandas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ia-predictive/tp1bis-geopandas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TP1bis. GeoPandas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ia-predictive/tp2-clustering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TP2. Clustering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ia-predictive/tp2bis-reduction-dimension/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TP2bis. Réduction de dimension
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ia-predictive/tp3-classification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TP3. Classification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ia-predictive/tp5-regression/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TP5. Régression et validation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ia-predictive/tp4-xgboost/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TP4. XGBoost
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ia-predictive/tp6-series-temporelles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TP6. Séries temporelles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ia-predictive/tp7-xgboost-objectifs-metriques/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TP7. XGBoost, objectifs et métriques
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ia-predictive/tp8-pretraitement/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TP8. Prétraitement des variables
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ia-predictive/tp9-xgboost-explicabilite-causalite/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TP9. XGBoost, explicabilité et causalité
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ia-predictive/tp10-theorie-information/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TP10. Théorie de l'information
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ia/evaluation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Projet et évaluation (IA)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../a-propos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    À propos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#objectifs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objectifs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prérequis
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ressources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ressources
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#etape-1-le-pas-quon-ne-sait-pas-choisir-15-min" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Étape 1. Le pas qu'on ne sait pas choisir (15 min)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#etape-2-les-nombres-duaux-ou-deriver-sans-h-30-min" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Étape 2. Les nombres duaux, ou dériver sans h (30 min)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#etape-3-du-gradient-a-la-descente-30-min" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Étape 3. Du gradient à la descente (30 min)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#etape-4-le-seuil-exact-du-pas-20-min" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Étape 4. Le seuil exact du pas (20 min)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#etape-5-diverger-mais-pas-tout-de-suite-25-min" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Étape 5. Diverger, mais pas tout de suite (25 min)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ce-quil-faut-retenir" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ce qu'il faut retenir
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#auto-evaluation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Auto-évaluation
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="tp3-deriver-descendre-diverger">TP3. Dériver, descendre, diverger<a class="headerlink" href="#tp3-deriver-descendre-diverger" title="Lien vers cette section">&para;</a></h1>
+<p><strong>Durée : 2 h.</strong></p>
+<h2 id="objectifs">Objectifs<a class="headerlink" href="#objectifs" title="Lien vers cette section">&para;</a></h2>
+<ul>
+<li>Mesurer pourquoi une dérivée calculée par différence finie n'est jamais exacte, et
+  constater qu'aucun choix de pas ne répare complètement le problème.</li>
+<li>Implémenter les nombres duaux, c'est-à-dire la dérivation automatique, en une quarantaine
+  de lignes, et obtenir la dérivée exacte au bit près.</li>
+<li>S'en servir pour calculer un gradient, puis descendre, et comparer votre descente à
+  l'optimiseur de scipy.</li>
+<li>Établir le seuil exact au-delà duquel un pas trop grand fait diverger la descente, et le
+  relier au conditionnement.</li>
+<li>Découvrir qu'entre « ça converge » et « ça explose » il existe un régime entier où la
+  descente oscille, se dédouble, puis devient chaotique.</li>
+</ul>
+<h2 id="prerequis">Prérequis<a class="headerlink" href="#prerequis" title="Lien vers cette section">&para;</a></h2>
+<p>Le conditionnement d'une matrice, rencontré en première année au
+<a href="../../outils-fondamentaux/tp4-matrices-gauss/">TP4 d'outils fondamentaux</a> sur la matrice de
+Hilbert : il réapparaît ici dans un tout autre rôle, celui d'une vitesse de convergence. La
+surcharge d'opérateurs en Python, qui est le seul point de langage nouveau de la séance.
+Aucune clé d'API, aucun téléchargement.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pip<span class="w"> </span>install<span class="w"> </span>numpy<span class="w"> </span>matplotlib<span class="w"> </span>scipy
+</span></code></pre></div>
+<h2 id="ressources">Ressources<a class="headerlink" href="#ressources" title="Lien vers cette section">&para;</a></h2>
+<ul>
+<li><a href="/lite/notebooks/index.html?path=modelisation-tp3.ipynb" target="_blank">Le carnet de ce TP</a>,
+  qui s'exécute dans votre navigateur, sans rien installer.</li>
+<li><a href="../qcm/qcm_tp3.html" target="_blank">Le QCM d'auto-évaluation de ce TP</a>, à faire après la
+  séance.</li>
+<li>Robert May, <em>Simple mathematical models with very complicated dynamics</em>, Nature, 1976 :
+  l'article qui a rendu célèbre la suite logistique de l'étape 5.</li>
+<li>La dérivation numérique et le choix du pas ont déjà été vus en première année, au
+  <a href="../../outils-fondamentaux/tp3-polynomes-fonctions/">TP3 d'outils fondamentaux</a> ; l'étape 1
+  en reprend le résultat pour s'en servir de point de comparaison.</li>
+</ul>
+<hr />
+<h2 id="etape-1-le-pas-quon-ne-sait-pas-choisir-15-min">Étape 1. Le pas qu'on ne sait pas choisir (15 min)<a class="headerlink" href="#etape-1-le-pas-quon-ne-sait-pas-choisir-15-min" title="Lien vers cette section">&para;</a></h2>
+<p>Une dérivée se définit comme une limite, et un ordinateur ne sait pas prendre de limite. Il
+prend un <code>h</code> petit et espère. Deux formules se présentent, la différence avant et la
+différence centrée :</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="k">def</span><span class="w"> </span><span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="k">def</span><span class="w"> </span><span class="nf">f_prime_exacte</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="n">x0</span> <span class="o">=</span> <span class="mf">1.5</span>
+</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="n">exacte</span> <span class="o">=</span> <span class="n">f_prime_exacte</span><span class="p">(</span><span class="n">x0</span><span class="p">)</span>
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"dérivée exacte :"</span><span class="p">,</span> <span class="n">exacte</span><span class="p">)</span>
+</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">17</span><span class="p">):</span>
+</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>    <span class="n">h</span> <span class="o">=</span> <span class="mf">10.0</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="n">k</span><span class="p">)</span>
+</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>    <span class="n">avant</span> <span class="o">=</span> <span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">x0</span> <span class="o">+</span> <span class="n">h</span><span class="p">)</span> <span class="o">-</span> <span class="n">f</span><span class="p">(</span><span class="n">x0</span><span class="p">))</span> <span class="o">/</span> <span class="n">h</span>
+</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>    <span class="n">centree</span> <span class="o">=</span> <span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">x0</span> <span class="o">+</span> <span class="n">h</span><span class="p">)</span> <span class="o">-</span> <span class="n">f</span><span class="p">(</span><span class="n">x0</span> <span class="o">-</span> <span class="n">h</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">h</span><span class="p">)</span>
+</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"h=1e-</span><span class="si">{</span><span class="n">k</span><span class="si">:</span><span class="s2">02d</span><span class="si">}</span><span class="s2"> : avant </span><span class="si">{</span><span class="nb">abs</span><span class="p">(</span><span class="n">avant</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">exacte</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="nb">abs</span><span class="p">(</span><span class="n">exacte</span><span class="p">)</span><span class="si">:</span><span class="s2">.3e</span><span class="si">}</span><span class="s2">"</span>
+</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>          <span class="sa">f</span><span class="s2">"   centrée </span><span class="si">{</span><span class="nb">abs</span><span class="p">(</span><span class="n">centree</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">exacte</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="nb">abs</span><span class="p">(</span><span class="n">exacte</span><span class="p">)</span><span class="si">:</span><span class="s2">.3e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span></code></pre></div>
+<p>L'erreur ne décroît pas jusqu'au bout : elle descend, atteint un minimum, puis <strong>remonte</strong>.
+C'est la signature de deux erreurs qui se combattent. L'erreur de troncature, celle du
+développement de Taylor qu'on interrompt, diminue avec <code>h</code>. L'erreur d'arrondi, elle,
+augmente quand <code>h</code> diminue, parce qu'on soustrait deux nombres de plus en plus proches puis
+qu'on divise par un nombre de plus en plus petit.</p>
+<div class="admonition question">
+<p class="admonition-title">Exercice 1.1 : où se trouve le meilleur pas</p>
+<p>Cherchez le <code>h</code> qui minimise l'erreur, pour chacune des deux formules, sur une grille
+plus fine que les puissances entières de 10. Comparez ce que vous trouvez à
+<code>sqrt(eps)</code> et à <code>eps ** (1/3)</code>, où <code>eps</code> est l'epsilon machine.</p>
+<p><strong>Résultat attendu :</strong> pour la différence avant, le minimum est atteint vers
+<code>h = 4.5e-09</code> avec une erreur relative de <code>2.1e-08</code>, à comparer à
+<code>sqrt(eps) = 1.49e-08</code>. Pour la centrée, il est vers <code>h = 6.3e-06</code> avec une erreur de
+<code>1.0e-11</code>, à comparer à <code>eps ** (1/3) = 6.06e-06</code>. Les deux prédictions théoriques
+tombent au bon ordre de grandeur, mais aucune ne donne le pas exact.</p>
+<details class="success">
+<summary>Corrigé</summary>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">eps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">finfo</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">eps</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="k">def</span><span class="w"> </span><span class="nf">meilleur_pas</span><span class="p">(</span><span class="n">formule</span><span class="p">,</span> <span class="n">exposants</span><span class="p">):</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="n">resultats</span> <span class="o">=</span> <span class="p">[(</span><span class="nb">abs</span><span class="p">(</span><span class="n">formule</span><span class="p">(</span><span class="mf">10.0</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="n">k</span><span class="p">))</span> <span class="o">-</span> <span class="n">exacte</span><span class="p">)</span> <span class="o">/</span> <span class="nb">abs</span><span class="p">(</span><span class="n">exacte</span><span class="p">),</span> <span class="mf">10.0</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="n">k</span><span class="p">))</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>                 <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">exposants</span><span class="p">]</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="n">resultats</span><span class="p">)</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="n">avant</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">:</span> <span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">x0</span> <span class="o">+</span> <span class="n">h</span><span class="p">)</span> <span class="o">-</span> <span class="n">f</span><span class="p">(</span><span class="n">x0</span><span class="p">))</span> <span class="o">/</span> <span class="n">h</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="n">centree</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">:</span> <span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">x0</span> <span class="o">+</span> <span class="n">h</span><span class="p">)</span> <span class="o">-</span> <span class="n">f</span><span class="p">(</span><span class="n">x0</span> <span class="o">-</span> <span class="n">h</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">h</span><span class="p">)</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="n">err_a</span><span class="p">,</span> <span class="n">h_a</span> <span class="o">=</span> <span class="n">meilleur_pas</span><span class="p">(</span><span class="n">avant</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">6.0</span><span class="p">,</span> <span class="mf">11.0</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">))</span>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="n">err_c</span><span class="p">,</span> <span class="n">h_c</span> <span class="o">=</span> <span class="n">meilleur_pas</span><span class="p">(</span><span class="n">centree</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">3.0</span><span class="p">,</span> <span class="mf">9.0</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">))</span>
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"avant   : h=</span><span class="si">{</span><span class="n">h_a</span><span class="si">:</span><span class="s2">.3e</span><span class="si">}</span><span class="s2">  erreur </span><span class="si">{</span><span class="n">err_a</span><span class="si">:</span><span class="s2">.3e</span><span class="si">}</span><span class="s2">   sqrt(eps)      = </span><span class="si">{</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">eps</span><span class="p">)</span><span class="si">:</span><span class="s2">.3e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"centrée : h=</span><span class="si">{</span><span class="n">h_c</span><span class="si">:</span><span class="s2">.3e</span><span class="si">}</span><span class="s2">  erreur </span><span class="si">{</span><span class="n">err_c</span><span class="si">:</span><span class="s2">.3e</span><span class="si">}</span><span class="s2">   eps**(1/3)     = </span><span class="si">{</span><span class="n">eps</span><span class="w"> </span><span class="o">**</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span><span class="si">:</span><span class="s2">.3e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Retenez la conséquence pratique plutôt que les formules : le meilleur pas dépend de
+la fonction, du point où on la dérive, et de l'échelle de ses valeurs. Il n'existe
+donc pas de constante universelle à écrire dans un code, et même au meilleur pas
+vous perdez la moitié des chiffres significatifs pour la formule avant. Toute la
+suite de cette séance consiste à se débarrasser de ce compromis au lieu de
+l'optimiser.</p>
+</details>
+</div>
+<h2 id="etape-2-les-nombres-duaux-ou-deriver-sans-h-30-min">Étape 2. Les nombres duaux, ou dériver sans h (30 min)<a class="headerlink" href="#etape-2-les-nombres-duaux-ou-deriver-sans-h-30-min" title="Lien vers cette section">&para;</a></h2>
+<p>Voici l'idée, et elle est courte. On invente un nombre <code>ε</code> non nul dont le carré est nul, et
+on travaille avec des couples <code>a + b·ε</code>. La règle du produit tombe alors toute seule :</p>
+<div class="arithmatex">\[
+(a + b\varepsilon)(c + d\varepsilon) = ac + (ad + bc)\varepsilon + bd\varepsilon^2 = ac + (ad + bc)\varepsilon
+\]</div>
+<p>et l'on reconnaît dans le facteur de <code>ε</code> la formule de la dérivée d'un produit. Si l'on
+évalue une fonction en <code>x + 1·ε</code>, la partie en <code>ε</code> du résultat <strong>est</strong> <code>f'(x)</code>, sans aucun
+pas et sans aucune limite. Il n'y a plus qu'à l'écrire en Python :</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">Dual</span><span class="p">:</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">    </span><span class="sd">"""Un nombre a + b·ε avec ε² = 0 : b porte la dérivée."""</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">valeur</span><span class="p">,</span> <span class="n">derivee</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">valeur</span> <span class="o">=</span> <span class="n">valeur</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">derivee</span> <span class="o">=</span> <span class="n">derivee</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    <span class="nd">@staticmethod</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_promouvoir</span><span class="p">(</span><span class="n">autre</span><span class="p">):</span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">        </span><span class="sd">"""Un flottant est un dual de dérivée nulle : c'est une constante."""</span>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>        <span class="k">return</span> <span class="n">autre</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">autre</span><span class="p">,</span> <span class="n">Dual</span><span class="p">)</span> <span class="k">else</span> <span class="n">Dual</span><span class="p">(</span><span class="n">autre</span><span class="p">)</span>
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">autre</span><span class="p">):</span>
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>        <span class="n">autre</span> <span class="o">=</span> <span class="n">Dual</span><span class="o">.</span><span class="n">_promouvoir</span><span class="p">(</span><span class="n">autre</span><span class="p">)</span>
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>        <span class="k">return</span> <span class="n">Dual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">valeur</span> <span class="o">+</span> <span class="n">autre</span><span class="o">.</span><span class="n">valeur</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">derivee</span> <span class="o">+</span> <span class="n">autre</span><span class="o">.</span><span class="n">derivee</span><span class="p">)</span>
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
+</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>    <span class="fm">__radd__</span> <span class="o">=</span> <span class="fm">__add__</span>
+</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
+</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">autre</span><span class="p">):</span>
+</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>        <span class="n">autre</span> <span class="o">=</span> <span class="n">Dual</span><span class="o">.</span><span class="n">_promouvoir</span><span class="p">(</span><span class="n">autre</span><span class="p">)</span>
+</span><span id="__span-3-21"><a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>        <span class="k">return</span> <span class="n">Dual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">valeur</span> <span class="o">*</span> <span class="n">autre</span><span class="o">.</span><span class="n">valeur</span><span class="p">,</span>
+</span><span id="__span-3-22"><a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>                    <span class="bp">self</span><span class="o">.</span><span class="n">derivee</span> <span class="o">*</span> <span class="n">autre</span><span class="o">.</span><span class="n">valeur</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">valeur</span> <span class="o">*</span> <span class="n">autre</span><span class="o">.</span><span class="n">derivee</span><span class="p">)</span>
+</span><span id="__span-3-23"><a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>
+</span><span id="__span-3-24"><a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>    <span class="fm">__rmul__</span> <span class="o">=</span> <span class="fm">__mul__</span>
+</span><span id="__span-3-25"><a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>
+</span><span id="__span-3-26"><a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__sub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">autre</span><span class="p">):</span>
+</span><span id="__span-3-27"><a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>        <span class="n">autre</span> <span class="o">=</span> <span class="n">Dual</span><span class="o">.</span><span class="n">_promouvoir</span><span class="p">(</span><span class="n">autre</span><span class="p">)</span>
+</span><span id="__span-3-28"><a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>        <span class="k">return</span> <span class="n">Dual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">valeur</span> <span class="o">-</span> <span class="n">autre</span><span class="o">.</span><span class="n">valeur</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">derivee</span> <span class="o">-</span> <span class="n">autre</span><span class="o">.</span><span class="n">derivee</span><span class="p">)</span>
+</span><span id="__span-3-29"><a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>
+</span><span id="__span-3-30"><a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__rsub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">autre</span><span class="p">):</span>
+</span><span id="__span-3-31"><a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>        <span class="k">return</span> <span class="n">Dual</span><span class="o">.</span><span class="n">_promouvoir</span><span class="p">(</span><span class="n">autre</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span>
+</span><span id="__span-3-32"><a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>
+</span><span id="__span-3-33"><a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__pow__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+</span><span id="__span-3-34"><a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a>        <span class="k">return</span> <span class="n">Dual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">valeur</span> <span class="o">**</span> <span class="n">n</span><span class="p">,</span> <span class="n">n</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">valeur</span> <span class="o">**</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">derivee</span><span class="p">)</span>
+</span><span id="__span-3-35"><a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a>
+</span><span id="__span-3-36"><a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-3-37"><a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a>        <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">valeur</span><span class="si">}</span><span class="s2"> + </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">derivee</span><span class="si">}</span><span class="s2">·ε"</span>
+</span><span id="__span-3-38"><a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a>
+</span><span id="__span-3-39"><a id="__codelineno-3-39" name="__codelineno-3-39" href="#__codelineno-3-39"></a>
+</span><span id="__span-3-40"><a id="__codelineno-3-40" name="__codelineno-3-40" href="#__codelineno-3-40"></a><span class="k">def</span><span class="w"> </span><span class="nf">sin</span><span class="p">(</span><span class="n">u</span><span class="p">):</span>
+</span><span id="__span-3-41"><a id="__codelineno-3-41" name="__codelineno-3-41" href="#__codelineno-3-41"></a>    <span class="k">return</span> <span class="n">Dual</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">valeur</span><span class="p">),</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">valeur</span><span class="p">)</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">derivee</span><span class="p">)</span>
+</span><span id="__span-3-42"><a id="__codelineno-3-42" name="__codelineno-3-42" href="#__codelineno-3-42"></a>
+</span><span id="__span-3-43"><a id="__codelineno-3-43" name="__codelineno-3-43" href="#__codelineno-3-43"></a>
+</span><span id="__span-3-44"><a id="__codelineno-3-44" name="__codelineno-3-44" href="#__codelineno-3-44"></a><span class="k">def</span><span class="w"> </span><span class="nf">exp</span><span class="p">(</span><span class="n">u</span><span class="p">):</span>
+</span><span id="__span-3-45"><a id="__codelineno-3-45" name="__codelineno-3-45" href="#__codelineno-3-45"></a>    <span class="k">return</span> <span class="n">Dual</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">valeur</span><span class="p">),</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">valeur</span><span class="p">)</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">derivee</span><span class="p">)</span>
+</span><span id="__span-3-46"><a id="__codelineno-3-46" name="__codelineno-3-46" href="#__codelineno-3-46"></a>
+</span><span id="__span-3-47"><a id="__codelineno-3-47" name="__codelineno-3-47" href="#__codelineno-3-47"></a>
+</span><span id="__span-3-48"><a id="__codelineno-3-48" name="__codelineno-3-48" href="#__codelineno-3-48"></a><span class="nb">print</span><span class="p">(</span><span class="n">Dual</span><span class="p">(</span><span class="mf">3.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">Dual</span><span class="p">(</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">))</span>
+</span></code></pre></div>
+<p>Chaque opérateur transporte la valeur <strong>et</strong> sa dérivée, et <code>sin</code> comme <code>exp</code> appliquent la
+règle de dérivation en chaîne : la dérivée de <code>sin(u)</code> est <code>cos(u)</code> fois celle de <code>u</code>.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">g</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="k">return</span> <span class="n">exp</span><span class="p">(</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="n">resultat</span> <span class="o">=</span> <span class="n">g</span><span class="p">(</span><span class="n">Dual</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">))</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"valeur  :"</span><span class="p">,</span> <span class="n">resultat</span><span class="o">.</span><span class="n">valeur</span><span class="p">)</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"dérivée :"</span><span class="p">,</span> <span class="n">resultat</span><span class="o">.</span><span class="n">derivee</span><span class="p">)</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"exacte  :"</span><span class="p">,</span> <span class="n">exacte</span><span class="p">)</span>
+</span></code></pre></div>
+<div class="admonition question">
+<p class="admonition-title">Exercice 2.1 : à quel point est-ce exact ?</p>
+<p>Comparez la dérivée obtenue par les duaux à la dérivée analytique, non pas à <code>1e-10</code>
+près, mais <strong>bit à bit</strong> avec <code>==</code>. Que vaut l'écart, et pourquoi ce résultat n'a-t-il
+rien de miraculeux ?</p>
+<p><strong>Résultat attendu :</strong> l'écart vaut exactement <code>0.0</code> et le test <code>==</code> renvoie <code>True</code>. Ce
+n'est pas une approximation très bonne, c'est le même calcul : la dérivée analytique
+s'écrit <code>cos(x) * exp(sin(x))</code>, et la classe <code>Dual</code> a effectué rigoureusement ces deux
+opérations flottantes, dans cet ordre. La dérivation automatique n'approche pas la
+dérivée, elle l'évalue.</p>
+<details class="success">
+<summary>Corrigé</summary>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"écart absolu :"</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">resultat</span><span class="o">.</span><span class="n">derivee</span> <span class="o">-</span> <span class="n">exacte</span><span class="p">))</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"identiques bit à bit :"</span><span class="p">,</span> <span class="n">resultat</span><span class="o">.</span><span class="n">derivee</span> <span class="o">==</span> <span class="n">exacte</span><span class="p">)</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"meilleure différence finie centrée :"</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">err_c</span><span class="si">:</span><span class="s2">.3e</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="s2">"d'erreur relative"</span><span class="p">)</span>
+</span></code></pre></div>
+<p>La différence est de nature, pas de degré. Une différence finie répond à la
+question « de combien la fonction varie-t-elle entre deux points proches », et cette
+question a une réponse bruitée. Les nombres duaux répondent à « quelles opérations
+la fonction enchaîne-t-elle », et appliquent à chacune sa règle de dérivation. C'est
+le principe exact de <code>torch.autograd</code> et de <code>jax.grad</code>, à la gestion mémoire près.</p>
+</details>
+</div>
+<div class="admonition question">
+<p class="admonition-title">Exercice 2.2 : la division manque</p>
+<p>La classe ne sait pas encore diviser. Ajoutez <code>__truediv__</code> et <code>__rtruediv__</code>, puis
+vérifiez votre implémentation sur <code>t(x) = sin(x) / x</code> en <code>x = 2.0</code>, dont la dérivée
+analytique vaut <code>cos(x)/x - sin(x)/x²</code>.</p>
+<p><strong>Résultat attendu :</strong> <code>t(2.0)</code> vaut <code>0.45464871341284085</code> et sa dérivée
+<code>-0.43539777497999166</code>, et l'écart avec la formule analytique est encore exactement
+<code>0.0</code>.</p>
+<details class="success">
+<summary>Corrigé</summary>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">diviser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">autre</span><span class="p">):</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>    <span class="n">autre</span> <span class="o">=</span> <span class="n">Dual</span><span class="o">.</span><span class="n">_promouvoir</span><span class="p">(</span><span class="n">autre</span><span class="p">)</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="k">return</span> <span class="n">Dual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">valeur</span> <span class="o">/</span> <span class="n">autre</span><span class="o">.</span><span class="n">valeur</span><span class="p">,</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>                <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">derivee</span> <span class="o">*</span> <span class="n">autre</span><span class="o">.</span><span class="n">valeur</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">valeur</span> <span class="o">*</span> <span class="n">autre</span><span class="o">.</span><span class="n">derivee</span><span class="p">)</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>                <span class="o">/</span> <span class="n">autre</span><span class="o">.</span><span class="n">valeur</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="n">Dual</span><span class="o">.</span><span class="fm">__truediv__</span> <span class="o">=</span> <span class="n">diviser</span>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="n">Dual</span><span class="o">.</span><span class="fm">__rtruediv__</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">autre</span><span class="p">:</span> <span class="n">diviser</span><span class="p">(</span><span class="n">Dual</span><span class="o">.</span><span class="n">_promouvoir</span><span class="p">(</span><span class="n">autre</span><span class="p">),</span> <span class="bp">self</span><span class="p">)</span>
+</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
+</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="n">sortie</span> <span class="o">=</span> <span class="n">sin</span><span class="p">(</span><span class="n">Dual</span><span class="p">(</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">))</span> <span class="o">/</span> <span class="n">Dual</span><span class="p">(</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="n">analytique</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mf">2.0</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span> <span class="o">-</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mf">2.0</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span> <span class="o">**</span> <span class="mi">2</span>
+</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"dual      :"</span><span class="p">,</span> <span class="n">sortie</span><span class="o">.</span><span class="n">valeur</span><span class="p">,</span> <span class="n">sortie</span><span class="o">.</span><span class="n">derivee</span><span class="p">)</span>
+</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"analytique:"</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mf">2.0</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">,</span> <span class="n">analytique</span><span class="p">)</span>
+</span><span id="__span-6-15"><a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"écart sur la dérivée :"</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">sortie</span><span class="o">.</span><span class="n">derivee</span> <span class="o">-</span> <span class="n">analytique</span><span class="p">))</span>
+</span></code></pre></div>
+<p>Le quotient est la seule des quatre opérations dont la règle se trompe si on
+l'écrit de mémoire, à cause du signe moins au numérateur. C'est aussi la raison pour
+laquelle on l'écrit une fois, dans une classe testée, plutôt qu'à la main dans
+chaque programme qui a besoin d'un gradient.</p>
+</details>
+</div>
+<h2 id="etape-3-du-gradient-a-la-descente-30-min">Étape 3. Du gradient à la descente (30 min)<a class="headerlink" href="#etape-3-du-gradient-a-la-descente-30-min" title="Lien vers cette section">&para;</a></h2>
+<p>Une fonction de plusieurs variables se dérive de la même façon, une variable à la fois : on
+marque d'un <code>ε</code> celle qu'on dérive et on laisse les autres à <code>0</code>. Le gradient coûte donc
+autant d'évaluations que de variables.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">gradient</span><span class="p">(</span><span class="n">fonction</span><span class="p">,</span> <span class="n">point</span><span class="p">):</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>    <span class="n">point</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">point</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    <span class="n">grad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">point</span><span class="p">)</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">point</span><span class="o">.</span><span class="n">size</span><span class="p">):</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>        <span class="n">duaux</span> <span class="o">=</span> <span class="p">[</span><span class="n">Dual</span><span class="p">(</span><span class="n">valeur</span><span class="p">,</span> <span class="mf">1.0</span> <span class="k">if</span> <span class="n">j</span> <span class="o">==</span> <span class="n">i</span> <span class="k">else</span> <span class="mf">0.0</span><span class="p">)</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>                 <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">valeur</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">point</span><span class="p">)]</span>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>        <span class="n">grad</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">fonction</span><span class="p">(</span><span class="n">duaux</span><span class="p">)</span><span class="o">.</span><span class="n">derivee</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>    <span class="k">return</span> <span class="n">grad</span>
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
+</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="k">def</span><span class="w"> </span><span class="nf">rosenbrock</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="w">    </span><span class="sd">"""Vallée de Rosenbrock : minimum unique en (1, 1), où elle vaut 0."""</span>
+</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</span><span id="__span-7-14"><a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>    <span class="k">return</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">x</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">100</span> <span class="o">*</span> <span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="n">x</span> <span class="o">*</span> <span class="n">x</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+</span></code></pre></div>
+<p>Remarquez que <code>rosenbrock</code> n'a pas été écrite pour les duaux : elle n'utilise que <code>+</code>, <code>-</code>,
+<code>*</code> et <code>**</code>, et Python choisit l'implémentation selon le type qu'on lui passe. La même
+fonction s'évalue donc sur des flottants ou se dérive sur des duaux, sans une ligne de plus.</p>
+<div class="admonition question">
+<p class="admonition-title">Exercice 3.1 : le gradient automatique contre le gradient à la main</p>
+<p>Dérivez Rosenbrock à la main, ce qui donne <code>∂f/∂x = -2(1-x) - 400x(y-x²)</code> et
+<code>∂f/∂y = 200(y-x²)</code>, puis comparez au gradient automatique au point <code>(-1.2, 1.0)</code>.</p>
+<p><strong>Résultat attendu :</strong> les deux valent <code>[-215.6, -88.0]</code>, mais pas au dernier bit :
+l'écart vaut <code>2.84e-14</code> sur la première composante et exactement <code>0</code> sur la seconde.
+Les deux calculs sont algébriquement identiques et n'enchaînent pas les mêmes
+opérations flottantes, ce qui suffit à les séparer d'un ou deux ulps. Rien ne permet de
+dire lequel des deux est le plus proche de la valeur réelle, et cela n'a aucune
+importance ici.</p>
+<details class="success">
+<summary>Corrigé</summary>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">gradient_a_la_main</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">v</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="mi">400</span> <span class="o">*</span> <span class="n">x</span> <span class="o">*</span> <span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="n">x</span> <span class="o">*</span> <span class="n">x</span><span class="p">),</span> <span class="mi">200</span> <span class="o">*</span> <span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="n">x</span> <span class="o">*</span> <span class="n">x</span><span class="p">)])</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="n">point</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mf">1.2</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"automatique :"</span><span class="p">,</span> <span class="n">gradient</span><span class="p">(</span><span class="n">rosenbrock</span><span class="p">,</span> <span class="n">point</span><span class="p">))</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"à la main   :"</span><span class="p">,</span> <span class="n">gradient_a_la_main</span><span class="p">(</span><span class="n">point</span><span class="p">))</span>
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"écart       :"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">gradient</span><span class="p">(</span><span class="n">rosenbrock</span><span class="p">,</span> <span class="n">point</span><span class="p">)</span> <span class="o">-</span> <span class="n">gradient_a_la_main</span><span class="p">(</span><span class="n">point</span><span class="p">)))</span>
+</span></code></pre></div>
+<p>Ce n'est pas un argument de précision, un ulp n'a jamais fait échouer une descente.
+C'est un argument de fiabilité : la formule à la main a demandé une dérivation, une
+transcription et une relecture, et chacune de ces trois étapes peut se tromper sans
+que rien ne le signale. La version automatique n'a demandé aucune des trois.</p>
+</details>
+</div>
+<p>La descente de gradient consiste à répéter <code>x ← x - η ∇f(x)</code>. Le paramètre <code>η</code> est le pas,
+aussi appelé taux d'apprentissage.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">descente</span><span class="p">(</span><span class="n">fonction</span><span class="p">,</span> <span class="n">depart</span><span class="p">,</span> <span class="n">pas</span><span class="p">,</span> <span class="n">iterations</span><span class="p">):</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>    <span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">depart</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>    <span class="n">trajet</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span><span class="o">.</span><span class="n">copy</span><span class="p">()]</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">iterations</span><span class="p">):</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>        <span class="n">v</span> <span class="o">=</span> <span class="n">v</span> <span class="o">-</span> <span class="n">pas</span> <span class="o">*</span> <span class="n">gradient</span><span class="p">(</span><span class="n">fonction</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>        <span class="n">trajet</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">trajet</span><span class="p">)</span>
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
+</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="k">for</span> <span class="n">pas</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">1e-4</span><span class="p">,</span> <span class="mf">1e-3</span><span class="p">,</span> <span class="mf">2e-3</span><span class="p">,</span> <span class="mf">3e-3</span><span class="p">]:</span>
+</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>    <span class="n">fin</span> <span class="o">=</span> <span class="n">descente</span><span class="p">(</span><span class="n">rosenbrock</span><span class="p">,</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.2</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="n">pas</span><span class="p">,</span> <span class="mi">5000</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+</span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"pas=</span><span class="si">{</span><span class="n">pas</span><span class="si">:</span><span class="s2">g</span><span class="si">}</span><span class="s2"> : après 5000 itérations, f = </span><span class="si">{</span><span class="n">rosenbrock</span><span class="p">(</span><span class="n">fin</span><span class="p">)</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">, point </span><span class="si">{</span><span class="n">fin</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span></code></pre></div>
+<div class="admonition question">
+<p class="admonition-title">Exercice 3.2 : cinq mille itérations contre trente-deux</p>
+<p>Confiez le même problème à scipy, en lui fournissant votre gradient automatique, et
+comparez le nombre d'évaluations de la fonction ainsi que la valeur finale.</p>
+<p><strong>Résultat attendu :</strong> le meilleur pas fixe testé, <code>2e-3</code>, laisse <code>f = 0.000055</code> après
+5000 itérations, soit 5000 gradients et donc 10 000 évaluations duales. BFGS atteint
+<code>f = 2.535e-15</code> en <code>32</code> itérations et <code>39</code> évaluations. Deux ordres de grandeur d'écart
+sur le coût, dix sur le résultat.</p>
+<details class="success">
+<summary>Corrigé</summary>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.optimize</span><span class="w"> </span><span class="kn">import</span> <span class="n">minimize</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="n">resultat</span> <span class="o">=</span> <span class="n">minimize</span><span class="p">(</span><span class="n">rosenbrock</span><span class="p">,</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.2</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>                    <span class="n">jac</span><span class="o">=</span><span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">gradient</span><span class="p">(</span><span class="n">rosenbrock</span><span class="p">,</span> <span class="n">v</span><span class="p">),</span> <span class="n">method</span><span class="o">=</span><span class="s2">"BFGS"</span><span class="p">)</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"BFGS : </span><span class="si">{</span><span class="n">resultat</span><span class="o">.</span><span class="n">nit</span><span class="si">}</span><span class="s2"> itérations, </span><span class="si">{</span><span class="n">resultat</span><span class="o">.</span><span class="n">nfev</span><span class="si">}</span><span class="s2"> évaluations"</span><span class="p">)</span>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"point final </span><span class="si">{</span><span class="n">resultat</span><span class="o">.</span><span class="n">x</span><span class="si">}</span><span class="s2">, f = </span><span class="si">{</span><span class="n">resultat</span><span class="o">.</span><span class="n">fun</span><span class="si">:</span><span class="s2">.3e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span></code></pre></div>
+<p>BFGS ne se contente pas de la pente : il accumule, au fil des pas, une
+approximation de la <strong>courbure</strong>, et s'en sert pour choisir à la fois la direction
+et la longueur du pas. C'est pour cela qu'il n'a aucun paramètre <code>η</code> à régler. La
+descente à pas fixe reste pourtant partout en apprentissage profond, parce que
+stocker une approximation de courbure sur des millions de paramètres est hors de
+portée. Le bon choix dépend de la taille du problème, pas de la qualité des
+méthodes.</p>
+</details>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">L'IA vous le donne en trois secondes</p>
+<p>Demandez une descente de gradient à un assistant conversationnel. Le pas proposé sera
+presque toujours <code>0.01</code>, parfois <code>0.001</code>, présenté comme une valeur usuelle. Appliquez
+<code>0.01</code> à Rosenbrock et regardez les six premières itérations : <code>f</code> passe de <code>24.2</code> à
+<code>93.3</code>, puis <code>4.7e4</code>, puis <code>2.5e12</code>, et vaut <code>inf</code> à la sixième. Le même <code>0.01</code> sur
+<code>f(x,y) = (x² + y²)/2</code> converge parfaitement, à <code>2.6e-09</code> de l'optimum. Un pas n'est
+donc ni bon ni mauvais en soi ; il est bon ou mauvais <strong>relativement à la courbure de
+votre fonction</strong>, et l'étape suivante donne le seuil exact. Notez aussi la façon dont
+l'échec se manifeste : pas d'exception, pas de message, seulement un <code>RuntimeWarning</code>
+d'<em>overflow</em> et des <code>nan</code> qui se propagent en silence.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="k">with</span> <span class="n">np</span><span class="o">.</span><span class="n">errstate</span><span class="p">(</span><span class="n">over</span><span class="o">=</span><span class="s2">"ignore"</span><span class="p">,</span> <span class="n">invalid</span><span class="o">=</span><span class="s2">"ignore"</span><span class="p">):</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>    <span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mf">1.2</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">7</span><span class="p">):</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>        <span class="n">v</span> <span class="o">=</span> <span class="n">v</span> <span class="o">-</span> <span class="mf">0.01</span> <span class="o">*</span> <span class="n">gradient_a_la_main</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  itération </span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2"> : f = </span><span class="si">{</span><span class="n">rosenbrock</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="si">:</span><span class="s2">.3e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
+</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
+</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2000</span><span class="p">):</span>
+</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>    <span class="n">w</span> <span class="o">=</span> <span class="n">w</span> <span class="o">-</span> <span class="mf">0.01</span> <span class="o">*</span> <span class="n">w</span>
+</span><span id="__span-11-10"><a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"sur (x²+y²)/2, le même pas donne ||x|| ="</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">w</span><span class="p">)</span><span class="si">:</span><span class="s2">.1e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span></code></pre></div>
+</div>
+<h2 id="etape-4-le-seuil-exact-du-pas-20-min">Étape 4. Le seuil exact du pas (20 min)<a class="headerlink" href="#etape-4-le-seuil-exact-du-pas-20-min" title="Lien vers cette section">&para;</a></h2>
+<p>Sur une fonction quadratique, la question se tranche complètement. Prenons
+<code>f(x, y) = (x² + c·y²)/2</code>, dont le gradient est <code>[x, c·y]</code> et dont la matrice des dérivées
+secondes est diagonale, de valeurs propres <code>1</code> et <code>c</code>. Une itération multiplie chaque
+coordonnée par <code>1 - η·λ</code>, où <code>λ</code> est la valeur propre correspondante. La descente converge
+donc si et seulement si <code>|1 - η·λ| &lt; 1</code> pour <strong>toutes</strong> les valeurs propres, c'est-à-dire si
+<code>η &lt; 2/L</code> où <code>L</code> est la plus grande.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">descente_quadratique</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">pas</span><span class="p">,</span> <span class="n">iterations</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">depart</span><span class="o">=</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)):</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>    <span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">depart</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">iterations</span><span class="p">):</span>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>        <span class="n">v</span> <span class="o">=</span> <span class="n">v</span> <span class="o">-</span> <span class="n">pas</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">c</span> <span class="o">*</span> <span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
+</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>
+</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">30.0</span><span class="p">]:</span>
+</span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>    <span class="n">L</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+</span><span id="__span-12-10"><a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">c=</span><span class="si">{</span><span class="n">c</span><span class="si">:</span><span class="s2">g</span><span class="si">}</span><span class="s2">, L=</span><span class="si">{</span><span class="n">L</span><span class="si">:</span><span class="s2">g</span><span class="si">}</span><span class="s2">, seuil 2/L = </span><span class="si">{</span><span class="mi">2</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">L</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-12-11"><a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>    <span class="k">for</span> <span class="n">fraction</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.9</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.05</span><span class="p">]:</span>
+</span><span id="__span-12-12"><a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>        <span class="n">norme</span> <span class="o">=</span> <span class="n">descente_quadratique</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">fraction</span> <span class="o">/</span> <span class="n">L</span><span class="p">)</span>
+</span><span id="__span-12-13"><a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  η = </span><span class="si">{</span><span class="n">fraction</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">/L : ||x|| après 200 itérations = </span><span class="si">{</span><span class="n">norme</span><span class="si">:</span><span class="s2">.3e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span></code></pre></div>
+<div class="admonition question">
+<p class="admonition-title">Exercice 4.1 : ce qui se passe exactement au seuil</p>
+<p>Trois régimes apparaissent dans le tableau ci-dessus. Décrivez ce qui arrive juste en
+dessous du seuil, exactement au seuil, et juste au-dessus, et expliquez chaque cas par
+la valeur de <code>1 - η·λ</code>.</p>
+<p><strong>Résultat attendu :</strong> pour <code>c = 1</code>, juste en dessous (<code>η = 1.9/L</code>) la norme tombe à
+<code>9.977e-10</code> ; exactement au seuil (<code>η = 2/L</code>) elle vaut <code>1.414e+00</code>, c'est-à-dire
+exactement la norme de départ, parce que <code>1 - η·λ = -1</code> : le point saute d'un côté à
+l'autre du minimum sans jamais s'en approcher ; juste au-dessus (<code>η = 2.05/L</code>) elle
+atteint <code>2.446e+04</code> et continue de croître. Le cas <code>η = 1/L</code> est remarquable : le
+facteur vaut <code>0</code> et la convergence est atteinte en <strong>une</strong> itération.</p>
+<details class="success">
+<summary>Corrigé</summary>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">for</span> <span class="n">fraction</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">1.9</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.05</span><span class="p">]:</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>    <span class="n">facteur</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">fraction</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"η = </span><span class="si">{</span><span class="n">fraction</span><span class="si">}</span><span class="s2">/L : facteur 1-ηλ = </span><span class="si">{</span><span class="n">facteur</span><span class="si">:</span><span class="s2">+.2f</span><span class="si">}</span><span class="s2">, "</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>          <span class="sa">f</span><span class="s2">"|facteur| = </span><span class="si">{</span><span class="nb">abs</span><span class="p">(</span><span class="n">facteur</span><span class="p">)</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">, "</span>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>          <span class="sa">f</span><span class="s2">"après 200 itérations : </span><span class="si">{</span><span class="nb">abs</span><span class="p">(</span><span class="n">facteur</span><span class="p">)</span><span class="w"> </span><span class="o">**</span><span class="w"> </span><span class="mi">200</span><span class="si">:</span><span class="s2">.3e</span><span class="si">}</span><span class="s2"> fois le départ"</span><span class="p">)</span>
+</span></code></pre></div>
+<p>La divergence n'est pas une pathologie mystérieuse, c'est une suite géométrique de
+raison plus grande que 1 en valeur absolue. Retenez surtout le signe : dès que le
+facteur devient négatif, c'est-à-dire dès que <code>η &gt; 1/L</code>, la descente <strong>oscille</strong>
+autour du minimum au lieu d'y glisser. Elle converge encore, mais en alternant de
+part et d'autre, et c'est ce comportement qui va dégénérer à l'étape 5.</p>
+</details>
+</div>
+<div class="admonition question">
+<p class="admonition-title">Exercice 4.2 : à partir de quand le conditionnement coûte-t-il</p>
+<p>Le <strong>conditionnement</strong> <code>κ = L/μ</code> est le rapport de la plus grande à la plus petite
+valeur propre, ici <code>c</code>. Mesurez la norme finale à <code>η = 1.9/L</code> pour <code>κ</code> valant <code>1</code>, <code>10</code>,
+<code>30</code> puis <code>100</code>, et expliquez le tableau obtenu à l'aide des deux facteurs <code>1 - η·λ</code>,
+un par direction.</p>
+<p><strong>Résultat attendu :</strong> il n'est pas monotone, et c'est le point de l'exercice. <code>κ = 10</code>
+converge <strong>mieux</strong> que <code>κ = 1</code> (<code>7.06e-10</code> contre <code>9.98e-10</code>), <code>κ = 30</code> est déjà en
+retard (<code>2.07e-06</code>) et <code>κ = 100</code> a pratiquement cessé d'avancer (<code>2.16e-02</code>). La raison
+est que la vitesse est fixée par le plus grand des deux facteurs en valeur absolue : la
+direction raide donne toujours <code>-0.9</code>, la direction molle donne <code>1 - 1.9/κ</code>, et celle-ci
+ne devient limitante qu'au-delà de <code>κ = 19</code>. En dessous, la direction molle s'écrase
+plus vite que la raide et le conditionnement ne coûte rien ; à <code>κ = 1</code> on paie même un
+facteur <code>√2</code> pour la seule raison que les deux coordonnées convergent aussi lentement
+l'une que l'autre.</p>
+<details class="success">
+<summary>Corrigé</summary>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"  κ |    ||x|| final | facteur raide | facteur mou"</span><span class="p">)</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">,</span> <span class="mf">19.0</span><span class="p">,</span> <span class="mf">30.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">]:</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>    <span class="n">eta</span> <span class="o">=</span> <span class="mf">1.9</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">c</span><span class="si">:</span><span class="s2">4.0f</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="n">descente_quadratique</span><span class="p">(</span><span class="n">c</span><span class="p">,</span><span class="w"> </span><span class="n">eta</span><span class="p">)</span><span class="si">:</span><span class="s2">.4e</span><span class="si">}</span><span class="s2"> |"</span>
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>          <span class="sa">f</span><span class="s2">" </span><span class="si">{</span><span class="mi">1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">eta</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">c</span><span class="si">:</span><span class="s2">+.4f</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="mi">1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">eta</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">1.0</span><span class="si">:</span><span class="s2">+.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Vérifiez la ligne <code>κ = 19</code> : les deux facteurs y valent <code>0.9</code> en valeur absolue, et
+la norme finale retombe exactement sur celle de <code>κ = 1</code>. C'est le conditionnement
+rencontré en première année sur la matrice de Hilbert, au
+<a href="../../outils-fondamentaux/tp4-matrices-gauss/">TP4 d'outils fondamentaux</a>, ici dans
+un tout autre rôle : il n'y mesurait pas une vitesse de convergence mais une perte
+de précision.
+Retenez la forme générale plutôt que le seuil <code>19</code>, qui dépend du pas choisi : un
+problème mal conditionné force de tout petits pas dans une direction parce qu'une
+autre est raide, et c'est la raison d'être de tout ce que vous verrez ensuite sous
+les noms de préconditionnement, de moment ou d'Adam.</p>
+</details>
+</div>
+<h2 id="etape-5-diverger-mais-pas-tout-de-suite-25-min">Étape 5. Diverger, mais pas tout de suite (25 min)<a class="headerlink" href="#etape-5-diverger-mais-pas-tout-de-suite-25-min" title="Lien vers cette section">&para;</a></h2>
+<p>Entre « ça converge » et « ça explose », on s'attend à une frontière nette. Sur une
+quadratique, c'est le cas. Dès que la fonction n'est plus quadratique, il n'en est rien.
+Prenons <code>f(x) = x²/2 - x³/3</code>, dont la dérivée est <code>x - x²</code> et qui a un minimum local en
+<code>x = 0</code>. Une itération de descente s'écrit alors :</p>
+<div class="arithmatex">\[
+x \mapsto (1-\eta)x + \eta x^2
+\]</div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">iterer</span><span class="p">(</span><span class="n">eta</span><span class="p">,</span> <span class="n">depart</span><span class="o">=</span><span class="mf">0.37</span><span class="p">,</span> <span class="n">transitoire</span><span class="o">=</span><span class="mi">20000</span><span class="p">,</span> <span class="n">garder</span><span class="o">=</span><span class="mi">200</span><span class="p">):</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">    </span><span class="sd">"""Renvoie les valeurs visitées une fois le régime établi, ou None si ça diverge."""</span>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>    <span class="n">x</span> <span class="o">=</span> <span class="n">depart</span>
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">transitoire</span><span class="p">):</span>
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>        <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">eta</span><span class="p">)</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">eta</span> <span class="o">*</span> <span class="n">x</span> <span class="o">*</span> <span class="n">x</span>
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">abs</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1e8</span><span class="p">:</span>
+</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>            <span class="k">return</span> <span class="kc">None</span>
+</span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>    <span class="n">visitees</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="__span-15-9"><a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">garder</span><span class="p">):</span>
+</span><span id="__span-15-10"><a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>        <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">eta</span><span class="p">)</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">eta</span> <span class="o">*</span> <span class="n">x</span> <span class="o">*</span> <span class="n">x</span>
+</span><span id="__span-15-11"><a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>        <span class="n">visitees</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</span><span id="__span-15-12"><a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">visitees</span><span class="p">)</span>
+</span><span id="__span-15-13"><a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>
+</span><span id="__span-15-14"><a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>
+</span><span id="__span-15-15"><a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a><span class="k">for</span> <span class="n">eta</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">1.9</span><span class="p">,</span> <span class="mf">2.01</span><span class="p">,</span> <span class="mf">2.1</span><span class="p">,</span> <span class="mf">2.44</span><span class="p">,</span> <span class="mf">2.45</span><span class="p">,</span> <span class="mf">2.55</span><span class="p">,</span> <span class="mf">2.57</span><span class="p">,</span> <span class="mf">2.8</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">3.0001</span><span class="p">]:</span>
+</span><span id="__span-15-16"><a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>    <span class="n">valeurs</span> <span class="o">=</span> <span class="n">iterer</span><span class="p">(</span><span class="n">eta</span><span class="p">)</span>
+</span><span id="__span-15-17"><a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>    <span class="k">if</span> <span class="n">valeurs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-15-18"><a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"η = </span><span class="si">{</span><span class="n">eta</span><span class="si">:</span><span class="s2">6.4f</span><span class="si">}</span><span class="s2"> : diverge"</span><span class="p">)</span>
+</span><span id="__span-15-19"><a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>    <span class="k">else</span><span class="p">:</span>
+</span><span id="__span-15-20"><a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>        <span class="n">distinctes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">valeurs</span><span class="p">,</span> <span class="mi">8</span><span class="p">)))</span>
+</span><span id="__span-15-21"><a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"η = </span><span class="si">{</span><span class="n">eta</span><span class="si">:</span><span class="s2">6.4f</span><span class="si">}</span><span class="s2"> : </span><span class="si">{</span><span class="n">distinctes</span><span class="si">:</span><span class="s2">3d</span><span class="si">}</span><span class="s2"> valeur(s) distincte(s) en régime établi"</span><span class="p">)</span>
+</span></code></pre></div>
+<p>La descente ne converge plus vers le minimum, mais elle ne diverge pas pour autant : elle
+s'installe sur un cycle de deux points, puis de quatre, puis de huit, et finit par ne plus
+se répéter du tout.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="n">etas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mi">600</span><span class="p">)</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">etas</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="mf">0.37</span><span class="p">)</span>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1500</span><span class="p">):</span>
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>    <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">etas</span><span class="p">)</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">etas</span> <span class="o">*</span> <span class="n">x</span> <span class="o">*</span> <span class="n">x</span>
+</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1e3</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+</span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>
+</span><span id="__span-16-7"><a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="n">abscisses</span><span class="p">,</span> <span class="n">ordonnees</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+</span><span id="__span-16-8"><a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">80</span><span class="p">):</span>
+</span><span id="__span-16-9"><a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>    <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">etas</span><span class="p">)</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">etas</span> <span class="o">*</span> <span class="n">x</span> <span class="o">*</span> <span class="n">x</span>
+</span><span id="__span-16-10"><a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1e3</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+</span><span id="__span-16-11"><a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>    <span class="n">abscisses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">etas</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+</span><span id="__span-16-12"><a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>    <span class="n">ordonnees</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+</span><span id="__span-16-13"><a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a>
+</span><span id="__span-16-14"><a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+</span><span id="__span-16-15"><a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">abscisses</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">ordonnees</span><span class="p">),</span> <span class="s2">",k"</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+</span><span id="__span-16-16"><a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a><span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">"pas η"</span><span class="p">)</span>
+</span><span id="__span-16-17"><a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a><span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">"valeurs visitées en régime établi"</span><span class="p">)</span>
+</span><span id="__span-16-18"><a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a><span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"Descente de gradient sur x²/2 - x³/3 : diagramme de bifurcation"</span><span class="p">)</span>
+</span><span id="__span-16-19"><a id="__codelineno-16-19" name="__codelineno-16-19" href="#__codelineno-16-19"></a><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</span></code></pre></div>
+<div class="admonition question">
+<p class="admonition-title">Exercice 5.1 : localiser les bifurcations</p>
+<p>Encadrez au centième près les trois pas auxquels le comportement change de nature :
+passage du point fixe au cycle de deux, du cycle de deux à celui de quatre, et l'entrée
+dans le régime où plus aucune valeur ne se répète. Cherchez enfin le pas au-delà duquel
+tout diverge.</p>
+<p><strong>Résultat attendu :</strong> point fixe jusqu'à <code>η = 1.99</code>, cycle de deux dès <code>η = 2.01</code>,
+cycle de quatre dès <code>η = 2.45</code> (encore deux valeurs à <code>2.449</code>), cycle de huit vers
+<code>η = 2.55</code>, plus aucune répétition à partir de <code>η = 2.57</code>. La suite reste bornée jusqu'à
+<code>η = 3.0</code> inclus et diverge dès <code>η = 3.0001</code>.</p>
+<details class="success">
+<summary>Corrigé</summary>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="k">for</span> <span class="n">eta</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">1.99</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.01</span><span class="p">,</span> <span class="mf">2.449</span><span class="p">,</span> <span class="mf">2.45</span><span class="p">,</span> <span class="mf">2.56</span><span class="p">,</span> <span class="mf">2.569</span><span class="p">,</span> <span class="mf">2.57</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">3.0001</span><span class="p">]:</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>    <span class="n">valeurs</span> <span class="o">=</span> <span class="n">iterer</span><span class="p">(</span><span class="n">eta</span><span class="p">)</span>
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>    <span class="k">if</span> <span class="n">valeurs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"η = </span><span class="si">{</span><span class="n">eta</span><span class="si">:</span><span class="s2">6.4f</span><span class="si">}</span><span class="s2"> : diverge"</span><span class="p">)</span>
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>    <span class="k">else</span><span class="p">:</span>
+</span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"η = </span><span class="si">{</span><span class="n">eta</span><span class="si">:</span><span class="s2">6.4f</span><span class="si">}</span><span class="s2"> : </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">valeurs</span><span class="p">,</span><span class="w"> </span><span class="mi">8</span><span class="p">)))</span><span class="si">:</span><span class="s2">3d</span><span class="si">}</span><span class="s2"> valeurs"</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Le cas <code>η = 2.0</code> mérite un regard : il affiche <code>200</code> valeurs distinctes sans être
+chaotique pour autant. Le facteur <code>1 - η</code> y vaut exactement <code>-1</code>, la convergence
+n'est plus géométrique mais infiniment lente, et la suite descend encore vers <code>0</code> en
+oscillant, trop lentement pour que 20 000 itérations suffisent. Un compteur de
+valeurs distinctes ne distingue pas « chaotique » de « pas encore arrivé », et c'est
+une confusion qu'on ne détecte qu'en regardant l'amplitude, ici de l'ordre de
+<code>2.5e-03</code> et toujours décroissante.</p>
+</details>
+</div>
+<div class="admonition question">
+<p class="admonition-title">Exercice 5.2 : ce n'est pas une coïncidence</p>
+<p>Ces quatre seuils, <code>2</code>, <code>2.449</code>, <code>2.570</code> et <code>3</code>, sont exactement ceux de la suite
+logistique <code>u ↦ r·u(1-u)</code>, décalés de <code>1</code>. Vérifiez que le changement de variable
+<code>x = A·u + 1</code> avec <code>A = -(η+1)/η</code> et <code>r = η + 1</code> transforme l'une en l'autre, en suivant
+les deux suites en parallèle.</p>
+<p><strong>Résultat attendu :</strong> à <code>η = 1.5</code> et <code>η = 2.3</code>, les deux suites restent identiques à
+<code>2.3e-16</code> et <code>5.6e-16</code> près sur cinquante itérations, c'est-à-dire à la précision des
+flottants. À <code>η = 2.8</code>, en revanche, l'écart atteint <code>5.2e-06</code> : l'identité
+mathématique est la même, mais le régime est chaotique et deux calculs équivalents
+divergent l'un de l'autre.</p>
+<details class="success">
+<summary>Corrigé</summary>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="k">for</span> <span class="n">eta</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">2.3</span><span class="p">,</span> <span class="mf">2.8</span><span class="p">]:</span>
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>    <span class="n">r</span> <span class="o">=</span> <span class="n">eta</span> <span class="o">+</span> <span class="mi">1</span>
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>    <span class="n">A</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">eta</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">eta</span>
+</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>    <span class="n">u</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="mf">0.37</span><span class="p">,</span> <span class="n">A</span> <span class="o">*</span> <span class="mf">0.37</span> <span class="o">+</span> <span class="mf">1.0</span>
+</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>    <span class="n">ecart</span> <span class="o">=</span> <span class="mf">0.0</span>
+</span><span id="__span-18-6"><a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">50</span><span class="p">):</span>
+</span><span id="__span-18-7"><a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>        <span class="n">u</span> <span class="o">=</span> <span class="n">r</span> <span class="o">*</span> <span class="n">u</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">u</span><span class="p">)</span>
+</span><span id="__span-18-8"><a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>        <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">eta</span><span class="p">)</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">eta</span> <span class="o">*</span> <span class="n">x</span> <span class="o">*</span> <span class="n">x</span>
+</span><span id="__span-18-9"><a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>        <span class="n">ecart</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">ecart</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="p">(</span><span class="n">A</span> <span class="o">*</span> <span class="n">u</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">)))</span>
+</span><span id="__span-18-10"><a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"η = </span><span class="si">{</span><span class="n">eta</span><span class="si">}</span><span class="s2"> (r = </span><span class="si">{</span><span class="n">r</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">) : écart maximal </span><span class="si">{</span><span class="n">ecart</span><span class="si">:</span><span class="s2">.3e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Les seuils <code>r = 3</code>, <code>r = 1 + √6 ≈ 3.449</code>, <code>r ≈ 3.5699</code> et <code>r = 4</code> de la suite
+logistique sont donc ceux de votre descente de gradient, à <code>1</code> près. Vous n'avez pas
+découvert un défaut de la descente de gradient : vous avez retrouvé la cascade de
+doublements de période décrite par May en 1976, dont les rapports successifs
+convergent vers la constante de Feigenbaum, la même pour toutes les fonctions à un
+seul maximum. Et le dernier écart de <code>5.2e-06</code> est la définition opérationnelle du
+chaos : une divergence exponentielle des trajectoires, ici mesurée entre deux
+façons d'écrire le même calcul.</p>
+</details>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Un départ malheureux se déguise en résultat</p>
+<p>Reprenez <code>iterer(2.5)</code> avec <code>depart=0.4</code> au lieu de <code>0.37</code>. Vous obtenez deux valeurs
+distinctes, <code>-0.2</code> et <code>0.4</code>, au lieu des quatre du véritable attracteur : <code>0.4</code> tombe
+pile sur un cycle de période deux instable, dont il ne s'échappe jamais parce que les
+arrondis ne le poussent nulle part. Aucun message, aucun avertissement, et une
+conclusion fausse sur la nature du régime. Vérifiez toujours une dynamique depuis
+plusieurs points de départ.</p>
+</div>
+<h2 id="ce-quil-faut-retenir">Ce qu'il faut retenir<a class="headerlink" href="#ce-quil-faut-retenir" title="Lien vers cette section">&para;</a></h2>
+<p>Une dérivée par différence finie oblige à arbitrer entre l'erreur de troncature et l'erreur
+d'arrondi, et même au meilleur pas elle perd la moitié des chiffres significatifs. Les
+nombres duaux suppriment l'arbitrage : en transportant la dérivée à travers chaque
+opération, ils rendent la dérivée exacte au bit près pour un coût comparable, et c'est le
+principe de toutes les bibliothèques de dérivation automatique. Une fois le gradient obtenu,
+la descente pose une seule question difficile, celle du pas : sur une fonction quadratique
+elle converge si et seulement si <code>η &lt; 2/L</code>, oscille dès que <code>η &gt; 1/L</code>, et sa vitesse est
+gouvernée par le conditionnement et non par le pas. Enfin, dès que la fonction n'est plus
+quadratique, la frontière entre convergence et divergence n'est plus une frontière : c'est
+une cascade de doublements de période puis un régime chaotique, mathématiquement identique à
+la suite logistique. Un optimiseur qui ne converge pas n'a donc pas forcément explosé, et
+c'est ce qui rend le diagnostic difficile.</p>
+<h2 id="auto-evaluation">Auto-évaluation<a class="headerlink" href="#auto-evaluation" title="Lien vers cette section">&para;</a></h2>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Je sais expliquer pourquoi l'erreur d'une différence finie remonte quand <code>h</code> devient
+      trop petit.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Je sais implémenter un nombre dual et dire pourquoi sa dérivée est exacte et non
+      approchée.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Je sais calculer un gradient par dérivation automatique, et dire ce qu'il coûte.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Je sais comparer une descente à pas fixe à un optimiseur de scipy, et dire ce que
+      BFGS utilise en plus.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Je sais énoncer et vérifier la condition <code>η &lt; 2/L</code>, et dire ce que fait le pas <code>1/L</code>.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Je sais relier la lenteur d'une descente au conditionnement plutôt qu'au pas.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> J'ai vu une descente de gradient produire un cycle, puis du chaos, et je sais que ce
+      n'est pas la même chose qu'une divergence.</li>
+</ul>
+<p><a class="md-button" href="../qcm/qcm_tp3.html" target="_blank">Le QCM du TP3</a>
+<a class="md-button md-button--primary" href="../evaluation/">Projet et évaluation</a>
+<a class="md-button" href="../tp2-marche-aleatoire/">Revenir au TP2</a></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Retour en haut de la page
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Pied de page" >
+        
+          
+          <a href="../tp2-marche-aleatoire/" class="md-footer__link md-footer__link--prev" aria-label="Précédent: TP2. La marche aléatoire">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Précédent
+              </span>
+              <div class="md-ellipsis">
+                TP2. La marche aléatoire
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../evaluation/" class="md-footer__link md-footer__link--next" aria-label="Suivant: Projet et évaluation">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Suivant
+              </span>
+              <div class="md-ellipsis">
+                Projet et évaluation
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Christophe Guyeux, IUT Nord Franche-Comté — contenu sous licence CC BY-NC-SA 4.0
+    </div>
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/cguyeux" target="_blank" rel="noopener" title="GitHub" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.sections", "navigation.top", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate", "content.tabs.link"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copi\u00e9 dans le presse-papier", "clipboard.copy": "Copier dans le presse-papier", "search.result.more.one": "1 de plus sur cette page", "search.result.more.other": "# de plus sur cette page", "search.result.none": "Aucun document trouv\u00e9", "search.result.one": "1 document trouv\u00e9", "search.result.other": "# documents trouv\u00e9s", "search.result.placeholder": "Taper pour d\u00e9marrer la recherche", "search.result.term.missing": "Non trouv\u00e9", "select.version": "S\u00e9lectionner la version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../assets/javascripts/mathjax-config.js"></script>
+      
+        <script src="../../assets/vendor/mathjax/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
