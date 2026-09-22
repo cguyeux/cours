@@ -1,0 +1,318 @@
+{
+  "titre": "QCM — TP2 : La marche aléatoire, du graphe au texte",
+  "source": "site/docs/modelisation/tp2-marche-aleatoire.md",
+  "langue": "fr",
+  "consignes": "Cochez la bonne réponse. Une seule réponse est correcte par question. Toutes les valeurs numériques citées sont celles mesurées pendant le TP.",
+  "questions": [
+    {
+      "id": 1,
+      "enonce": "Qu'est-ce qui fait d'une matrice carrée une matrice de transition ?",
+      "type": "unique",
+      "difficulte": "facile",
+      "theme": "Matrice de transition",
+      "source_fichier": "tp2-marche-aleatoire.md",
+      "points": 1,
+      "options": [
+        {
+          "texte": "Chacune de ses lignes est une loi de probabilité, donc somme à 1",
+          "correcte": true,
+          "justification": "À chaque pas, la marche part quelque part avec certitude : la ligne `i` est la loi de la destination depuis l'état `i`."
+        },
+        {
+          "texte": "Chacune de ses colonnes somme à 1",
+          "correcte": false,
+          "justification": "Les colonnes de `P` valent ici `[2.2, 1.033, 2.033, 1.0, 0.2, 0.2, 0.333]` : aucune raison de sommer à 1, et celle qui le fait est une coïncidence."
+        },
+        {
+          "texte": "Elle est symétrique",
+          "correcte": false,
+          "justification": "Un lien de `i` vers `j` n'implique pas un lien de `j` vers `i` : la matrice d'un graphe orienté n'est pas symétrique."
+        },
+        {
+          "texte": "Tous ses coefficients sont égaux",
+          "correcte": false,
+          "justification": "Ce serait le cas très particulier d'un graphe complet à poids uniformes, sans aucun intérêt."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "enonce": "En partant de la page `contact` puis d'une loi uniforme, les distributions après 30 pas coïncident à `2.53e-04` près. Qu'est-ce que cela illustre ?",
+      "type": "unique",
+      "difficulte": "moyen",
+      "theme": "Distribution stationnaire",
+      "source_fichier": "tp2-marche-aleatoire.md",
+      "points": 1,
+      "options": [
+        {
+          "texte": "La marche converge vers une distribution stationnaire qui ne dépend que du graphe",
+          "correcte": true,
+          "justification": "C'est l'exercice 2.1 : le point de départ est oublié, seule la structure des liens détermine la limite."
+        },
+        {
+          "texte": "Les deux calculs sont identiques parce que 30 pas ne suffisent pas à différencier quoi que ce soit",
+          "correcte": false,
+          "justification": "C'est l'inverse : 30 pas suffisent au contraire à effacer la différence entre deux départs opposés."
+        },
+        {
+          "texte": "Le graphe est symétrique",
+          "correcte": false,
+          "justification": "Il ne l'est pas, et la convergence vers une distribution stationnaire n'exige aucune symétrie."
+        },
+        {
+          "texte": "L'écart est un artefact d'arrondi des flottants",
+          "correcte": false,
+          "justification": "L'écart de `2.53e-04` est bien au-dessus de la précision machine : c'est une convergence encore incomplète, pas du bruit numérique."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "enonce": "La méthode utilisée à l'étape 2 pour atteindre la distribution stationnaire est-elle nouvelle ?",
+      "type": "unique",
+      "difficulte": "moyen",
+      "theme": "Lien avec le TP1",
+      "source_fichier": "tp2-marche-aleatoire.md",
+      "points": 1,
+      "options": [
+        {
+          "texte": "Non : c'est la puissance itérée du TP1, appliquée au vecteur propre à gauche de `P` pour la valeur propre 1",
+          "correcte": true,
+          "justification": "Multiplier répétitivement par `P` aligne n'importe quel vecteur de départ sur la direction dominante, exactement comme au TP1."
+        },
+        {
+          "texte": "Oui : la puissance itérée ne s'applique qu'aux matrices symétriques",
+          "correcte": false,
+          "justification": "Elle ne demande aucune symétrie, seulement une valeur propre dominante bien séparée des autres."
+        },
+        {
+          "texte": "Oui : il s'agit d'une résolution de système linéaire",
+          "correcte": false,
+          "justification": "On peut effectivement poser le problème comme un système, mais ce n'est pas ce que fait le code : il itère un produit matrice-vecteur."
+        },
+        {
+          "texte": "Non : c'est une décomposition en valeurs singulières",
+          "correcte": false,
+          "justification": "La SVD calcule tout le spectre ; ici on ne cherche qu'un seul vecteur propre, et l'itération suffit."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "enonce": "La page `contact` perd tous ses liens sortants et sa ligne de `P` devient nulle. Que devient la masse totale de probabilité au fil des pas ?",
+      "type": "unique",
+      "difficulte": "moyen",
+      "theme": "Nœuds puits",
+      "source_fichier": "tp2-marche-aleatoire.md",
+      "points": 1,
+      "options": [
+        {
+          "texte": "Elle décroît : `0.857143` après un pas, `0.203199` après cent",
+          "correcte": true,
+          "justification": "Une ligne nulle n'est pas une loi de probabilité : la matrice n'est plus stochastique et la masse fuit par le puits."
+        },
+        {
+          "texte": "Elle reste égale à 1, la probabilité se conservant toujours",
+          "correcte": false,
+          "justification": "La conservation vient précisément de la stochasticité des lignes, qui est perdue ici."
+        },
+        {
+          "texte": "Elle augmente, la masse se concentrant sur les pages restantes",
+          "correcte": false,
+          "justification": "Rien ne crée de la probabilité ; le calcul mesuré montre une décroissance monotone."
+        },
+        {
+          "texte": "Le calcul lève une exception",
+          "correcte": false,
+          "justification": "`np.divide` avec `where` produit une ligne de zéros sans broncher : l'erreur est silencieuse, c'est tout le problème."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "enonce": "À quoi sert le terme `(1 - d) / n` ajouté à chaque itération de PageRank ?",
+      "type": "unique",
+      "difficulte": "moyen",
+      "theme": "PageRank",
+      "source_fichier": "tp2-marche-aleatoire.md",
+      "points": 1,
+      "options": [
+        {
+          "texte": "Il modélise un saut vers une page au hasard, ce qui règle à la fois les puits et les groupes de pages dont on ne ressort pas",
+          "correcte": true,
+          "justification": "C'est l'amortissement de Brin et Page : avec probabilité `1 - d`, l'internaute abandonne les liens et recommence ailleurs."
+        },
+        {
+          "texte": "Il normalise le vecteur pour qu'il somme à 1",
+          "correcte": false,
+          "justification": "La somme vaut 1 parce que `P` est stochastique et que les deux termes sont pondérés par `d` et `1 - d` ; ce n'est pas le rôle du terme."
+        },
+        {
+          "texte": "Il accélère la convergence quelle que soit la valeur de `d`",
+          "correcte": false,
+          "justification": "L'effet est l'inverse quand `d` grandit : 27 itérations à `d = 0.5`, 104 à `d = 0.99`."
+        },
+        {
+          "texte": "Il corrige les erreurs d'arrondi des flottants",
+          "correcte": false,
+          "justification": "Le problème qu'il résout est structurel, pas numérique : il existerait à l'identique en arithmétique exacte."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "enonce": "`accueil` et `tp` reçoivent chacune quatre liens entrants, mais PageRank donne `0.3167` à `tp` et `0.2152` à `accueil`. Pourquoi ?",
+      "type": "unique",
+      "difficulte": "difficile",
+      "theme": "PageRank",
+      "source_fichier": "tp2-marche-aleatoire.md",
+      "points": 1,
+      "options": [
+        {
+          "texte": "Parce qu'un lien vaut le rang de la page qui le pose, divisé par le nombre de liens qu'elle pose",
+          "correcte": true,
+          "justification": "`exos` ne cite que `tp` et lui reverse tout son rang, alors que les citations de `accueil` viennent de pages faibles ou qui partagent leur rang entre plusieurs destinations."
+        },
+        {
+          "texte": "Parce que `tp` a plus de liens sortants",
+          "correcte": false,
+          "justification": "`tp` en a deux et `accueil` trois : c'est l'inverse, et les liens sortants ne font pas monter le rang de la page qui les pose."
+        },
+        {
+          "texte": "Parce que l'amortissement favorise les pages placées en fin de liste",
+          "correcte": false,
+          "justification": "L'amortissement traite toutes les pages à égalité : c'est un saut uniforme."
+        },
+        {
+          "texte": "Parce que le calcul n'a pas convergé",
+          "correcte": false,
+          "justification": "Il a convergé en 63 itérations à une tolérance de `1e-12`, et networkx retrouve le même résultat à `4e-13` près."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "enonce": "Un assistant écrit `A / A.sum(axis=0)` au lieu de `A / A.sum(axis=1, keepdims=True)`. Que se passe-t-il ?",
+      "type": "unique",
+      "difficulte": "difficile",
+      "theme": "Pièges d'implémentation",
+      "source_fichier": "tp2-marche-aleatoire.md",
+      "points": 1,
+      "options": [
+        {
+          "texte": "Aucune erreur, le résultat somme encore à 1, mais le classement change et `accueil` passe devant `tp`",
+          "correcte": true,
+          "justification": "C'est l'encadré du TP : les lignes ne sont plus stochastiques, rien ne le signale, et seul le classement trahit l'erreur."
+        },
+        {
+          "texte": "Le code lève une erreur de dimension",
+          "correcte": false,
+          "justification": "Les deux divisions ont des formes compatibles par diffusion : c'est justement ce qui rend l'erreur silencieuse."
+        },
+        {
+          "texte": "Le résultat ne somme plus à 1, ce qui alerte immédiatement",
+          "correcte": false,
+          "justification": "La somme vaut encore `1.0`, parce que l'itération de PageRank renormalise de fait à chaque pas."
+        },
+        {
+          "texte": "Le classement est identique, seule la vitesse de convergence change",
+          "correcte": false,
+          "justification": "Les deux classements diffèrent dès la première place, et sur presque tout l'ordre."
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "enonce": "Sur la matrice de bigrammes construite à partir des deux fables, que vaut la probabilité que `'u'` suive `'q'` ?",
+      "type": "unique",
+      "difficulte": "facile",
+      "theme": "Modèle de langue",
+      "source_fichier": "tp2-marche-aleatoire.md",
+      "points": 1,
+      "options": [
+        {
+          "texte": "1.00 : la matrice a appris seule une règle orthographique du français",
+          "correcte": true,
+          "justification": "Aucune autre lettre ne suit jamais `q` dans le corpus, et personne n'a énoncé la règle au programme."
+        },
+        {
+          "texte": "Environ 0.5, à égalité avec l'espace",
+          "correcte": false,
+          "justification": "L'espace après `q` a une probabilité nulle dans ce corpus."
+        },
+        {
+          "texte": "1/25, comme toutes les transitions",
+          "correcte": false,
+          "justification": "Ce serait le cas d'un modèle uniforme, qui n'aurait rien appris du texte."
+        },
+        {
+          "texte": "0, car `q` n'apparaît pas dans le corpus",
+          "correcte": false,
+          "justification": "`q` apparaît, notamment dans « que », « qui » et « quelque »."
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "enonce": "Seules 195 des 625 cases de la matrice de bigrammes sont non nulles. Quelle est la bonne lecture de ce fait ?",
+      "type": "unique",
+      "difficulte": "difficile",
+      "theme": "Limites du modèle",
+      "source_fichier": "tp2-marche-aleatoire.md",
+      "points": 1,
+      "options": [
+        {
+          "texte": "Le modèle déclare impossibles des paires qu'il n'a simplement jamais vues, faute de corpus",
+          "correcte": true,
+          "justification": "C'est le problème du zéro non observé : un modèle ne distingue pas tout seul ce qu'il a vu être faux de ce qu'il n'a pas vu."
+        },
+        {
+          "texte": "Les deux tiers des paires de lettres sont réellement impossibles en français",
+          "correcte": false,
+          "justification": "Beaucoup de paires absentes du corpus sont parfaitement courantes ailleurs : le corpus fait 1229 caractères."
+        },
+        {
+          "texte": "La matrice est mal construite",
+          "correcte": false,
+          "justification": "Elle est correctement construite ; c'est la quantité de données qui est faible, pas le code."
+        },
+        {
+          "texte": "Il faudrait augmenter la température pour combler les zéros",
+          "correcte": false,
+          "justification": "La température déforme les probabilités non nulles ; elle ne peut rien faire d'une probabilité exactement nulle."
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "enonce": "L'entropie vaut `4.6439` bits par caractère pour un tirage uniforme, `3.9813` avec les fréquences des lettres et `2.9321` avec le modèle de bigrammes. Que mesure l'écart entre les deux dernières valeurs ?",
+      "type": "unique",
+      "difficulte": "difficile",
+      "theme": "Théorie de l'information",
+      "source_fichier": "tp2-marche-aleatoire.md",
+      "points": 1,
+      "options": [
+        {
+          "texte": "L'information que le caractère précédent apporte sur le suivant, soit une information mutuelle d'environ un bit",
+          "correcte": true,
+          "justification": "C'est la différence entre entropie marginale et entropie conditionnelle, les notions du TP10 d'IA prédictive appliquées au langage."
+        },
+        {
+          "texte": "L'erreur d'estimation due à la taille du corpus",
+          "correcte": false,
+          "justification": "Le corpus est petit, mais l'écart mesuré est bien un gain d'information apporté par le contexte, pas une incertitude d'estimation."
+        },
+        {
+          "texte": "La perplexité du modèle",
+          "correcte": false,
+          "justification": "La perplexité est `2` élevé à la puissance de l'entropie conditionnelle, pas la différence entre deux entropies."
+        },
+        {
+          "texte": "Le nombre de bits nécessaires pour stocker la matrice",
+          "correcte": false,
+          "justification": "L'entropie mesure une incertitude par caractère du texte, pas la taille du modèle."
+        }
+      ]
+    }
+  ]
+}

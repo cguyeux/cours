@@ -38,3 +38,14 @@ présente comme certain alors que ce ne l'est pas. Sur un module qui porte juste
 l'orchestration de modèles de langage, cet exercice prend un relief particulier : vous
 apprenez à construire avec l'outil dont vous apprenez, dans le même geste, à ne pas trop
 vous fier.
+
+## Projet et évaluation
+
+Les deux modules d'IA, génératif et prédictif, donnent lieu à **un seul rendu commun** :
+un **projet personnel** accompagné de **vos solutions aux TP des deux modules**, dans un
+dépôt GitHub à m'envoyer **quatorze jours après la dernière séance**. Il n'y a donc qu'un
+projet à mener, et vous pouvez l'appuyer sur l'un des deux versants ou sur les deux. Le
+sujet est libre, mais c'est la profondeur avec laquelle il exploite les notions vues en TP
+qui fait la note.
+
+[Ce qu'il faut rendre, quand, et comment c'est noté](../ia/evaluation.md){ .md-button .md-button--primary }

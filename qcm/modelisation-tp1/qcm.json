@@ -1,0 +1,318 @@
+{
+  "titre": "QCM — TP1 : Ce qu'une matrice sait faire",
+  "source": "site/docs/modelisation/tp1-matrice-svd.md",
+  "langue": "fr",
+  "consignes": "Cochez la bonne réponse. Une seule réponse est correcte par question. Toutes les valeurs numériques citées sont celles mesurées pendant le TP.",
+  "questions": [
+    {
+      "id": 1,
+      "enonce": "Que contient la troisième valeur renvoyée par `U, S, Vt = np.linalg.svd(A)` ?",
+      "type": "unique",
+      "difficulte": "facile",
+      "theme": "Décomposition en valeurs singulières",
+      "source_fichier": "tp1-matrice-svd.md",
+      "points": 1,
+      "options": [
+        {
+          "texte": "La matrice `V` déjà transposée, c'est-à-dire `Vᵀ`",
+          "correcte": true,
+          "justification": "L'étape 2 le signale explicitement : numpy renvoie `Vᵀ`, pas `V`. C'est la source d'erreur numéro un sur cette fonction."
+        },
+        {
+          "texte": "La matrice `V`, qu'il faut transposer avant de reconstruire",
+          "correcte": false,
+          "justification": "C'est exactement l'erreur que l'encadré du TP fait commettre : transposer une matrice déjà transposée donne une reconstruction fausse."
+        },
+        {
+          "texte": "La matrice diagonale des valeurs singulières",
+          "correcte": false,
+          "justification": "Les valeurs singulières sont dans la deuxième valeur de retour, `S`, et sous forme de vecteur, pas de matrice diagonale."
+        },
+        {
+          "texte": "L'inverse de `U`",
+          "correcte": false,
+          "justification": "`U` et `V` sont deux matrices distinctes, chacune à colonnes orthonormées ; aucune des deux n'est l'inverse de l'autre."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "enonce": "Le rang de la photographie utilisée dans le TP vaut 512, c'est-à-dire le maximum possible pour une matrice 600 × 512. Qu'est-ce que cela implique ?",
+      "type": "unique",
+      "difficulte": "moyen",
+      "theme": "Rang et approximation",
+      "source_fichier": "tp1-matrice-svd.md",
+      "points": 1,
+      "options": [
+        {
+          "texte": "Aucune reconstruction exacte à partir de moins de 512 colonnes indépendantes n'est possible, mais une reconstruction approchée le reste",
+          "correcte": true,
+          "justification": "C'est le corrigé de l'exercice 1.1 : le rang maximal ferme la question de l'exactitude et ouvre celle de l'approximation, qui est l'objet du TP."
+        },
+        {
+          "texte": "L'image ne peut être ni comprimée ni approchée d'aucune façon",
+          "correcte": false,
+          "justification": "Le rang mesure l'exactitude, pas la qualité d'une approximation : dix couches sur 512 portent déjà près de 93 % de l'énergie."
+        },
+        {
+          "texte": "Les 512 valeurs singulières sont toutes de taille comparable",
+          "correcte": false,
+          "justification": "Elles vont de 48 975 à moins de 2, soit quatre ordres de grandeur ; c'est ce déséquilibre qui rend la troncature utile."
+        },
+        {
+          "texte": "La matrice est orthogonale",
+          "correcte": false,
+          "justification": "Être de rang plein n'a rien à voir avec l'orthogonalité : une matrice orthogonale a toutes ses valeurs singulières égales à 1."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "enonce": "Quelle fraction de l'énergie totale les dix plus grandes valeurs singulières de l'image portent-elles ?",
+      "type": "unique",
+      "difficulte": "facile",
+      "theme": "Spectre",
+      "source_fichier": "tp1-matrice-svd.md",
+      "points": 1,
+      "options": [
+        {
+          "texte": "Environ 93 %",
+          "correcte": true,
+          "justification": "La mesure de l'exercice 2.1 donne 0,9297 pour les dix premières, et 0,9881 pour les cinquante premières."
+        },
+        {
+          "texte": "Environ 10 %, puisqu'il s'agit de dix couches sur 512",
+          "correcte": false,
+          "justification": "L'énergie n'est pas répartie uniformément entre les couches : elle se concentre massivement sur les premières."
+        },
+        {
+          "texte": "Environ 50 %",
+          "correcte": false,
+          "justification": "C'est à peu près ce que porte la première valeur singulière à elle seule (0,7311 exactement) ; dix en portent bien davantage."
+        },
+        {
+          "texte": "Environ 99 %",
+          "correcte": false,
+          "justification": "0,9881 est la valeur des cinquante premières, pas des dix premières."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "enonce": "Comment connaître l'erreur relative d'une approximation de rang `k` sans reconstruire la matrice ?",
+      "type": "unique",
+      "difficulte": "moyen",
+      "theme": "Théorème d'Eckart-Young",
+      "source_fichier": "tp1-matrice-svd.md",
+      "points": 1,
+      "options": [
+        {
+          "texte": "En divisant la racine de la somme des carrés des valeurs singulières jetées par la norme de Frobenius de la matrice",
+          "correcte": true,
+          "justification": "C'est la formule vérifiée à l'exercice 3.1 : la version mesurée et la version théorique coïncident sur quatre décimales pour tous les `k` testés."
+        },
+        {
+          "texte": "En divisant la k-ième valeur singulière par la première",
+          "correcte": false,
+          "justification": "Ce rapport mesure la décroissance locale du spectre, pas l'erreur cumulée de toutes les couches jetées."
+        },
+        {
+          "texte": "En comptant le nombre de valeurs singulières inférieures à 1",
+          "correcte": false,
+          "justification": "L'erreur dépend de la taille des valeurs jetées, pas de leur nombre, et un seuil absolu n'a aucun sens sans référence à l'échelle de la matrice."
+        },
+        {
+          "texte": "Ce n'est pas possible : il faut reconstruire et comparer",
+          "correcte": false,
+          "justification": "C'est précisément l'intérêt pratique du théorème : on choisit `k` en lisant le seul vecteur `S`, avant toute reconstruction."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "enonce": "Combien de nombres faut-il stocker pour conserver l'approximation de rang `k` d'une matrice `m × n` ?",
+      "type": "unique",
+      "difficulte": "moyen",
+      "theme": "Coût de stockage",
+      "source_fichier": "tp1-matrice-svd.md",
+      "points": 1,
+      "options": [
+        {
+          "texte": "`k × (m + n + 1)`",
+          "correcte": true,
+          "justification": "Il faut `k` colonnes de `U` (longueur `m`), `k` lignes de `Vᵀ` (longueur `n`) et les `k` valeurs singulières."
+        },
+        {
+          "texte": "`k × m × n`",
+          "correcte": false,
+          "justification": "Ce serait `k` fois plus que la matrice entière : la troncature ne recopie pas la matrice, elle en garde des facteurs."
+        },
+        {
+          "texte": "`k` seulement, puisqu'on ne garde que `k` valeurs singulières",
+          "correcte": false,
+          "justification": "Les valeurs singulières ne suffisent pas à reconstruire : il faut aussi les vecteurs de `U` et de `Vᵀ`, qui dominent largement le compte."
+        },
+        {
+          "texte": "`m × n` quelle que soit la valeur de `k`",
+          "correcte": false,
+          "justification": "Ce serait le coût de l'image d'origine ; l'intérêt de la troncature est justement de descendre en dessous, quand `k` est assez petit."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "enonce": "Sur l'image 600 × 512 du TP, le seuil `k*` vaut 276. Que se passe-t-il pour `k = 300` ?",
+      "type": "unique",
+      "difficulte": "moyen",
+      "theme": "Coût de stockage",
+      "source_fichier": "tp1-matrice-svd.md",
+      "points": 1,
+      "options": [
+        {
+          "texte": "La « compression » stocke plus de nombres que l'image d'origine, avec un ratio de 1,09",
+          "correcte": true,
+          "justification": "La mesure de l'étape 4 donne 333 900 nombres stockés contre 307 200 coefficients dans l'image."
+        },
+        {
+          "texte": "La reconstruction devient exacte",
+          "correcte": false,
+          "justification": "Le rang de l'image vaut 512 : il faudrait garder les 512 couches pour reconstruire exactement, et l'erreur à `k = 300` est encore d'environ 1 %."
+        },
+        {
+          "texte": "L'erreur relative devient nulle et le stockage reste inférieur à l'original",
+          "correcte": false,
+          "justification": "Les deux affirmations sont fausses, et elles sont d'ailleurs contradictoires avec le seuil `k*` qui vient d'être calculé."
+        },
+        {
+          "texte": "Le calcul échoue, car `k` dépasse le nombre de colonnes",
+          "correcte": false,
+          "justification": "L'image a 512 colonnes, donc `k = 300` reste parfaitement valide ; c'est le bilan de stockage qui devient défavorable, pas le calcul."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "enonce": "Le TP montre qu'il faut `k = 307` pour descendre sous 1 % d'erreur relative. Quelle conclusion faut-il en tirer ?",
+      "type": "unique",
+      "difficulte": "difficile",
+      "theme": "Limites de la méthode",
+      "source_fichier": "tp1-matrice-svd.md",
+      "points": 1,
+      "options": [
+        {
+          "texte": "Sur cette photographie, atteindre 1 % d'erreur par troncature de rang coûte plus cher que de stocker l'image entière",
+          "correcte": true,
+          "justification": "307 dépasse le seuil `k*` de 276 : le ratio de stockage vaut 1,11. C'est le résultat négatif central de la séance."
+        },
+        {
+          "texte": "La troncature de rang est toujours une mauvaise méthode de compression",
+          "correcte": false,
+          "justification": "Elle échoue sur une photographie, dont le spectre décroît trop lentement, mais reste excellente sur les matrices de rang effectif faible, comme le montre l'exercice 6.2."
+        },
+        {
+          "texte": "Il faudrait utiliser une image plus grande pour que cela fonctionne",
+          "correcte": false,
+          "justification": "Le seuil `k*` croît avec la taille, mais le spectre d'une photographie décroît lentement quelle que soit sa taille : le problème est la structure de l'image, pas ses dimensions."
+        },
+        {
+          "texte": "L'algorithme de numpy est en cause et une autre implémentation ferait mieux",
+          "correcte": false,
+          "justification": "Le théorème d'Eckart-Young garantit que cette troncature est la meilleure approximation de rang `k` possible : aucune implémentation ne peut faire mieux à rang égal."
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "enonce": "Que produit la reconstruction écrite `U[:, :20] @ np.diag(S[:20]) @ Vt.T[:20, :]` sur l'image du TP ?",
+      "type": "unique",
+      "difficulte": "difficile",
+      "theme": "Pièges d'implémentation",
+      "source_fichier": "tp1-matrice-svd.md",
+      "points": 1,
+      "options": [
+        {
+          "texte": "Une matrice de la bonne forme, sans exception, mais d'erreur relative 1,3993 au lieu de 0,1919",
+          "correcte": true,
+          "justification": "C'est la mesure de l'encadré : `Vt` étant carrée, les formes concordent et rien ne signale l'erreur. La reconstruction est même plus éloignée de l'image qu'une matrice de zéros."
+        },
+        {
+          "texte": "Une `ValueError` sur les dimensions",
+          "correcte": false,
+          "justification": "C'est ce qui serait rassurant, et c'est précisément ce qui n'arrive pas ici : l'erreur est silencieuse."
+        },
+        {
+          "texte": "Exactement la même chose que la version correcte",
+          "correcte": false,
+          "justification": "Les erreurs relatives mesurées diffèrent d'un facteur sept ; les deux versions n'ont rien à voir."
+        },
+        {
+          "texte": "Une image légèrement plus floue, mais utilisable",
+          "correcte": false,
+          "justification": "Une erreur relative supérieure à 1 signifie que la reconstruction s'écarte de l'image plus que ne le ferait une matrice nulle."
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "enonce": "On fabrique une matrice de rang 3 exact, puis on lui ajoute un bruit d'écart-type 0,5. Que devient le rang, et que montre le spectre ?",
+      "type": "unique",
+      "difficulte": "moyen",
+      "theme": "Rang effectif",
+      "source_fichier": "tp1-matrice-svd.md",
+      "points": 1,
+      "options": [
+        {
+          "texte": "Le rang calculé passe à 150, mais le spectre garde trois valeurs élevées puis s'écrase autour de 12,5",
+          "correcte": true,
+          "justification": "Mesuré à l'exercice 5.1 : les trois premières valeurs restent à 177,5, 165,5 et 138,7, et le rapport entre la troisième et la quatrième vaut 10,86."
+        },
+        {
+          "texte": "Le rang reste 3, car le bruit est trop faible pour compter",
+          "correcte": false,
+          "justification": "Le rang au sens algébrique est binaire : la moindre perturbation le fait sauter au maximum, ici 150."
+        },
+        {
+          "texte": "Le rang passe à 150 et le spectre devient plat, la structure est perdue",
+          "correcte": false,
+          "justification": "La structure est parfaitement visible dans le spectre : c'est exactement le point de l'exercice."
+        },
+        {
+          "texte": "Le rang devient impossible à calculer",
+          "correcte": false,
+          "justification": "`np.linalg.matrix_rank` rend un résultat sans difficulté ; le problème est que ce résultat est trompeur, pas qu'il manque."
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "enonce": "Pour obtenir seulement la plus grande valeur singulière, le TP compare `np.linalg.svd` à la puissance itérée. Que conclut la mesure ?",
+      "type": "unique",
+      "difficulte": "moyen",
+      "theme": "Choisir sa méthode",
+      "source_fichier": "tp1-matrice-svd.md",
+      "points": 1,
+      "options": [
+        {
+          "texte": "Dix itérations suffisent pour atteindre la précision machine, pour un coût plusieurs fois moindre que la décomposition complète",
+          "correcte": true,
+          "justification": "L'écart relatif vaut 3,9e-03 après une itération, 1,1e-12 après cinq, et 1,5e-16 après dix ; les quarante itérations suivantes n'apportent rien."
+        },
+        {
+          "texte": "La puissance itérée est plus rapide mais nettement moins précise",
+          "correcte": false,
+          "justification": "Elle atteint la précision des flottants : l'écart relatif final est de l'ordre de 1e-16, c'est-à-dire indiscernable de l'exact."
+        },
+        {
+          "texte": "La décomposition complète est toujours préférable, car elle donne tout",
+          "correcte": false,
+          "justification": "Elle donne tout, y compris ce dont on n'a pas besoin, et le paie en temps. Choisir la méthode selon le besoin est l'objet même de la ressource."
+        },
+        {
+          "texte": "Il faut au moins cent itérations pour que la puissance itérée converge",
+          "correcte": false,
+          "justification": "C'est la valeur par défaut du paramètre dans le TP, mais la mesure montre que dix suffisent largement."
+        }
+      ]
+    }
+  ]
+}

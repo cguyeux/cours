@@ -480,4 +480,5 @@ déterminant à zéro est une faute, et les cas limites, sommets et côtés alig
 - [ ] dire pourquoi la méthode de Monte-Carlo est lente, et quand on l'emploie malgré tout.
 
 [Le QCM du TP6](qcm/qcm_tp6.html){ .md-button target=_blank }
-[Retour au module](index.md){ .md-button .md-button--primary }
+[Projet et évaluation](evaluation.md){ .md-button .md-button--primary }
+[Retour au module](index.md){ .md-button }

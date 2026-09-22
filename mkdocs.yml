@@ -59,6 +59,7 @@ nav:
       - TP5. Synthèse: outils-fondamentaux/tp5-synthese.md
       - TP6. Géométrie du plan: outils-fondamentaux/tp6-geometrie-plan.md
       - Mémento Python: outils-fondamentaux/memento.md
+      - Projet et évaluation: outils-fondamentaux/evaluation.md
   - IA générative (BUT3):
       - Le module: ia-generative/index.md
       - Mise en route BUT3: ia-generative/demarrage.md
@@ -67,6 +68,13 @@ nav:
       - TP3. RAG et bases vectorielles: ia-generative/tp3-rag-vecteurs.md
       - TP4. Agents: ia-generative/tp4-agents.md
       - TP5. Multimodalité: ia-generative/tp5-multimodalite.md
+      - Projet et évaluation (IA): ia/evaluation.md
+  - Modélisations mathématiques (BUT3):
+      - Le module: modelisation/index.md
+      - TP1. Ce qu'une matrice sait faire: modelisation/tp1-matrice-svd.md
+      - TP2. La marche aléatoire: modelisation/tp2-marche-aleatoire.md
+      - TP3. Dériver, descendre, diverger: modelisation/tp3-gradient-bifurcation.md
+      - Projet et évaluation: modelisation/evaluation.md
   - IA prédictive (BUT3):
       - Le module: ia-predictive/index.md
       - TP1. Pandas: ia-predictive/tp1-pandas.md
@@ -81,6 +89,7 @@ nav:
       - TP8. Prétraitement des variables: ia-predictive/tp8-pretraitement.md
       - TP9. XGBoost, explicabilité et causalité: ia-predictive/tp9-xgboost-explicabilite-causalite.md
       - TP10. Théorie de l'information: ia-predictive/tp10-theorie-information.md
+      - Projet et évaluation (IA): ia/evaluation.md
   - À propos: a-propos.md
 
 markdown_extensions:

@@ -346,4 +346,5 @@ Vous devez pouvoir, sans regarder le corrigé :
     l'emploi : les TP d'IA prédictive n'en ont jamais eu. En créer un est possible avec le
     skill `qcm-generator`, mais reste à faire.
 
-[Retour au module IA prédictive](index.md){ .md-button .md-button--primary }
+[Projet et évaluation](../ia/evaluation.md){ .md-button .md-button--primary }
+[Retour au module IA prédictive](index.md){ .md-button }

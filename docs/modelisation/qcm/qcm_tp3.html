@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QCM — TP3 : Dériver, descendre, diverger</title>
+<style>
+  :root { --ok:#1b8a5a; --ko:#c0392b; --accent:#2c5f8a; --bg:#f6f7f9; }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, "Segoe UI", Roboto, sans-serif; line-height:1.5;
+         max-width: 820px; margin: 0 auto; padding: 1.5rem; color:#1a1a1a; background:var(--bg); }
+  h1 { color: var(--accent); margin-bottom:.2rem; }
+  .meta { color:#666; font-size:.9rem; margin-bottom:1rem; }
+  .consignes { background:#eef3f8; border-left:4px solid var(--accent); padding:.6rem .9rem;
+               border-radius:4px; margin-bottom:1.2rem; }
+  .q { background:#fff; border:1px solid #e1e4e8; border-radius:8px; padding:1rem 1.2rem;
+       margin-bottom:1rem; box-shadow:0 1px 2px rgba(0,0,0,.04); }
+  .q h3 { margin:.1rem 0 .2rem; font-size:1.05rem; }
+  .badge { font-size:.72rem; font-weight:600; padding:.1rem .5rem; border-radius:10px;
+           margin-left:.4rem; vertical-align:middle; }
+  .b-facile{background:#e3f4ea;color:var(--ok);} .b-moyen{background:#fdf3e0;color:#b87600;}
+  .b-difficile{background:#fbe6e6;color:var(--ko);} .b-theme{background:#eef0f3;color:#555;}
+  .enonce { margin:.4rem 0 .8rem; }
+  .opt { display:block; padding:.45rem .6rem; border:1px solid #e1e4e8; border-radius:6px;
+         margin:.35rem 0; cursor:pointer; transition:background .12s; }
+  .opt:hover { background:#f0f4f8; }
+  .opt input { margin-right:.55rem; }
+  .opt.correct { border-color:var(--ok); background:#eaf7f0; }
+  .opt.wrong   { border-color:var(--ko); background:#fbecec; }
+  .just { font-size:.86rem; color:#555; margin:.2rem 0 0 1.7rem; display:none; }
+  .just.show { display:block; }
+  .src { font-size:.78rem; color:#888; margin-top:.5rem; display:none; }
+  .src.show { display:block; }
+  .bar { position:sticky; bottom:0; background:var(--bg); padding:.8rem 0; }
+  button { background:var(--accent); color:#fff; border:0; padding:.6rem 1.3rem;
+           font-size:1rem; border-radius:6px; cursor:pointer; }
+  button.ghost { background:#fff; color:var(--accent); border:1px solid var(--accent); margin-left:.5rem; }
+  #score { font-size:1.2rem; font-weight:700; margin-left:1rem; }
+  .qmark { float:right; font-weight:700; display:none; }
+  .qmark.show{display:inline;}
+</style>
+</head>
+<body>
+<h1>QCM — TP3 : Dériver, descendre, diverger</h1>
+<div class="meta">Source : site/docs/modelisation/tp3-gradient-bifurcation.md — 10 questions</div>
+<div class="consignes">Cochez la bonne réponse. Une seule réponse est correcte par question. Toutes les valeurs numériques citées sont celles mesurées pendant le TP.</div>
+<form id="qcm"></form>
+<div class="bar">
+  <button type="button" onclick="grade()">Valider mes réponses</button>
+  <button type="button" class="ghost" onclick="location.reload()">Réinitialiser</button>
+  <span id="score"></span>
+</div>
+<script>
+const DATA = {"questions": [{"_enonce": "Pourquoi l'erreur d'une dérivée par différence finie remonte-t-elle quand <code>h<\/code> devient très petit ?", "_multiple": false, "difficulte": "facile", "theme": "Différence finie", "source_fichier": "tp3-gradient-bifurcation.md", "_source": "tp3-gradient-bifurcation.md", "options": [{"_texte": "Parce qu'on soustrait deux nombres de plus en plus proches, puis qu'on divise par un nombre de plus en plus petit", "correcte": true, "_justification": "C'est l'élimination catastrophique : la soustraction détruit les chiffres significatifs, et la division par <code>h<\/code> amplifie ce qu'il en reste."}, {"_texte": "Parce que le développement de Taylor devient faux pour les petits <code>h<\/code>", "correcte": false, "_justification": "C'est l'inverse : l'erreur de troncature du développement de Taylor, elle, diminue quand <code>h<\/code> diminue. C'est bien pour cela qu'il y a un compromis."}, {"_texte": "Parce que la fonction n'est plus dérivable à cette échelle", "correcte": false, "_justification": "La dérivabilité est une propriété de la fonction mathématique, indépendante de <code>h<\/code> et de l'arithmétique flottante."}, {"_texte": "Parce que <code>math.exp<\/code> perd en précision près de zéro", "correcte": false, "_justification": "Le phénomène se produit avec n'importe quelle fonction, y compris un polynôme évalué exactement."}]}, {"_enonce": "Sur <code>f(x) = exp(sin(x))<\/code> en <code>x = 1.5<\/code>, quel est l'ordre de grandeur du meilleur pas mesuré pour la différence *<em>centrée<\/em>*, et l'erreur relative qu'il atteint ?", "_multiple": false, "difficulte": "moyenne", "theme": "Différence finie", "source_fichier": "tp3-gradient-bifurcation.md", "_source": "tp3-gradient-bifurcation.md", "options": [{"_texte": "<code>h ≈ 6.3e-06<\/code> pour une erreur de <code>1.0e-11<\/code>", "correcte": true, "_justification": "Mesuré sur une grille fine, à comparer à la prédiction théorique <code>eps**(1/3) = 6.06e-06<\/code>, qui tombe au bon ordre de grandeur."}, {"_texte": "<code>h ≈ 1e-16<\/code> pour une erreur nulle", "correcte": false, "_justification": "À <code>h = 1e-16<\/code>, l'erreur relative mesurée vaut <code>1.000e+00<\/code> : la dérivée obtenue n'a plus aucun chiffre juste."}, {"_texte": "<code>h ≈ 4.5e-09<\/code> pour une erreur de <code>2.1e-08<\/code>", "correcte": false, "_justification": "Ce sont les valeurs de la différence *<em>avant<\/em>*, pas de la centrée, qui fait bien mieux pour un pas bien plus grand."}, {"_texte": "<code>h ≈ 1e-01<\/code> : plus le pas est grand, plus c'est stable", "correcte": false, "_justification": "À <code>h = 1e-01<\/code> l'erreur centrée vaut <code>6.620e-03<\/code>, soit huit ordres de grandeur de plus qu'au pas optimal : l'erreur de troncature domine."}]}, {"_enonce": "Dans un nombre dual <code>a + b·ε<\/code>, quelle propriété de <code>ε<\/code> fait apparaître la règle de dérivation d'un produit ?", "_multiple": false, "difficulte": "facile", "theme": "Nombres duaux", "source_fichier": "tp3-gradient-bifurcation.md", "_source": "tp3-gradient-bifurcation.md", "options": [{"_texte": "<code>ε² = 0<\/code> alors que <code>ε ≠ 0<\/code>", "correcte": true, "_justification": "Le produit <code>(a+bε)(c+dε)<\/code> donne <code>ac + (ad+bc)ε + bd·ε²<\/code>, et l'annulation du dernier terme laisse exactement <code>ad + bc<\/code>, la dérivée d'un produit."}, {"_texte": "<code>ε<\/code> est infiniment petit mais non nul", "correcte": false, "_justification": "Formulation d'analyse non standard, séduisante mais inutile ici : le calcul repose sur une règle algébrique exacte, <code>ε² = 0<\/code>, implémentable en flottants."}, {"_texte": "<code>ε = sqrt(-1)<\/code>", "correcte": false, "_justification": "C'est l'unité imaginaire des nombres complexes, dont le carré vaut <code>-1<\/code> et non <code>0<\/code>. La structure obtenue serait différente."}, {"_texte": "<code>ε<\/code> vaut l'epsilon machine, soit <code>2.22e-16<\/code>", "correcte": false, "_justification": "Aucun rapport : <code>ε<\/code> n'est pas un petit nombre, c'est un symbole. Aucune valeur numérique ne lui est jamais attribuée dans la classe <code>Dual<\/code>."}]}, {"_enonce": "La dérivée de <code>exp(sin(x))<\/code> en <code>1.5<\/code> obtenue par nombres duaux est comparée à la dérivée analytique. Quel est l'écart mesuré ?", "_multiple": false, "difficulte": "moyenne", "theme": "Nombres duaux", "source_fichier": "tp3-gradient-bifurcation.md", "_source": "tp3-gradient-bifurcation.md", "options": [{"_texte": "Exactement <code>0.0<\/code> : les deux nombres flottants sont identiques bit à bit", "correcte": true, "_justification": "La classe <code>Dual<\/code> enchaîne rigoureusement les mêmes opérations flottantes que <code>cos(x) * exp(sin(x))<\/code>. La dérivation automatique n'approche pas la dérivée, elle l'évalue."}, {"_texte": "Environ <code>1e-11<\/code>, soit le niveau d'une bonne différence finie", "correcte": false, "_justification": "<code>1.0e-11<\/code> est l'erreur de la différence *<em>centrée<\/em>* à son pas optimal. Les duaux font strictement mieux : ils ne se trompent pas du tout."}, {"_texte": "Environ <code>1e-16<\/code>, l'epsilon machine", "correcte": false, "_justification": "Il n'y a même pas d'erreur d'arrondi supplémentaire : le résultat est le même flottant, pas un flottant voisin."}, {"_texte": "L'écart dépend du <code>h<\/code> choisi dans la classe <code>Dual<\/code>", "correcte": false, "_justification": "Il n'y a aucun <code>h<\/code> dans la classe <code>Dual<\/code>. C'est précisément ce qui la distingue d'une différence finie."}]}, {"_enonce": "La fonction <code>rosenbrock<\/code> n'a pas été écrite pour les nombres duaux, et se dérive pourtant sans être modifiée. Pourquoi ?", "_multiple": false, "difficulte": "moyenne", "theme": "Gradient automatique", "source_fichier": "tp3-gradient-bifurcation.md", "_source": "tp3-gradient-bifurcation.md", "options": [{"_texte": "Parce qu'elle n'utilise que <code>+<\/code>, <code>-<\/code>, <code>*<\/code> et <code>**<\/code>, et que Python choisit l'implémentation de ces opérateurs selon le type reçu", "correcte": true, "_justification": "C'est tout le bénéfice de la surcharge d'opérateurs : le même code source s'évalue sur des flottants ou se dérive sur des duaux."}, {"_texte": "Parce que numpy détecte automatiquement les dérivées", "correcte": false, "_justification": "numpy ne sait pas dériver. Ici il ne sert qu'à ranger les résultats dans un tableau."}, {"_texte": "Parce que <code>gradient<\/code> réécrit le code source de la fonction", "correcte": false, "_justification": "Aucune réécriture n'a lieu. Certaines bibliothèques de dérivation procèdent ainsi par transformation de source, mais pas celle-ci."}, {"_texte": "Parce que Rosenbrock est un polynôme, et que les polynômes sont un cas particulier", "correcte": false, "_justification": "La méthode marche tout aussi bien sur <code>exp(sin(x))<\/code>, comme à l'étape 2, dès lors que chaque fonction élémentaire a sa règle."}]}, {"_enonce": "Sur Rosenbrock, la descente à pas fixe <code>2e-3<\/code> laisse <code>f = 0.000055<\/code> après 5000 itérations, là où BFGS atteint <code>f = 2.535e-15<\/code>. Qu'est-ce que BFGS utilise que la descente à pas fixe ignore ?", "_multiple": false, "difficulte": "moyenne", "theme": "Descente de gradient", "source_fichier": "tp3-gradient-bifurcation.md", "_source": "tp3-gradient-bifurcation.md", "options": [{"_texte": "Une approximation de la courbure, accumulée au fil des itérations", "correcte": true, "_justification": "Elle lui donne à la fois la direction et la longueur du pas, ce qui explique qu'il n'ait aucun <code>η<\/code> à régler et qu'il ait fini en 32 itérations et 39 évaluations."}, {"_texte": "Un gradient plus précis que celui des nombres duaux", "correcte": false, "_justification": "C'est exactement le même gradient : on le lui a fourni par l'argument <code>jac<\/code>."}, {"_texte": "Un tirage aléatoire qui lui permet de sortir des minima locaux", "correcte": false, "_justification": "BFGS est entièrement déterministe, et Rosenbrock n'a de toute façon qu'un seul minimum."}, {"_texte": "Un pas beaucoup plus grand, gardé constant", "correcte": false, "_justification": "Son pas n'est pas constant : il est déterminé à chaque itération par une recherche linéaire guidée par la courbure estimée."}]}, {"_enonce": "Le pas <code>0.01<\/code>, souvent proposé comme valeur usuelle, est appliqué à Rosenbrock depuis <code>(-1.2, 1)<\/code>. Que se passe-t-il ?", "_multiple": false, "difficulte": "moyenne", "theme": "Choix du pas", "source_fichier": "tp3-gradient-bifurcation.md", "_source": "tp3-gradient-bifurcation.md", "options": [{"_texte": "<code>f<\/code> explose en quelques itérations et vaut <code>inf<\/code> dès la sixième, sans aucune exception levée", "correcte": true, "_justification": "Mesuré : <code>9.333e+01<\/code>, <code>4.704e+04<\/code>, <code>2.530e+12<\/code>, <code>4.146e+35<\/code>, <code>1.824e+105<\/code>, puis <code>inf<\/code>. Seul un <code>RuntimeWarning<\/code> d'overflow apparaît, et des <code>nan<\/code> se propagent ensuite en silence."}, {"_texte": "La descente converge lentement mais sûrement", "correcte": false, "_justification": "Elle ne converge pas du tout : <code>f<\/code> est multipliée par plusieurs ordres de grandeur à chaque itération."}, {"_texte": "Python lève une <code>OverflowError<\/code> qui signale le problème", "correcte": false, "_justification": "Les flottants numpy débordent vers <code>inf<\/code> sans exception. C'est justement ce qui rend l'échec difficile à repérer dans un programme plus gros."}, {"_texte": "Le même pas échouerait sur n'importe quelle fonction", "correcte": false, "_justification": "Sur <code>f(x,y) = (x²+y²)/2<\/code>, le même <code>0.01<\/code> converge parfaitement, jusqu'à <code>2.6e-09<\/code> de l'optimum. Un pas n'est bon ou mauvais que relativement à la courbure."}]}, {"_enonce": "Sur une fonction quadratique dont la plus grande valeur propre de la matrice des dérivées secondes est <code>L<\/code>, que se passe-t-il exactement au pas <code>η = 2/L<\/code> ?", "_multiple": false, "difficulte": "difficile", "theme": "Seuil du pas", "source_fichier": "tp3-gradient-bifurcation.md", "_source": "tp3-gradient-bifurcation.md", "options": [{"_texte": "Le facteur <code>1 - η·λ<\/code> vaut <code>-1<\/code> : le point saute d'un côté à l'autre du minimum sans jamais s'en approcher", "correcte": true, "_justification": "La norme après 200 itérations vaut <code>1.414e+00<\/code>, c'est-à-dire exactement la norme de départ. Ni convergence ni divergence."}, {"_texte": "La convergence est atteinte en une seule itération", "correcte": false, "_justification": "C'est le cas du pas <code>η = 1/L<\/code>, où le facteur vaut <code>0<\/code> : la norme mesurée tombe alors à <code>0.000e+00<\/code>."}, {"_texte": "La descente diverge immédiatement vers l'infini", "correcte": false, "_justification": "La divergence commence strictement au-delà : à <code>η = 2.05/L<\/code>, la norme atteint <code>2.446e+04<\/code> et continue de croître."}, {"_texte": "La convergence est la plus rapide possible", "correcte": false, "_justification": "C'est le pire pas admissible, pas le meilleur. Le plus rapide sur une quadratique isotrope est <code>η = 1/L<\/code>."}]}, {"_enonce": "À pas <code>η = 1.9/L<\/code> et 200 itérations, <code>κ = 10<\/code> converge *<em>mieux<\/em>* que <code>κ = 1<\/code> (<code>7.06e-10<\/code> contre <code>9.98e-10<\/code>). Pourquoi le conditionnement ne coûte-t-il rien dans ce cas ?", "_multiple": false, "difficulte": "difficile", "theme": "Conditionnement", "source_fichier": "tp3-gradient-bifurcation.md", "_source": "tp3-gradient-bifurcation.md", "options": [{"_texte": "Parce que la vitesse est fixée par le plus grand des deux facteurs en valeur absolue, et que la direction molle (<code>1 - 1.9/κ = 0.81<\/code>) s'écrase encore plus vite que la raide (<code>-0.9<\/code>)", "correcte": true, "_justification": "La direction molle ne devient limitante qu'au-delà de <code>κ = 19<\/code>, où <code>|1 - 1.9/κ|<\/code> dépasse <code>0.9<\/code>. À <code>κ = 30<\/code> puis <code>100<\/code>, la norme remonte bien à <code>2.07e-06<\/code> puis <code>2.16e-02<\/code>."}, {"_texte": "Parce que le conditionnement n'a aucun effet sur la vitesse d'une descente de gradient", "correcte": false, "_justification": "Il en a un, et il est violent : à <code>κ = 100<\/code>, la descente a pratiquement cessé d'avancer après 200 itérations."}, {"_texte": "Parce que le pas a été adapté à <code>κ<\/code>, ce qui compense exactement", "correcte": false, "_justification": "Le pas est bien adapté à <code>L<\/code>, mais cela ne compense rien : c'est justement ce qui rend la direction molle de plus en plus lente quand <code>κ<\/code> grandit."}, {"_texte": "Parce que <code>κ = 1<\/code> souffre d'une erreur d'arrondi supplémentaire", "correcte": false, "_justification": "Aucun arrondi n'est en cause. À <code>κ = 1<\/code> les deux coordonnées convergent au même rythme <code>0.9<\/code>, d'où un facteur <code>√2<\/code> sur la norme : <code>9.977e-10<\/code> contre <code>7.055e-10<\/code>."}]}, {"_enonce": "La descente de gradient sur <code>f(x) = x²/2 - x³/3<\/code> avec un pas <code>η<\/code> entre <code>2<\/code> et <code>3<\/code> : que fait-elle ?", "_multiple": false, "difficulte": "difficile", "theme": "Bifurcation", "source_fichier": "tp3-gradient-bifurcation.md", "_source": "tp3-gradient-bifurcation.md", "options": [{"_texte": "Elle s'installe sur un cycle de 2 points, puis 4, puis 8, puis devient chaotique, et ne diverge qu'au-delà de <code>η = 3<\/code>", "correcte": true, "_justification": "Cycle de 2 dès <code>η = 2.01<\/code>, de 4 dès <code>2.45<\/code>, de 8 vers <code>2.55<\/code>, plus aucune répétition à partir de <code>2.57<\/code>, et divergence dès <code>3.0001<\/code>. Ce sont les seuils de la suite logistique, décalés de 1."}, {"_texte": "Elle diverge dès que <code>η<\/code> dépasse <code>2<\/code>, comme sur une quadratique", "correcte": false, "_justification": "C'est vrai d'une quadratique, mais faux ici : la suite reste bornée jusqu'à <code>η = 3.0<\/code> inclus, sans pour autant converger."}, {"_texte": "Elle converge vers le minimum, simplement plus lentement", "correcte": false, "_justification": "Elle ne converge plus du tout : à <code>η = 2.1<\/code>, le régime établi visite indéfiniment deux valeurs, <code>-0.128646<\/code> et <code>0.176265<\/code>, qui encadrent le minimum sans l'atteindre."}, {"_texte": "Elle trouve un autre minimum de la fonction", "correcte": false, "_justification": "La fonction n'a qu'un minimum local, en <code>x = 0<\/code> ; l'autre point critique, <code>x = 1<\/code>, est un maximum. Aucun des cycles observés n'est un point critique."}]}]};
+const form = document.getElementById('qcm');
+DATA.questions.forEach((q, i) => {
+  const multi = q._multiple;
+  const div = document.createElement('div');
+  div.className = 'q'; div.id = 'q'+i;
+  let badges = '';
+  if (q.difficulte) badges += `<span class="badge b-${q.difficulte}">${q.difficulte}</span>`;
+  if (q.theme) badges += `<span class="badge b-theme">${q.theme}</span>`;
+  const hint = multi ? ' <small>(plusieurs réponses)</small>' : '';
+  let html = `<span class="qmark" id="m${i}"></span><h3>Question ${i+1}${hint}${badges}</h3>`;
+  html += `<div class="enonce">${q._enonce}</div>`;
+  q.options.forEach((o, j) => {
+    const type = multi ? 'checkbox' : 'radio';
+    html += `<label class="opt" id="o${i}_${j}">`
+          + `<input type="${type}" name="q${i}" value="${j}">${o._texte}</label>`;
+    html += `<div class="just" id="j${i}_${j}">${o._justification||''}</div>`;
+  });
+  if (q.source_fichier) html += `<div class="src" id="s${i}">Source : ${q._source}</div>`;
+  div.innerHTML = html;
+  form.appendChild(div);
+});
+function grade(){
+  let correct = 0;
+  DATA.questions.forEach((q, i) => {
+    const chosen = [...form.querySelectorAll(`input[name=q${i}]:checked`)].map(e=>+e.value);
+    const good = q.options.map((o,j)=>o.correcte?j:-1).filter(j=>j>=0);
+    const ok = chosen.length===good.length && chosen.every(j=>good.includes(j));
+    if (ok) correct++;
+    q.options.forEach((o,j)=>{
+      const lab = document.getElementById(`o${i}_${j}`);
+      lab.classList.remove('correct','wrong');
+      if (o.correcte) lab.classList.add('correct');
+      else if (chosen.includes(j)) lab.classList.add('wrong');
+      const ju = document.getElementById(`j${i}_${j}`);
+      if (ju && o._justification) ju.classList.add('show');
+    });
+    const m = document.getElementById('m'+i);
+    m.textContent = ok ? '✓' : '✗';
+    m.style.color = ok ? 'var(--ok)' : 'var(--ko)';
+    m.classList.add('show');
+    const s = document.getElementById('s'+i); if (s) s.classList.add('show');
+  });
+  const n = DATA.questions.length;
+  const pct = Math.round(100*correct/n);
+  const sc = document.getElementById('score');
+  sc.textContent = `Score : ${correct} / ${n}  (${pct} %)`;
+  sc.style.color = pct>=50 ? 'var(--ok)' : 'var(--ko)';
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+</script>
+</body>
+</html>

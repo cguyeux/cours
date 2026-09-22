@@ -5,6 +5,7 @@ nbclient==0.10.2
 ipykernel==6.30.1
 numpy
 matplotlib
+networkx
 pandas
 scikit-learn
 geopandas

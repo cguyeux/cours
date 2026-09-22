@@ -14,16 +14,23 @@ import pathlib
 import re
 
 RACINE = pathlib.Path(__file__).resolve().parent.parent
-SOURCE = RACINE / "docs" / "outils-fondamentaux"
+SOURCE = RACINE / "docs"
 CIBLE = RACINE / "notebooks"
+SITE = "https://cours.gclab.fr"
 
+# Nom du carnet produit -> chemin de l'énoncé, relatif à docs/. Le nom du carnet est ce que
+# référence le lien `/lite/notebooks/index.html?path=<nom>.ipynb` en tête de chaque TP : ne
+# pas le renommer sans corriger le lien correspondant.
 PAGES = {
-    "tp1": "tp1-calcul-numerique.md",
-    "tp2": "tp2-arithmetique.md",
-    "tp3": "tp3-polynomes-fonctions.md",
-    "tp4": "tp4-matrices-gauss.md",
-    "tp5": "tp5-synthese.md",
-    "tp6": "tp6-geometrie-plan.md",
+    "tp1": "outils-fondamentaux/tp1-calcul-numerique.md",
+    "tp2": "outils-fondamentaux/tp2-arithmetique.md",
+    "tp3": "outils-fondamentaux/tp3-polynomes-fonctions.md",
+    "tp4": "outils-fondamentaux/tp4-matrices-gauss.md",
+    "tp5": "outils-fondamentaux/tp5-synthese.md",
+    "tp6": "outils-fondamentaux/tp6-geometrie-plan.md",
+    "modelisation-tp1": "modelisation/tp1-matrice-svd.md",
+    "modelisation-tp2": "modelisation/tp2-marche-aleatoire.md",
+    "modelisation-tp3": "modelisation/tp3-gradient-bifurcation.md",
 }
 
 DEBUT_EXERCICE = re.compile(r'^!!! question "(?P<titre>[^"]+)"\s*$', re.MULTILINE)
@@ -73,11 +80,11 @@ def titre_de(texte: str) -> str:
 
 def main() -> None:
     CIBLE.mkdir(exist_ok=True)
-    for cle, fichier in PAGES.items():
-        page = SOURCE / fichier
+    for cle, chemin in PAGES.items():
+        page = SOURCE / chemin
         texte = page.read_text(encoding="utf-8")
         titre = titre_de(texte)
-        lien = f"https://cours.gclab.fr/outils-fondamentaux/{fichier[:-3]}/"
+        lien = f"{SITE}/{chemin[:-3]}/"
 
         cellules = [cellule("markdown", (
             f"# {titre}\n\n"

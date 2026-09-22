@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QCM — TP2 : La marche aléatoire, du graphe au texte</title>
+<style>
+  :root { --ok:#1b8a5a; --ko:#c0392b; --accent:#2c5f8a; --bg:#f6f7f9; }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, "Segoe UI", Roboto, sans-serif; line-height:1.5;
+         max-width: 820px; margin: 0 auto; padding: 1.5rem; color:#1a1a1a; background:var(--bg); }
+  h1 { color: var(--accent); margin-bottom:.2rem; }
+  .meta { color:#666; font-size:.9rem; margin-bottom:1rem; }
+  .consignes { background:#eef3f8; border-left:4px solid var(--accent); padding:.6rem .9rem;
+               border-radius:4px; margin-bottom:1.2rem; }
+  .q { background:#fff; border:1px solid #e1e4e8; border-radius:8px; padding:1rem 1.2rem;
+       margin-bottom:1rem; box-shadow:0 1px 2px rgba(0,0,0,.04); }
+  .q h3 { margin:.1rem 0 .2rem; font-size:1.05rem; }
+  .badge { font-size:.72rem; font-weight:600; padding:.1rem .5rem; border-radius:10px;
+           margin-left:.4rem; vertical-align:middle; }
+  .b-facile{background:#e3f4ea;color:var(--ok);} .b-moyen{background:#fdf3e0;color:#b87600;}
+  .b-difficile{background:#fbe6e6;color:var(--ko);} .b-theme{background:#eef0f3;color:#555;}
+  .enonce { margin:.4rem 0 .8rem; }
+  .opt { display:block; padding:.45rem .6rem; border:1px solid #e1e4e8; border-radius:6px;
+         margin:.35rem 0; cursor:pointer; transition:background .12s; }
+  .opt:hover { background:#f0f4f8; }
+  .opt input { margin-right:.55rem; }
+  .opt.correct { border-color:var(--ok); background:#eaf7f0; }
+  .opt.wrong   { border-color:var(--ko); background:#fbecec; }
+  .just { font-size:.86rem; color:#555; margin:.2rem 0 0 1.7rem; display:none; }
+  .just.show { display:block; }
+  .src { font-size:.78rem; color:#888; margin-top:.5rem; display:none; }
+  .src.show { display:block; }
+  .bar { position:sticky; bottom:0; background:var(--bg); padding:.8rem 0; }
+  button { background:var(--accent); color:#fff; border:0; padding:.6rem 1.3rem;
+           font-size:1rem; border-radius:6px; cursor:pointer; }
+  button.ghost { background:#fff; color:var(--accent); border:1px solid var(--accent); margin-left:.5rem; }
+  #score { font-size:1.2rem; font-weight:700; margin-left:1rem; }
+  .qmark { float:right; font-weight:700; display:none; }
+  .qmark.show{display:inline;}
+</style>
+</head>
+<body>
+<h1>QCM — TP2 : La marche aléatoire, du graphe au texte</h1>
+<div class="meta">Source : site/docs/modelisation/tp2-marche-aleatoire.md — 10 questions</div>
+<div class="consignes">Cochez la bonne réponse. Une seule réponse est correcte par question. Toutes les valeurs numériques citées sont celles mesurées pendant le TP.</div>
+<form id="qcm"></form>
+<div class="bar">
+  <button type="button" onclick="grade()">Valider mes réponses</button>
+  <button type="button" class="ghost" onclick="location.reload()">Réinitialiser</button>
+  <span id="score"></span>
+</div>
+<script>
+const DATA = {"questions": [{"_enonce": "Qu'est-ce qui fait d'une matrice carrée une matrice de transition ?", "_multiple": false, "difficulte": "facile", "theme": "Matrice de transition", "source_fichier": "tp2-marche-aleatoire.md", "_source": "tp2-marche-aleatoire.md", "options": [{"_texte": "Chacune de ses lignes est une loi de probabilité, donc somme à 1", "correcte": true, "_justification": "À chaque pas, la marche part quelque part avec certitude : la ligne <code>i<\/code> est la loi de la destination depuis l'état <code>i<\/code>."}, {"_texte": "Chacune de ses colonnes somme à 1", "correcte": false, "_justification": "Les colonnes de <code>P<\/code> valent ici <code>[2.2, 1.033, 2.033, 1.0, 0.2, 0.2, 0.333]<\/code> : aucune raison de sommer à 1, et celle qui le fait est une coïncidence."}, {"_texte": "Elle est symétrique", "correcte": false, "_justification": "Un lien de <code>i<\/code> vers <code>j<\/code> n'implique pas un lien de <code>j<\/code> vers <code>i<\/code> : la matrice d'un graphe orienté n'est pas symétrique."}, {"_texte": "Tous ses coefficients sont égaux", "correcte": false, "_justification": "Ce serait le cas très particulier d'un graphe complet à poids uniformes, sans aucun intérêt."}]}, {"_enonce": "En partant de la page <code>contact<\/code> puis d'une loi uniforme, les distributions après 30 pas coïncident à <code>2.53e-04<\/code> près. Qu'est-ce que cela illustre ?", "_multiple": false, "difficulte": "moyen", "theme": "Distribution stationnaire", "source_fichier": "tp2-marche-aleatoire.md", "_source": "tp2-marche-aleatoire.md", "options": [{"_texte": "La marche converge vers une distribution stationnaire qui ne dépend que du graphe", "correcte": true, "_justification": "C'est l'exercice 2.1 : le point de départ est oublié, seule la structure des liens détermine la limite."}, {"_texte": "Les deux calculs sont identiques parce que 30 pas ne suffisent pas à différencier quoi que ce soit", "correcte": false, "_justification": "C'est l'inverse : 30 pas suffisent au contraire à effacer la différence entre deux départs opposés."}, {"_texte": "Le graphe est symétrique", "correcte": false, "_justification": "Il ne l'est pas, et la convergence vers une distribution stationnaire n'exige aucune symétrie."}, {"_texte": "L'écart est un artefact d'arrondi des flottants", "correcte": false, "_justification": "L'écart de <code>2.53e-04<\/code> est bien au-dessus de la précision machine : c'est une convergence encore incomplète, pas du bruit numérique."}]}, {"_enonce": "La méthode utilisée à l'étape 2 pour atteindre la distribution stationnaire est-elle nouvelle ?", "_multiple": false, "difficulte": "moyen", "theme": "Lien avec le TP1", "source_fichier": "tp2-marche-aleatoire.md", "_source": "tp2-marche-aleatoire.md", "options": [{"_texte": "Non : c'est la puissance itérée du TP1, appliquée au vecteur propre à gauche de <code>P<\/code> pour la valeur propre 1", "correcte": true, "_justification": "Multiplier répétitivement par <code>P<\/code> aligne n'importe quel vecteur de départ sur la direction dominante, exactement comme au TP1."}, {"_texte": "Oui : la puissance itérée ne s'applique qu'aux matrices symétriques", "correcte": false, "_justification": "Elle ne demande aucune symétrie, seulement une valeur propre dominante bien séparée des autres."}, {"_texte": "Oui : il s'agit d'une résolution de système linéaire", "correcte": false, "_justification": "On peut effectivement poser le problème comme un système, mais ce n'est pas ce que fait le code : il itère un produit matrice-vecteur."}, {"_texte": "Non : c'est une décomposition en valeurs singulières", "correcte": false, "_justification": "La SVD calcule tout le spectre ; ici on ne cherche qu'un seul vecteur propre, et l'itération suffit."}]}, {"_enonce": "La page <code>contact<\/code> perd tous ses liens sortants et sa ligne de <code>P<\/code> devient nulle. Que devient la masse totale de probabilité au fil des pas ?", "_multiple": false, "difficulte": "moyen", "theme": "Nœuds puits", "source_fichier": "tp2-marche-aleatoire.md", "_source": "tp2-marche-aleatoire.md", "options": [{"_texte": "Elle décroît : <code>0.857143<\/code> après un pas, <code>0.203199<\/code> après cent", "correcte": true, "_justification": "Une ligne nulle n'est pas une loi de probabilité : la matrice n'est plus stochastique et la masse fuit par le puits."}, {"_texte": "Elle reste égale à 1, la probabilité se conservant toujours", "correcte": false, "_justification": "La conservation vient précisément de la stochasticité des lignes, qui est perdue ici."}, {"_texte": "Elle augmente, la masse se concentrant sur les pages restantes", "correcte": false, "_justification": "Rien ne crée de la probabilité ; le calcul mesuré montre une décroissance monotone."}, {"_texte": "Le calcul lève une exception", "correcte": false, "_justification": "<code>np.divide<\/code> avec <code>where<\/code> produit une ligne de zéros sans broncher : l'erreur est silencieuse, c'est tout le problème."}]}, {"_enonce": "À quoi sert le terme <code>(1 - d) / n<\/code> ajouté à chaque itération de PageRank ?", "_multiple": false, "difficulte": "moyen", "theme": "PageRank", "source_fichier": "tp2-marche-aleatoire.md", "_source": "tp2-marche-aleatoire.md", "options": [{"_texte": "Il modélise un saut vers une page au hasard, ce qui règle à la fois les puits et les groupes de pages dont on ne ressort pas", "correcte": true, "_justification": "C'est l'amortissement de Brin et Page : avec probabilité <code>1 - d<\/code>, l'internaute abandonne les liens et recommence ailleurs."}, {"_texte": "Il normalise le vecteur pour qu'il somme à 1", "correcte": false, "_justification": "La somme vaut 1 parce que <code>P<\/code> est stochastique et que les deux termes sont pondérés par <code>d<\/code> et <code>1 - d<\/code> ; ce n'est pas le rôle du terme."}, {"_texte": "Il accélère la convergence quelle que soit la valeur de <code>d<\/code>", "correcte": false, "_justification": "L'effet est l'inverse quand <code>d<\/code> grandit : 27 itérations à <code>d = 0.5<\/code>, 104 à <code>d = 0.99<\/code>."}, {"_texte": "Il corrige les erreurs d'arrondi des flottants", "correcte": false, "_justification": "Le problème qu'il résout est structurel, pas numérique : il existerait à l'identique en arithmétique exacte."}]}, {"_enonce": "<code>accueil<\/code> et <code>tp<\/code> reçoivent chacune quatre liens entrants, mais PageRank donne <code>0.3167<\/code> à <code>tp<\/code> et <code>0.2152<\/code> à <code>accueil<\/code>. Pourquoi ?", "_multiple": false, "difficulte": "difficile", "theme": "PageRank", "source_fichier": "tp2-marche-aleatoire.md", "_source": "tp2-marche-aleatoire.md", "options": [{"_texte": "Parce qu'un lien vaut le rang de la page qui le pose, divisé par le nombre de liens qu'elle pose", "correcte": true, "_justification": "<code>exos<\/code> ne cite que <code>tp<\/code> et lui reverse tout son rang, alors que les citations de <code>accueil<\/code> viennent de pages faibles ou qui partagent leur rang entre plusieurs destinations."}, {"_texte": "Parce que <code>tp<\/code> a plus de liens sortants", "correcte": false, "_justification": "<code>tp<\/code> en a deux et <code>accueil<\/code> trois : c'est l'inverse, et les liens sortants ne font pas monter le rang de la page qui les pose."}, {"_texte": "Parce que l'amortissement favorise les pages placées en fin de liste", "correcte": false, "_justification": "L'amortissement traite toutes les pages à égalité : c'est un saut uniforme."}, {"_texte": "Parce que le calcul n'a pas convergé", "correcte": false, "_justification": "Il a convergé en 63 itérations à une tolérance de <code>1e-12<\/code>, et networkx retrouve le même résultat à <code>4e-13<\/code> près."}]}, {"_enonce": "Un assistant écrit <code>A / A.sum(axis=0)<\/code> au lieu de <code>A / A.sum(axis=1, keepdims=True)<\/code>. Que se passe-t-il ?", "_multiple": false, "difficulte": "difficile", "theme": "Pièges d'implémentation", "source_fichier": "tp2-marche-aleatoire.md", "_source": "tp2-marche-aleatoire.md", "options": [{"_texte": "Aucune erreur, le résultat somme encore à 1, mais le classement change et <code>accueil<\/code> passe devant <code>tp<\/code>", "correcte": true, "_justification": "C'est l'encadré du TP : les lignes ne sont plus stochastiques, rien ne le signale, et seul le classement trahit l'erreur."}, {"_texte": "Le code lève une erreur de dimension", "correcte": false, "_justification": "Les deux divisions ont des formes compatibles par diffusion : c'est justement ce qui rend l'erreur silencieuse."}, {"_texte": "Le résultat ne somme plus à 1, ce qui alerte immédiatement", "correcte": false, "_justification": "La somme vaut encore <code>1.0<\/code>, parce que l'itération de PageRank renormalise de fait à chaque pas."}, {"_texte": "Le classement est identique, seule la vitesse de convergence change", "correcte": false, "_justification": "Les deux classements diffèrent dès la première place, et sur presque tout l'ordre."}]}, {"_enonce": "Sur la matrice de bigrammes construite à partir des deux fables, que vaut la probabilité que <code>'u'<\/code> suive <code>'q'<\/code> ?", "_multiple": false, "difficulte": "facile", "theme": "Modèle de langue", "source_fichier": "tp2-marche-aleatoire.md", "_source": "tp2-marche-aleatoire.md", "options": [{"_texte": "1.00 : la matrice a appris seule une règle orthographique du français", "correcte": true, "_justification": "Aucune autre lettre ne suit jamais <code>q<\/code> dans le corpus, et personne n'a énoncé la règle au programme."}, {"_texte": "Environ 0.5, à égalité avec l'espace", "correcte": false, "_justification": "L'espace après <code>q<\/code> a une probabilité nulle dans ce corpus."}, {"_texte": "1/25, comme toutes les transitions", "correcte": false, "_justification": "Ce serait le cas d'un modèle uniforme, qui n'aurait rien appris du texte."}, {"_texte": "0, car <code>q<\/code> n'apparaît pas dans le corpus", "correcte": false, "_justification": "<code>q<\/code> apparaît, notamment dans « que », « qui » et « quelque »."}]}, {"_enonce": "Seules 195 des 625 cases de la matrice de bigrammes sont non nulles. Quelle est la bonne lecture de ce fait ?", "_multiple": false, "difficulte": "difficile", "theme": "Limites du modèle", "source_fichier": "tp2-marche-aleatoire.md", "_source": "tp2-marche-aleatoire.md", "options": [{"_texte": "Le modèle déclare impossibles des paires qu'il n'a simplement jamais vues, faute de corpus", "correcte": true, "_justification": "C'est le problème du zéro non observé : un modèle ne distingue pas tout seul ce qu'il a vu être faux de ce qu'il n'a pas vu."}, {"_texte": "Les deux tiers des paires de lettres sont réellement impossibles en français", "correcte": false, "_justification": "Beaucoup de paires absentes du corpus sont parfaitement courantes ailleurs : le corpus fait 1229 caractères."}, {"_texte": "La matrice est mal construite", "correcte": false, "_justification": "Elle est correctement construite ; c'est la quantité de données qui est faible, pas le code."}, {"_texte": "Il faudrait augmenter la température pour combler les zéros", "correcte": false, "_justification": "La température déforme les probabilités non nulles ; elle ne peut rien faire d'une probabilité exactement nulle."}]}, {"_enonce": "L'entropie vaut <code>4.6439<\/code> bits par caractère pour un tirage uniforme, <code>3.9813<\/code> avec les fréquences des lettres et <code>2.9321<\/code> avec le modèle de bigrammes. Que mesure l'écart entre les deux dernières valeurs ?", "_multiple": false, "difficulte": "difficile", "theme": "Théorie de l'information", "source_fichier": "tp2-marche-aleatoire.md", "_source": "tp2-marche-aleatoire.md", "options": [{"_texte": "L'information que le caractère précédent apporte sur le suivant, soit une information mutuelle d'environ un bit", "correcte": true, "_justification": "C'est la différence entre entropie marginale et entropie conditionnelle, les notions du TP10 d'IA prédictive appliquées au langage."}, {"_texte": "L'erreur d'estimation due à la taille du corpus", "correcte": false, "_justification": "Le corpus est petit, mais l'écart mesuré est bien un gain d'information apporté par le contexte, pas une incertitude d'estimation."}, {"_texte": "La perplexité du modèle", "correcte": false, "_justification": "La perplexité est <code>2<\/code> élevé à la puissance de l'entropie conditionnelle, pas la différence entre deux entropies."}, {"_texte": "Le nombre de bits nécessaires pour stocker la matrice", "correcte": false, "_justification": "L'entropie mesure une incertitude par caractère du texte, pas la taille du modèle."}]}]};
+const form = document.getElementById('qcm');
+DATA.questions.forEach((q, i) => {
+  const multi = q._multiple;
+  const div = document.createElement('div');
+  div.className = 'q'; div.id = 'q'+i;
+  let badges = '';
+  if (q.difficulte) badges += `<span class="badge b-${q.difficulte}">${q.difficulte}</span>`;
+  if (q.theme) badges += `<span class="badge b-theme">${q.theme}</span>`;
+  const hint = multi ? ' <small>(plusieurs réponses)</small>' : '';
+  let html = `<span class="qmark" id="m${i}"></span><h3>Question ${i+1}${hint}${badges}</h3>`;
+  html += `<div class="enonce">${q._enonce}</div>`;
+  q.options.forEach((o, j) => {
+    const type = multi ? 'checkbox' : 'radio';
+    html += `<label class="opt" id="o${i}_${j}">`
+          + `<input type="${type}" name="q${i}" value="${j}">${o._texte}</label>`;
+    html += `<div class="just" id="j${i}_${j}">${o._justification||''}</div>`;
+  });
+  if (q.source_fichier) html += `<div class="src" id="s${i}">Source : ${q._source}</div>`;
+  div.innerHTML = html;
+  form.appendChild(div);
+});
+function grade(){
+  let correct = 0;
+  DATA.questions.forEach((q, i) => {
+    const chosen = [...form.querySelectorAll(`input[name=q${i}]:checked`)].map(e=>+e.value);
+    const good = q.options.map((o,j)=>o.correcte?j:-1).filter(j=>j>=0);
+    const ok = chosen.length===good.length && chosen.every(j=>good.includes(j));
+    if (ok) correct++;
+    q.options.forEach((o,j)=>{
+      const lab = document.getElementById(`o${i}_${j}`);
+      lab.classList.remove('correct','wrong');
+      if (o.correcte) lab.classList.add('correct');
+      else if (chosen.includes(j)) lab.classList.add('wrong');
+      const ju = document.getElementById(`j${i}_${j}`);
+      if (ju && o._justification) ju.classList.add('show');
+    });
+    const m = document.getElementById('m'+i);
+    m.textContent = ok ? '✓' : '✗';
+    m.style.color = ok ? 'var(--ok)' : 'var(--ko)';
+    m.classList.add('show');
+    const s = document.getElementById('s'+i); if (s) s.classList.add('show');
+  });
+  const n = DATA.questions.length;
+  const pct = Math.round(100*correct/n);
+  const sc = document.getElementById('score');
+  sc.textContent = `Score : ${correct} / ${n}  (${pct} %)`;
+  sc.style.color = pct>=50 ? 'var(--ok)' : 'var(--ko)';
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+</script>
+</body>
+</html>

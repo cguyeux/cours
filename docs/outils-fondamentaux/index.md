@@ -89,3 +89,12 @@ terrain qui soit pour éprouver le coût d'un algorithme. Le même problème, te
 nombre est premier, se résout de trois manières qui donnent toutes la bonne réponse, et
 dont les temps de calcul diffèrent d'un facteur un million. Aucun autre sujet du programme
 ne rend cette leçon aussi tangible en une séance.
+
+## Projet et évaluation
+
+Le module est validé par un **projet personnel** accompagné de **vos solutions aux TP**, le
+tout dans un dépôt GitHub à m'envoyer **quatorze jours après la dernière séance**. Le sujet
+du projet est libre, mais il doit exploiter réellement les notions vues ici, et c'est la
+profondeur de cette exploitation qui fait la note.
+
+[Ce qu'il faut rendre, quand, et comment c'est noté](evaluation.md){ .md-button .md-button--primary }

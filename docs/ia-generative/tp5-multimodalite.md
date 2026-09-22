@@ -346,4 +346,5 @@ Vous devez pouvoir, sans regarder le corrigé :
 - [ ] décrire, en une phrase, un pipeline qui enchaîne au moins deux modalités.
 
 [Le QCM du TP5](qcm/qcm_tp5.html){ .md-button target=_blank }
-[Retour au module IA générative](index.md){ .md-button .md-button--primary }
+[Projet et évaluation](../ia/evaluation.md){ .md-button .md-button--primary }
+[Retour au module IA générative](index.md){ .md-button }

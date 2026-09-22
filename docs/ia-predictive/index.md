@@ -45,3 +45,14 @@ paramètres scikit-learn et XGBoost supprimés ou déplacés, une bibliothèque 
 corrigés bien réels mais mal classés dans le corpus source (voir le journal du projet
 pour le détail). Chaque décalage est documenté directement sur la page concernée plutôt
 que caché.
+
+## Projet et évaluation
+
+Les deux modules d'IA, génératif et prédictif, donnent lieu à **un seul rendu commun** :
+un **projet personnel** accompagné de **vos solutions aux TP des deux modules**, dans un
+dépôt GitHub à m'envoyer **quatorze jours après la dernière séance**. Il n'y a donc qu'un
+projet à mener, et vous pouvez l'appuyer sur l'un des deux versants ou sur les deux. Le
+sujet est libre, mais c'est la profondeur avec laquelle il exploite les notions vues en TP
+qui fait la note.
+
+[Ce qu'il faut rendre, quand, et comment c'est noté](../ia/evaluation.md){ .md-button .md-button--primary }

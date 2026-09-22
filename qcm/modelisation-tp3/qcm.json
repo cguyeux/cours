@@ -1,0 +1,318 @@
+{
+  "titre": "QCM — TP3 : Dériver, descendre, diverger",
+  "source": "site/docs/modelisation/tp3-gradient-bifurcation.md",
+  "langue": "fr",
+  "consignes": "Cochez la bonne réponse. Une seule réponse est correcte par question. Toutes les valeurs numériques citées sont celles mesurées pendant le TP.",
+  "questions": [
+    {
+      "id": 1,
+      "enonce": "Pourquoi l'erreur d'une dérivée par différence finie remonte-t-elle quand `h` devient très petit ?",
+      "type": "unique",
+      "difficulte": "facile",
+      "theme": "Différence finie",
+      "source_fichier": "tp3-gradient-bifurcation.md",
+      "points": 1,
+      "options": [
+        {
+          "texte": "Parce qu'on soustrait deux nombres de plus en plus proches, puis qu'on divise par un nombre de plus en plus petit",
+          "correcte": true,
+          "justification": "C'est l'élimination catastrophique : la soustraction détruit les chiffres significatifs, et la division par `h` amplifie ce qu'il en reste."
+        },
+        {
+          "texte": "Parce que le développement de Taylor devient faux pour les petits `h`",
+          "correcte": false,
+          "justification": "C'est l'inverse : l'erreur de troncature du développement de Taylor, elle, diminue quand `h` diminue. C'est bien pour cela qu'il y a un compromis."
+        },
+        {
+          "texte": "Parce que la fonction n'est plus dérivable à cette échelle",
+          "correcte": false,
+          "justification": "La dérivabilité est une propriété de la fonction mathématique, indépendante de `h` et de l'arithmétique flottante."
+        },
+        {
+          "texte": "Parce que `math.exp` perd en précision près de zéro",
+          "correcte": false,
+          "justification": "Le phénomène se produit avec n'importe quelle fonction, y compris un polynôme évalué exactement."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "enonce": "Sur `f(x) = exp(sin(x))` en `x = 1.5`, quel est l'ordre de grandeur du meilleur pas mesuré pour la différence **centrée**, et l'erreur relative qu'il atteint ?",
+      "type": "unique",
+      "difficulte": "moyenne",
+      "theme": "Différence finie",
+      "source_fichier": "tp3-gradient-bifurcation.md",
+      "points": 1,
+      "options": [
+        {
+          "texte": "`h ≈ 6.3e-06` pour une erreur de `1.0e-11`",
+          "correcte": true,
+          "justification": "Mesuré sur une grille fine, à comparer à la prédiction théorique `eps**(1/3) = 6.06e-06`, qui tombe au bon ordre de grandeur."
+        },
+        {
+          "texte": "`h ≈ 1e-16` pour une erreur nulle",
+          "correcte": false,
+          "justification": "À `h = 1e-16`, l'erreur relative mesurée vaut `1.000e+00` : la dérivée obtenue n'a plus aucun chiffre juste."
+        },
+        {
+          "texte": "`h ≈ 4.5e-09` pour une erreur de `2.1e-08`",
+          "correcte": false,
+          "justification": "Ce sont les valeurs de la différence **avant**, pas de la centrée, qui fait bien mieux pour un pas bien plus grand."
+        },
+        {
+          "texte": "`h ≈ 1e-01` : plus le pas est grand, plus c'est stable",
+          "correcte": false,
+          "justification": "À `h = 1e-01` l'erreur centrée vaut `6.620e-03`, soit huit ordres de grandeur de plus qu'au pas optimal : l'erreur de troncature domine."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "enonce": "Dans un nombre dual `a + b·ε`, quelle propriété de `ε` fait apparaître la règle de dérivation d'un produit ?",
+      "type": "unique",
+      "difficulte": "facile",
+      "theme": "Nombres duaux",
+      "source_fichier": "tp3-gradient-bifurcation.md",
+      "points": 1,
+      "options": [
+        {
+          "texte": "`ε² = 0` alors que `ε ≠ 0`",
+          "correcte": true,
+          "justification": "Le produit `(a+bε)(c+dε)` donne `ac + (ad+bc)ε + bd·ε²`, et l'annulation du dernier terme laisse exactement `ad + bc`, la dérivée d'un produit."
+        },
+        {
+          "texte": "`ε` est infiniment petit mais non nul",
+          "correcte": false,
+          "justification": "Formulation d'analyse non standard, séduisante mais inutile ici : le calcul repose sur une règle algébrique exacte, `ε² = 0`, implémentable en flottants."
+        },
+        {
+          "texte": "`ε = sqrt(-1)`",
+          "correcte": false,
+          "justification": "C'est l'unité imaginaire des nombres complexes, dont le carré vaut `-1` et non `0`. La structure obtenue serait différente."
+        },
+        {
+          "texte": "`ε` vaut l'epsilon machine, soit `2.22e-16`",
+          "correcte": false,
+          "justification": "Aucun rapport : `ε` n'est pas un petit nombre, c'est un symbole. Aucune valeur numérique ne lui est jamais attribuée dans la classe `Dual`."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "enonce": "La dérivée de `exp(sin(x))` en `1.5` obtenue par nombres duaux est comparée à la dérivée analytique. Quel est l'écart mesuré ?",
+      "type": "unique",
+      "difficulte": "moyenne",
+      "theme": "Nombres duaux",
+      "source_fichier": "tp3-gradient-bifurcation.md",
+      "points": 1,
+      "options": [
+        {
+          "texte": "Exactement `0.0` : les deux nombres flottants sont identiques bit à bit",
+          "correcte": true,
+          "justification": "La classe `Dual` enchaîne rigoureusement les mêmes opérations flottantes que `cos(x) * exp(sin(x))`. La dérivation automatique n'approche pas la dérivée, elle l'évalue."
+        },
+        {
+          "texte": "Environ `1e-11`, soit le niveau d'une bonne différence finie",
+          "correcte": false,
+          "justification": "`1.0e-11` est l'erreur de la différence **centrée** à son pas optimal. Les duaux font strictement mieux : ils ne se trompent pas du tout."
+        },
+        {
+          "texte": "Environ `1e-16`, l'epsilon machine",
+          "correcte": false,
+          "justification": "Il n'y a même pas d'erreur d'arrondi supplémentaire : le résultat est le même flottant, pas un flottant voisin."
+        },
+        {
+          "texte": "L'écart dépend du `h` choisi dans la classe `Dual`",
+          "correcte": false,
+          "justification": "Il n'y a aucun `h` dans la classe `Dual`. C'est précisément ce qui la distingue d'une différence finie."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "enonce": "La fonction `rosenbrock` n'a pas été écrite pour les nombres duaux, et se dérive pourtant sans être modifiée. Pourquoi ?",
+      "type": "unique",
+      "difficulte": "moyenne",
+      "theme": "Gradient automatique",
+      "source_fichier": "tp3-gradient-bifurcation.md",
+      "points": 1,
+      "options": [
+        {
+          "texte": "Parce qu'elle n'utilise que `+`, `-`, `*` et `**`, et que Python choisit l'implémentation de ces opérateurs selon le type reçu",
+          "correcte": true,
+          "justification": "C'est tout le bénéfice de la surcharge d'opérateurs : le même code source s'évalue sur des flottants ou se dérive sur des duaux."
+        },
+        {
+          "texte": "Parce que numpy détecte automatiquement les dérivées",
+          "correcte": false,
+          "justification": "numpy ne sait pas dériver. Ici il ne sert qu'à ranger les résultats dans un tableau."
+        },
+        {
+          "texte": "Parce que `gradient` réécrit le code source de la fonction",
+          "correcte": false,
+          "justification": "Aucune réécriture n'a lieu. Certaines bibliothèques de dérivation procèdent ainsi par transformation de source, mais pas celle-ci."
+        },
+        {
+          "texte": "Parce que Rosenbrock est un polynôme, et que les polynômes sont un cas particulier",
+          "correcte": false,
+          "justification": "La méthode marche tout aussi bien sur `exp(sin(x))`, comme à l'étape 2, dès lors que chaque fonction élémentaire a sa règle."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "enonce": "Sur Rosenbrock, la descente à pas fixe `2e-3` laisse `f = 0.000055` après 5000 itérations, là où BFGS atteint `f = 2.535e-15`. Qu'est-ce que BFGS utilise que la descente à pas fixe ignore ?",
+      "type": "unique",
+      "difficulte": "moyenne",
+      "theme": "Descente de gradient",
+      "source_fichier": "tp3-gradient-bifurcation.md",
+      "points": 1,
+      "options": [
+        {
+          "texte": "Une approximation de la courbure, accumulée au fil des itérations",
+          "correcte": true,
+          "justification": "Elle lui donne à la fois la direction et la longueur du pas, ce qui explique qu'il n'ait aucun `η` à régler et qu'il ait fini en 32 itérations et 39 évaluations."
+        },
+        {
+          "texte": "Un gradient plus précis que celui des nombres duaux",
+          "correcte": false,
+          "justification": "C'est exactement le même gradient : on le lui a fourni par l'argument `jac`."
+        },
+        {
+          "texte": "Un tirage aléatoire qui lui permet de sortir des minima locaux",
+          "correcte": false,
+          "justification": "BFGS est entièrement déterministe, et Rosenbrock n'a de toute façon qu'un seul minimum."
+        },
+        {
+          "texte": "Un pas beaucoup plus grand, gardé constant",
+          "correcte": false,
+          "justification": "Son pas n'est pas constant : il est déterminé à chaque itération par une recherche linéaire guidée par la courbure estimée."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "enonce": "Le pas `0.01`, souvent proposé comme valeur usuelle, est appliqué à Rosenbrock depuis `(-1.2, 1)`. Que se passe-t-il ?",
+      "type": "unique",
+      "difficulte": "moyenne",
+      "theme": "Choix du pas",
+      "source_fichier": "tp3-gradient-bifurcation.md",
+      "points": 1,
+      "options": [
+        {
+          "texte": "`f` explose en quelques itérations et vaut `inf` dès la sixième, sans aucune exception levée",
+          "correcte": true,
+          "justification": "Mesuré : `9.333e+01`, `4.704e+04`, `2.530e+12`, `4.146e+35`, `1.824e+105`, puis `inf`. Seul un `RuntimeWarning` d'overflow apparaît, et des `nan` se propagent ensuite en silence."
+        },
+        {
+          "texte": "La descente converge lentement mais sûrement",
+          "correcte": false,
+          "justification": "Elle ne converge pas du tout : `f` est multipliée par plusieurs ordres de grandeur à chaque itération."
+        },
+        {
+          "texte": "Python lève une `OverflowError` qui signale le problème",
+          "correcte": false,
+          "justification": "Les flottants numpy débordent vers `inf` sans exception. C'est justement ce qui rend l'échec difficile à repérer dans un programme plus gros."
+        },
+        {
+          "texte": "Le même pas échouerait sur n'importe quelle fonction",
+          "correcte": false,
+          "justification": "Sur `f(x,y) = (x²+y²)/2`, le même `0.01` converge parfaitement, jusqu'à `2.6e-09` de l'optimum. Un pas n'est bon ou mauvais que relativement à la courbure."
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "enonce": "Sur une fonction quadratique dont la plus grande valeur propre de la matrice des dérivées secondes est `L`, que se passe-t-il exactement au pas `η = 2/L` ?",
+      "type": "unique",
+      "difficulte": "difficile",
+      "theme": "Seuil du pas",
+      "source_fichier": "tp3-gradient-bifurcation.md",
+      "points": 1,
+      "options": [
+        {
+          "texte": "Le facteur `1 - η·λ` vaut `-1` : le point saute d'un côté à l'autre du minimum sans jamais s'en approcher",
+          "correcte": true,
+          "justification": "La norme après 200 itérations vaut `1.414e+00`, c'est-à-dire exactement la norme de départ. Ni convergence ni divergence."
+        },
+        {
+          "texte": "La convergence est atteinte en une seule itération",
+          "correcte": false,
+          "justification": "C'est le cas du pas `η = 1/L`, où le facteur vaut `0` : la norme mesurée tombe alors à `0.000e+00`."
+        },
+        {
+          "texte": "La descente diverge immédiatement vers l'infini",
+          "correcte": false,
+          "justification": "La divergence commence strictement au-delà : à `η = 2.05/L`, la norme atteint `2.446e+04` et continue de croître."
+        },
+        {
+          "texte": "La convergence est la plus rapide possible",
+          "correcte": false,
+          "justification": "C'est le pire pas admissible, pas le meilleur. Le plus rapide sur une quadratique isotrope est `η = 1/L`."
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "enonce": "À pas `η = 1.9/L` et 200 itérations, `κ = 10` converge **mieux** que `κ = 1` (`7.06e-10` contre `9.98e-10`). Pourquoi le conditionnement ne coûte-t-il rien dans ce cas ?",
+      "type": "unique",
+      "difficulte": "difficile",
+      "theme": "Conditionnement",
+      "source_fichier": "tp3-gradient-bifurcation.md",
+      "points": 1,
+      "options": [
+        {
+          "texte": "Parce que la vitesse est fixée par le plus grand des deux facteurs en valeur absolue, et que la direction molle (`1 - 1.9/κ = 0.81`) s'écrase encore plus vite que la raide (`-0.9`)",
+          "correcte": true,
+          "justification": "La direction molle ne devient limitante qu'au-delà de `κ = 19`, où `|1 - 1.9/κ|` dépasse `0.9`. À `κ = 30` puis `100`, la norme remonte bien à `2.07e-06` puis `2.16e-02`."
+        },
+        {
+          "texte": "Parce que le conditionnement n'a aucun effet sur la vitesse d'une descente de gradient",
+          "correcte": false,
+          "justification": "Il en a un, et il est violent : à `κ = 100`, la descente a pratiquement cessé d'avancer après 200 itérations."
+        },
+        {
+          "texte": "Parce que le pas a été adapté à `κ`, ce qui compense exactement",
+          "correcte": false,
+          "justification": "Le pas est bien adapté à `L`, mais cela ne compense rien : c'est justement ce qui rend la direction molle de plus en plus lente quand `κ` grandit."
+        },
+        {
+          "texte": "Parce que `κ = 1` souffre d'une erreur d'arrondi supplémentaire",
+          "correcte": false,
+          "justification": "Aucun arrondi n'est en cause. À `κ = 1` les deux coordonnées convergent au même rythme `0.9`, d'où un facteur `√2` sur la norme : `9.977e-10` contre `7.055e-10`."
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "enonce": "La descente de gradient sur `f(x) = x²/2 - x³/3` avec un pas `η` entre `2` et `3` : que fait-elle ?",
+      "type": "unique",
+      "difficulte": "difficile",
+      "theme": "Bifurcation",
+      "source_fichier": "tp3-gradient-bifurcation.md",
+      "points": 1,
+      "options": [
+        {
+          "texte": "Elle s'installe sur un cycle de 2 points, puis 4, puis 8, puis devient chaotique, et ne diverge qu'au-delà de `η = 3`",
+          "correcte": true,
+          "justification": "Cycle de 2 dès `η = 2.01`, de 4 dès `2.45`, de 8 vers `2.55`, plus aucune répétition à partir de `2.57`, et divergence dès `3.0001`. Ce sont les seuils de la suite logistique, décalés de 1."
+        },
+        {
+          "texte": "Elle diverge dès que `η` dépasse `2`, comme sur une quadratique",
+          "correcte": false,
+          "justification": "C'est vrai d'une quadratique, mais faux ici : la suite reste bornée jusqu'à `η = 3.0` inclus, sans pour autant converger."
+        },
+        {
+          "texte": "Elle converge vers le minimum, simplement plus lentement",
+          "correcte": false,
+          "justification": "Elle ne converge plus du tout : à `η = 2.1`, le régime établi visite indéfiniment deux valeurs, `-0.128646` et `0.176265`, qui encadrent le minimum sans l'atteindre."
+        },
+        {
+          "texte": "Elle trouve un autre minimum de la fonction",
+          "correcte": false,
+          "justification": "La fonction n'a qu'un minimum local, en `x = 0` ; l'autre point critique, `x = 1`, est un maximum. Aucun des cycles observés n'est un point critique."
+        }
+      ]
+    }
+  ]
+}
