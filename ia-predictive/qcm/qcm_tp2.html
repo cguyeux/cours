@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QCM — TP2 : Clustering, méthodes modernes et évaluation</title>
+<style>
+  :root { --ok:#1b8a5a; --ko:#c0392b; --accent:#2c5f8a; --bg:#f6f7f9; }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, "Segoe UI", Roboto, sans-serif; line-height:1.5;
+         max-width: 820px; margin: 0 auto; padding: 1.5rem; color:#1a1a1a; background:var(--bg); }
+  h1 { color: var(--accent); margin-bottom:.2rem; }
+  .meta { color:#666; font-size:.9rem; margin-bottom:1rem; }
+  .consignes { background:#eef3f8; border-left:4px solid var(--accent); padding:.6rem .9rem;
+               border-radius:4px; margin-bottom:1.2rem; }
+  .q { background:#fff; border:1px solid #e1e4e8; border-radius:8px; padding:1rem 1.2rem;
+       margin-bottom:1rem; box-shadow:0 1px 2px rgba(0,0,0,.04); }
+  .q h3 { margin:.1rem 0 .2rem; font-size:1.05rem; }
+  .badge { font-size:.72rem; font-weight:600; padding:.1rem .5rem; border-radius:10px;
+           margin-left:.4rem; vertical-align:middle; }
+  .b-facile{background:#e3f4ea;color:var(--ok);} .b-moyen{background:#fdf3e0;color:#b87600;}
+  .b-difficile{background:#fbe6e6;color:var(--ko);} .b-theme{background:#eef0f3;color:#555;}
+  .enonce { margin:.4rem 0 .8rem; }
+  .opt { display:block; padding:.45rem .6rem; border:1px solid #e1e4e8; border-radius:6px;
+         margin:.35rem 0; cursor:pointer; transition:background .12s; }
+  .opt:hover { background:#f0f4f8; }
+  .opt input { margin-right:.55rem; }
+  .opt.correct { border-color:var(--ok); background:#eaf7f0; }
+  .opt.wrong   { border-color:var(--ko); background:#fbecec; }
+  .just { font-size:.86rem; color:#555; margin:.2rem 0 0 1.7rem; display:none; }
+  .just.show { display:block; }
+  .src { font-size:.78rem; color:#888; margin-top:.5rem; display:none; }
+  .src.show { display:block; }
+  .bar { position:sticky; bottom:0; background:var(--bg); padding:.8rem 0; }
+  button { background:var(--accent); color:#fff; border:0; padding:.6rem 1.3rem;
+           font-size:1rem; border-radius:6px; cursor:pointer; }
+  button.ghost { background:#fff; color:var(--accent); border:1px solid var(--accent); margin-left:.5rem; }
+  #score { font-size:1.2rem; font-weight:700; margin-left:1rem; }
+  .qmark { float:right; font-weight:700; display:none; }
+  .qmark.show{display:inline;}
+</style>
+</head>
+<body>
+<h1>QCM — TP2 : Clustering, méthodes modernes et évaluation</h1>
+<div class="meta">Source : site/docs/ia-predictive/tp2-clustering.md — 10 questions</div>
+<div class="consignes">Cochez la bonne réponse. Une seule réponse est correcte par question. Toutes les valeurs numériques citées sont celles mesurées pendant le TP (scikit-learn 1.9.1, hdbscan 0.8.44, jeu synthétique de clients avec graine 0).</div>
+<form id="qcm"></form>
+<div class="bar">
+  <button type="button" onclick="grade()">Valider mes réponses</button>
+  <button type="button" class="ghost" onclick="location.reload()">Réinitialiser</button>
+  <span id="score"></span>
+</div>
+<script>
+const DATA = {"questions": [{"_enonce": "Dans le jeu de clients, <code>revenu<\/code> a un écart-type d'environ 19 300 et <code>score_depense<\/code> d'environ 28,5, <code>age<\/code> d'environ 5,9. Pourquoi K-Means sans normalisation donne-t-il un ARI de 0,295 contre 0,58 avec <code>StandardScaler<\/code> ?", "_multiple": false, "difficulte": "moyen", "theme": "Normalisation", "source_fichier": "tp2-clustering.md", "_source": "tp2-clustering.md", "options": [{"_texte": "K-Means refuse de converger sur des variables d'échelles différentes, et renvoie un résultat aléatoire", "correcte": false, "_justification": "K-Means converge et renvoie un résultat sans aucune erreur : c'est ce qui le rend trompeur. Le résultat n'est pas aléatoire, il est biaisé par une variable."}, {"_texte": "<code>StandardScaler<\/code> ajoute de l'information qui n'existe pas dans les données brutes", "correcte": false, "_justification": "La normalisation ne rajoute aucune information, elle ne change que les échelles pour que chaque variable pèse pareil dans la distance."}, {"_texte": "La distance euclidienne est dominée par <code>revenu<\/code>, dont l'échelle écrase les deux autres variables", "correcte": true, "_justification": "Mesuré : ARI 0,295 sans normalisation, 0,58 avec. C'est le piège de l'encadré « L'IA vous le donne en trois secondes »."}, {"_texte": "L'ARI ne se calcule correctement que sur des données centrées et réduites", "correcte": false, "_justification": "L'ARI compare deux partitions, il ne dépend pas de l'échelle des variables. C'est le clustering qui change, pas la mesure."}]}, {"_enonce": "K-Means avec <code>n_clusters=2<\/code> sur <code>make_moons(n_samples=500, noise=0.1, random_state=42)<\/code> donne un ARI de 0,265 contre les vraies étiquettes. Quelle explication est la bonne ?", "_multiple": false, "difficulte": "moyen", "theme": "Limites de K-Means", "source_fichier": "tp2-clustering.md", "_source": "tp2-clustering.md", "options": [{"_texte": "<code>n_init=10<\/code> est trop faible : avec davantage d'initialisations, l'ARI approcherait de 1", "correcte": false, "_justification": "Le défaut est structurel : même avec un très grand nombre d'initialisations, des centres et une frontière droite ne séparent pas deux croissants."}, {"_texte": "K-Means suppose des clusters à peu près sphériques : il coupe les deux croissants par une frontière droite, quelle que soit l'initialisation", "correcte": true, "_justification": "Exercice 1.1. Le défaut est structurel à la méthode, aucun réglage ne le corrige."}, {"_texte": "Il faut <code>n_clusters=3<\/code> pour que K-Means retrouve les deux croissants", "correcte": false, "_justification": "Ajouter un cluster ne rend pas la forme des croissants plus sphérique, et le « bon » nombre de clusters est bien 2."}, {"_texte": "Les données de <code>make_moons<\/code> ne sont pas normalisées, ce qui fausse K-Means", "correcte": false, "_justification": "Les deux coordonnées de <code>make_moons<\/code> sont déjà de même ordre de grandeur. Le problème est la forme des clusters, pas leur échelle."}]}, {"_enonce": "DBSCAN sur <code>make_moons<\/code> donne un ARI de 1,0 avec <code>eps=0.2<\/code>. Avec <code>eps=0.05<\/code>, on obtient 15 clusters et 395 points de bruit sur 500 ; avec <code>eps=1.0<\/code>, un seul cluster. Quelle lecture est exacte ?", "_multiple": false, "difficulte": "difficile", "theme": "Choix de eps", "source_fichier": "tp2-clustering.md", "_source": "tp2-clustering.md", "options": [{"_texte": "Un <code>eps<\/code> trop petit fragmente les clusters et rejette presque tous les points en bruit, un <code>eps<\/code> trop grand fusionne tout : le paramètre doit être calibré", "correcte": true, "_justification": "Mesuré : <code>eps=0.05<\/code> donne un ARI de 0,007 et <code>eps=1.0<\/code> un ARI de 0. Seule une valeur intermédiaire comme 0,2 retrouve les deux croissants."}, {"_texte": "Un <code>eps<\/code> plus grand est toujours préférable, car il rattache davantage de points à un cluster", "correcte": false, "_justification": "Avec <code>eps=1.0<\/code>, les deux croissants sont fusionnés en un seul cluster (ARI de 0) : rattacher plus de points n'est pas un gain si les clusters se confondent."}, {"_texte": "Un <code>eps<\/code> plus petit est toujours préférable, car il rend les clusters plus purs", "correcte": false, "_justification": "Avec <code>eps=0.05<\/code>, 395 points sur 500 sont étiquetés comme bruit et il reste 15 petits clusters : l'ARI s'effondre à 0,007."}, {"_texte": "<code>eps<\/code> n'a aucune influence sur le résultat de DBSCAN, seul <code>min_samples<\/code> compte", "correcte": false, "_justification": "Les trois valeurs testées donnent trois résultats radicalement différents (15 clusters, 2, puis 1)."}]}, {"_enonce": "Sur <code>make_moons<\/code>, le graphe des k-distances (distance au 5ᵉ voisin, triée) montre un coude autour de 0,158. Comment l'exploiter ?", "_multiple": false, "difficulte": "moyen", "theme": "Graphe des k-distances", "source_fichier": "tp2-clustering.md", "_source": "tp2-clustering.md", "options": [{"_texte": "Prendre cette valeur comme nombre de clusters, car le coude indique combien de groupes existent", "correcte": false, "_justification": "0,158 est une distance, pas un entier : le graphe estime <code>eps<\/code>, il ne compte pas les clusters."}, {"_texte": "Prendre cette valeur comme <code>min_samples<\/code>, le coude indiquant le nombre minimal de voisins", "correcte": false, "_justification": "<code>min_samples<\/code> est un nombre de voisins, fixé à 5 ici par construction du graphe (<code>n_neighbors=5<\/code>). Le coude donne une distance."}, {"_texte": "Ne rien en faire : le graphe des k-distances ne sert que si l'on utilise K-Means", "correcte": false, "_justification": "Ce graphe sert précisément à choisir <code>eps<\/code> pour DBSCAN, et sa logique est celle de la méthode du coude sur l'inertie de K-Means."}, {"_texte": "Prendre cette valeur comme ordre de grandeur de <code>eps<\/code> : avant le coude, les points sont dans une zone dense ; après, ils sont isolés ou en transition", "correcte": true, "_justification": "Exercice 2.1. La valeur mesurée (0,158 à l'indice 480) est cohérente avec le <code>eps=0.2<\/code> qui retrouve les deux croissants."}]}, {"_enonce": "Sur les données normalisées des clients, la silhouette vaut 0,273 pour <code>k=2<\/code>, 0,321 pour <code>k=4<\/code>, 0,347 pour <code>k=5<\/code>, 0,333 pour <code>k=6<\/code>. Quel <code>k<\/code> retient-on, et que valide ce résultat ?", "_multiple": false, "difficulte": "moyen", "theme": "Score de silhouette", "source_fichier": "tp2-clustering.md", "_source": "tp2-clustering.md", "options": [{"_texte": "<code>k=2<\/code>, car la silhouette la plus faible indique les clusters les mieux séparés", "correcte": false, "_justification": "C'est l'inverse : plus la silhouette est haute, meilleur est le regroupement. <code>k=2<\/code> a l'une des plus faibles."}, {"_texte": "<code>k=5<\/code>, maximum de silhouette, qui coïncide avec les 5 centres utilisés pour générer les données", "correcte": true, "_justification": "Exercice 3.1. Cette coïncidence n'est pas garantie sur des données réelles, dont le « bon » nombre de clusters n'est pas connu."}, {"_texte": "<code>k=8<\/code>, car l'inertie y est la plus basse (207,4)", "correcte": false, "_justification": "L'inertie diminue mécaniquement quand <code>k<\/code> augmente (652,7 pour k=2, 207,4 pour k=8) : elle ne peut pas désigner un <code>k<\/code>, il faut chercher un coude ou une silhouette maximale."}, {"_texte": "<code>k=6<\/code>, car la silhouette y est à peine inférieure à celle de <code>k=5<\/code>, donc équivalente", "correcte": false, "_justification": "Les valeurs sont proches, mais la silhouette maximale désigne <code>k=5<\/code>, qui est de plus le vrai nombre de groupes ici."}]}, {"_enonce": "Sur les données brutes (non normalisées), K-Means à 5 clusters obtient une silhouette de 0,558, supérieure aux 0,347 des données normalisées. Faut-il en conclure que le clustering brut est meilleur ?", "_multiple": false, "difficulte": "difficile", "theme": "Piège de la silhouette", "source_fichier": "tp2-clustering.md", "_source": "tp2-clustering.md", "options": [{"_texte": "Non : les deux silhouettes sont calculées dans des espaces différents, et dans l'espace brut c'est <code>revenu<\/code> seul qui structure la distance ; l'ARI contre les vrais groupes est de 0,295 contre 0,58", "correcte": true, "_justification": "Mesuré. Une silhouette ne compare que des partitions d'un même espace : une variable dominante peut donner une silhouette élevée à un regroupement qui ne reflète pas les vrais groupes."}, {"_texte": "Oui : une silhouette plus haute prouve toujours un meilleur accord avec les vrais groupes", "correcte": false, "_justification": "L'accord avec les vrais groupes se mesure par l'ARI, qui est ici de 0,295 contre 0,58 pour le clustering normalisé : le verdict est inverse."}, {"_texte": "Oui, mais seulement parce que les données brutes contiennent plus d'information", "correcte": false, "_justification": "Les données normalisées contiennent exactement la même information, simplement mise à l'échelle."}, {"_texte": "Non, car la silhouette ne peut pas se calculer sur des données non normalisées", "correcte": false, "_justification": "La silhouette se calcule sans erreur sur n'importe quelles données : elle vaut 0,558, c'est son interprétation qui est trompeuse."}]}, {"_enonce": "HDBSCAN (<code>min_cluster_size=15<\/code>, <code>min_samples=5<\/code>) sur les clients normalisés renvoie les étiquettes -1, 0 et 1, avec 202, 58 et 40 points. Combien de clusters trouve-t-il ?", "_multiple": false, "difficulte": "moyen", "theme": "HDBSCAN", "source_fichier": "tp2-clustering.md", "_source": "tp2-clustering.md", "options": [{"_texte": "3 clusters, -1 étant un cluster comme les autres", "correcte": false, "_justification": "L'étiquette -1 marque les points non assignés (bruit). Les clusters sont 0 et 1."}, {"_texte": "5 clusters, HDBSCAN retrouve les groupes réels et classe 58 points en doublon", "correcte": false, "_justification": "Il n'y a que deux étiquettes de cluster dans le résultat. Le nombre réel (5) n'est pas retrouvé, d'où l'ARI de 0,139."}, {"_texte": "2 clusters (0 et 1) plus 58 points de bruit étiquetés -1 : il en manque 3 par rapport aux 5 groupes réels", "correcte": true, "_justification": "Exercice 4.1. L'étiquette -1 désigne le bruit, pas un cluster. Mesuré : ARI de 0,139."}, {"_texte": "202 clusters, un par point de la première étiquette", "correcte": false, "_justification": "Les chiffres 202, 58 et 40 sont les effectifs de chaque étiquette, pas des nombres de clusters."}]}, {"_enonce": "Pourquoi HDBSCAN (ARI 0,139) fait-il nettement moins bien que K-Means (ARI 0,58) sur les clients, alors qu'il fait presque parfaitement sur <code>make_moons<\/code> (ARI 0,996) ?", "_multiple": false, "difficulte": "difficile", "theme": "DBSCAN et HDBSCAN contre K-Means", "source_fichier": "tp2-clustering.md", "_source": "tp2-clustering.md", "options": [{"_texte": "HDBSCAN est un algorithme plus ancien que K-Means, donc moins précis", "correcte": false, "_justification": "HDBSCAN est plus récent que K-Means, et ce n'est pas une question d'âge : « plus récent » ne veut pas dire « meilleur en toutes circonstances »."}, {"_texte": "Les cinq groupes gaussiens se chevauchent : la densité ne baisse pas vraiment entre eux, il n'y a pas de creux à détecter, alors que K-Means cherche des centres", "correcte": true, "_justification": "Exercice 4.1. Les clusters convexes qui se touchent sont le terrain de K-Means, pas celui des méthodes par densité."}, {"_texte": "HDBSCAN ne fonctionne que sur deux variables, et les clients en ont trois", "correcte": false, "_justification": "HDBSCAN s'applique à un nombre quelconque de variables. Il a d'ailleurs travaillé ici sur les trois colonnes."}, {"_texte": "HDBSCAN n'a pas été normalisé alors que K-Means l'a été", "correcte": false, "_justification": "HDBSCAN a reçu <code>Xs<\/code>, les données normalisées, comme K-Means."}]}, {"_enonce": "Sur les clients normalisés, <code>PCA(n_components=2)<\/code> donne <code>explained_variance_ratio_<\/code> de 0,362 et 0,329. Que signifie leur somme, 0,691 ?", "_multiple": false, "difficulte": "moyen", "theme": "Variance expliquée par la PCA", "source_fichier": "tp2-clustering.md", "_source": "tp2-clustering.md", "options": [{"_texte": "69,1 % des clients sont correctement placés dans leur cluster sur le graphique", "correcte": false, "_justification": "Ce ratio parle de variance des variables, pas d'un taux de bonne classification des clients."}, {"_texte": "L'ARI entre la PCA et K-Means vaut 0,691", "correcte": false, "_justification": "L'ARI compare deux partitions ; <code>explained_variance_ratio_<\/code> n'a rien à voir avec une partition."}, {"_texte": "Les deux axes expliquent 100 % de la variance, car 0,362 + 0,329 est proche de 1 après normalisation", "correcte": false, "_justification": "La somme est 0,691, pas 1. Avec trois variables, une projection en deux dimensions perd nécessairement une partie de l'information."}, {"_texte": "Les deux axes représentent 69,1 % de la variance totale des trois variables ; les 30,9 % restants sont perdus dans la projection", "correcte": true, "_justification": "Mesuré : la troisième composante porte 0,309. Le corrigé du TP parle de « 60 % de la variance » à titre d'exemple chiffré, la valeur réelle est 69,1 %."}]}, {"_enonce": "Quelle combinaison algorithme/jeu de données est exacte, d'après les mesures du TP ?", "_multiple": false, "difficulte": "difficile", "theme": "Choisir un algorithme", "source_fichier": "tp2-clustering.md", "_source": "tp2-clustering.md", "options": [{"_texte": "<code>make_moons<\/code> : HDBSCAN (ARI 0,996) bien meilleur que K-Means (0,265) ; clients : K-Means (0,58) meilleur que HDBSCAN (0,139)", "correcte": true, "_justification": "Aucun algorithme ne gagne partout : la forme réelle des données décide, pas la date de publication de la méthode."}, {"_texte": "HDBSCAN meilleur sur les deux jeux, car plus récent et plus sophistiqué", "correcte": false, "_justification": "Sur les clients, HDBSCAN (ARI 0,139) est nettement derrière K-Means (0,58)."}, {"_texte": "K-Means meilleur sur les deux jeux, car plus simple et plus rapide", "correcte": false, "_justification": "Sur <code>make_moons<\/code>, K-Means (ARI 0,265) est très loin de HDBSCAN (0,996)."}, {"_texte": "Les deux algorithmes sont équivalents tant que les variables sont normalisées", "correcte": false, "_justification": "La normalisation n'aide pas K-Means sur des croissants : l'ARI sur <code>make_moons<\/code> reste de 0,265, pour des clusters non convexes."}]}]};
+const form = document.getElementById('qcm');
+DATA.questions.forEach((q, i) => {
+  const multi = q._multiple;
+  const div = document.createElement('div');
+  div.className = 'q'; div.id = 'q'+i;
+  let badges = '';
+  if (q.difficulte) badges += `<span class="badge b-${q.difficulte}">${q.difficulte}</span>`;
+  if (q.theme) badges += `<span class="badge b-theme">${q.theme}</span>`;
+  const hint = multi ? ' <small>(plusieurs réponses)</small>' : '';
+  let html = `<span class="qmark" id="m${i}"></span><h3>Question ${i+1}${hint}${badges}</h3>`;
+  html += `<div class="enonce">${q._enonce}</div>`;
+  q.options.forEach((o, j) => {
+    const type = multi ? 'checkbox' : 'radio';
+    html += `<label class="opt" id="o${i}_${j}">`
+          + `<input type="${type}" name="q${i}" value="${j}">${o._texte}</label>`;
+    html += `<div class="just" id="j${i}_${j}">${o._justification||''}</div>`;
+  });
+  if (q.source_fichier) html += `<div class="src" id="s${i}">Source : ${q._source}</div>`;
+  div.innerHTML = html;
+  form.appendChild(div);
+});
+function grade(){
+  let correct = 0;
+  DATA.questions.forEach((q, i) => {
+    const chosen = [...form.querySelectorAll(`input[name=q${i}]:checked`)].map(e=>+e.value);
+    const good = q.options.map((o,j)=>o.correcte?j:-1).filter(j=>j>=0);
+    const ok = chosen.length===good.length && chosen.every(j=>good.includes(j));
+    if (ok) correct++;
+    q.options.forEach((o,j)=>{
+      const lab = document.getElementById(`o${i}_${j}`);
+      lab.classList.remove('correct','wrong');
+      if (o.correcte) lab.classList.add('correct');
+      else if (chosen.includes(j)) lab.classList.add('wrong');
+      const ju = document.getElementById(`j${i}_${j}`);
+      if (ju && o._justification) ju.classList.add('show');
+    });
+    const m = document.getElementById('m'+i);
+    m.textContent = ok ? '✓' : '✗';
+    m.style.color = ok ? 'var(--ok)' : 'var(--ko)';
+    m.classList.add('show');
+    const s = document.getElementById('s'+i); if (s) s.classList.add('show');
+  });
+  const n = DATA.questions.length;
+  const pct = Math.round(100*correct/n);
+  const sc = document.getElementById('score');
+  sc.textContent = `Score : ${correct} / ${n}  (${pct} %)`;
+  sc.style.color = pct>=50 ? 'var(--ok)' : 'var(--ko)';
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+</script>
+</body>
+</html>

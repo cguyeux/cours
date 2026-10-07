@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QCM — TP3 : Classification</title>
+<style>
+  :root { --ok:#1b8a5a; --ko:#c0392b; --accent:#2c5f8a; --bg:#f6f7f9; }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, "Segoe UI", Roboto, sans-serif; line-height:1.5;
+         max-width: 820px; margin: 0 auto; padding: 1.5rem; color:#1a1a1a; background:var(--bg); }
+  h1 { color: var(--accent); margin-bottom:.2rem; }
+  .meta { color:#666; font-size:.9rem; margin-bottom:1rem; }
+  .consignes { background:#eef3f8; border-left:4px solid var(--accent); padding:.6rem .9rem;
+               border-radius:4px; margin-bottom:1.2rem; }
+  .q { background:#fff; border:1px solid #e1e4e8; border-radius:8px; padding:1rem 1.2rem;
+       margin-bottom:1rem; box-shadow:0 1px 2px rgba(0,0,0,.04); }
+  .q h3 { margin:.1rem 0 .2rem; font-size:1.05rem; }
+  .badge { font-size:.72rem; font-weight:600; padding:.1rem .5rem; border-radius:10px;
+           margin-left:.4rem; vertical-align:middle; }
+  .b-facile{background:#e3f4ea;color:var(--ok);} .b-moyen{background:#fdf3e0;color:#b87600;}
+  .b-difficile{background:#fbe6e6;color:var(--ko);} .b-theme{background:#eef0f3;color:#555;}
+  .enonce { margin:.4rem 0 .8rem; }
+  .opt { display:block; padding:.45rem .6rem; border:1px solid #e1e4e8; border-radius:6px;
+         margin:.35rem 0; cursor:pointer; transition:background .12s; }
+  .opt:hover { background:#f0f4f8; }
+  .opt input { margin-right:.55rem; }
+  .opt.correct { border-color:var(--ok); background:#eaf7f0; }
+  .opt.wrong   { border-color:var(--ko); background:#fbecec; }
+  .just { font-size:.86rem; color:#555; margin:.2rem 0 0 1.7rem; display:none; }
+  .just.show { display:block; }
+  .src { font-size:.78rem; color:#888; margin-top:.5rem; display:none; }
+  .src.show { display:block; }
+  .bar { position:sticky; bottom:0; background:var(--bg); padding:.8rem 0; }
+  button { background:var(--accent); color:#fff; border:0; padding:.6rem 1.3rem;
+           font-size:1rem; border-radius:6px; cursor:pointer; }
+  button.ghost { background:#fff; color:var(--accent); border:1px solid var(--accent); margin-left:.5rem; }
+  #score { font-size:1.2rem; font-weight:700; margin-left:1rem; }
+  .qmark { float:right; font-weight:700; display:none; }
+  .qmark.show{display:inline;}
+</style>
+</head>
+<body>
+<h1>QCM — TP3 : Classification</h1>
+<div class="meta">Source : site/docs/ia-predictive/tp3-classification.md — 10 questions</div>
+<div class="consignes">Cochez la bonne réponse. Une seule réponse est correcte par question. Toutes les valeurs numériques citées sont celles mesurées en rejouant le TP (scikit-learn 1.9.1, xgboost 3.4.1, jeu Breast Cancer de scikit-learn, random_state=42).</div>
+<form id="qcm"></form>
+<div class="bar">
+  <button type="button" onclick="grade()">Valider mes réponses</button>
+  <button type="button" class="ghost" onclick="location.reload()">Réinitialiser</button>
+  <span id="score"></span>
+</div>
+<script>
+const DATA = {"questions": [{"_enonce": "Pourquoi passe-t-on <code>stratify=y<\/code> à <code>train_test_split<\/code> sur le jeu Breast Cancer (212 tumeurs malignes, 357 bénignes) ?", "_multiple": false, "difficulte": "facile", "theme": "Séparer entraînement et test", "source_fichier": "tp3-classification.md", "_source": "tp3-classification.md", "options": [{"_texte": "Pour rendre le partage reproductible, à la place de <code>random_state=42<\/code>", "correcte": false, "_justification": "La reproductibilité vient de <code>random_state<\/code>. <code>stratify<\/code> règle un autre problème et les deux se combinent, comme dans le TP."}, {"_texte": "Pour que les deux jeux conservent la proportion de chaque classe : 36,8 % de malignes dans le test, contre 37,3 % dans le jeu complet", "correcte": true, "_justification": "Mesuré : avec stratification, le test contient 36,8 % de malignes. Sans elle, le même tirage donne 37,7 % : l'écart est modeste ici, mais il devient sérieux sur un jeu plus petit ou plus déséquilibré."}, {"_texte": "Pour que les 114 exemples de test soient triés par classe, ce qui accélère l'évaluation", "correcte": false, "_justification": "La stratification ne trie rien. Elle ne règle que la composition des deux jeux en classes."}, {"_texte": "Pour que le modèle voie davantage d'exemples malins pendant l'entraînement, la classe qui compte le plus", "correcte": false, "_justification": "La stratification ne favorise aucune classe : elle conserve la proportion d'origine dans les deux jeux, elle ne la modifie pas."}]}, {"_enonce": "Avec <code>test_size=0.2<\/code> sur les 569 tumeurs, quelles sont les formes de <code>X_train<\/code> et <code>X_test<\/code> ?", "_multiple": false, "difficulte": "facile", "theme": "Séparer entraînement et test", "source_fichier": "tp3-classification.md", "_source": "tp3-classification.md", "options": [{"_texte": "<code>(114, 30)<\/code> pour l'entraînement et <code>(455, 30)<\/code> pour le test", "correcte": false, "_justification": "C'est l'inverse : <code>test_size=0.2<\/code> réserve 20 % des lignes au test, pas à l'entraînement."}, {"_texte": "<code>(569, 30)<\/code> pour l'entraînement et <code>(114, 30)<\/code> pour le test", "correcte": false, "_justification": "Les lignes du test sont retirées de l'entraînement : les deux jeux ne se chevauchent pas, leurs tailles s'additionnent à 569."}, {"_texte": "<code>(512, 30)<\/code> pour l'entraînement et <code>(57, 30)<\/code> pour le test", "correcte": false, "_justification": "Cela correspondrait à <code>test_size=0.1<\/code>. Ici, 20 % de 569 donne 114 lignes de test."}, {"_texte": "<code>(455, 30)<\/code> pour l'entraînement et <code>(114, 30)<\/code> pour le test", "correcte": true, "_justification": "Mesuré. 20 % de 569 valent 113,8 : scikit-learn arrondit le test à 114, l'entraînement reçoit les 455 lignes restantes. Le nombre de colonnes (30) ne change pas."}]}, {"_enonce": "Un <code>DecisionTreeClassifier<\/code> sans limite de profondeur obtient 1,0 d'exactitude sur l'entraînement. Que vaut son exactitude sur le test, et que conclure ?", "_multiple": false, "difficulte": "moyen", "theme": "Surapprentissage", "source_fichier": "tp3-classification.md", "_source": "tp3-classification.md", "options": [{"_texte": "0,912 : l'arbre a mémorisé l'entraînement et généralise moins bien que l'arbre limité à <code>max_depth=4<\/code> (0,939 sur le test)", "correcte": true, "_justification": "Mesuré. L'arbre à profondeur 4 fait 0,987 à l'entraînement et 0,939 au test : moins parfait sur ce qu'il a vu, meilleur sur ce qu'il n'a jamais vu. C'est le surapprentissage."}, {"_texte": "0,987 : l'exactitude de test est toujours égale à celle de l'arbre à profondeur 4", "correcte": false, "_justification": "0,987 est l'exactitude d'entraînement de l'arbre à profondeur 4, pas un résultat de test."}, {"_texte": "0,5 : un arbre profond ne fait pas mieux qu'un tirage au hasard sur des données neuves", "correcte": false, "_justification": "Il fait nettement mieux que le hasard (0,912). Le surapprentissage dégrade la généralisation, il ne l'annule pas."}, {"_texte": "1,0 également : un score parfait à l'entraînement garantit un score parfait sur des données neuves", "correcte": false, "_justification": "Un score parfait à l'entraînement ne garantit rien. Mesuré : l'arbre libre n'atteint que 0,912 sur le test."}]}, {"_enonce": "Pour l'arbre à profondeur 4, la matrice de confusion du test est <code>[[39, 3], [4, 68]]<\/code> (lignes : classe réelle, colonnes : classe prédite, dans l'ordre 0 = maligne, 1 = bénigne). Que représentent les 3 ?", "_multiple": false, "difficulte": "moyen", "theme": "Matrice de confusion", "source_fichier": "tp3-classification.md", "_source": "tp3-classification.md", "options": [{"_texte": "Trois tumeurs bénignes prises à tort pour des malignes", "correcte": false, "_justification": "Ce sont les 4 de la ligne du bas, première colonne : réelles bénignes, prédites malignes (fausses alertes)."}, {"_texte": "Trois tumeurs malignes correctement détectées", "correcte": false, "_justification": "Les malignes correctement détectées sont les 39 de la diagonale. Les 3 sont hors diagonale, donc des erreurs."}, {"_texte": "Trois tumeurs malignes prédites bénignes : les erreurs les plus graves du TP, car des cas à détecter ont été manqués", "correcte": true, "_justification": "Ligne 0 (réelles malignes), colonne 1 (prédites bénignes). Sur 42 malignes, 39 sont détectées, d'où un rappel de 39/42 = 0,929."}, {"_texte": "Trois erreurs d'entraînement, la matrice mélangeant les deux jeux", "correcte": false, "_justification": "La matrice est calculée avec <code>y_test<\/code> et <code>pred_arbre<\/code> : elle ne porte que sur les 114 exemples de test (39 + 3 + 4 + 68 = 114)."}]}, {"_enonce": "Sans argument, <code>recall_score(y_test, pred_arbre)<\/code> vaut 0,944. Quelle proportion des tumeurs MALIGNES l'arbre détecte-t-il réellement ?", "_multiple": false, "difficulte": "difficile", "theme": "Choisir la bonne métrique", "source_fichier": "tp3-classification.md", "_source": "tp3-classification.md", "options": [{"_texte": "0,958 : la précision de la classe bénigne, qui est le rappel de la classe maligne", "correcte": false, "_justification": "La précision et le rappel sont deux métriques différentes : 0,958 est la précision de la classe « benign » (68 sur 71 prédites bénignes), sans lien avec les malignes détectées."}, {"_texte": "0,939 : l'exactitude globale, qui équivaut au rappel de la classe maligne", "correcte": false, "_justification": "L'exactitude mélange les deux classes. Elle peut être élevée alors que la classe qui compte est mal détectée, c'est l'objet de l'étape 6."}, {"_texte": "0,944 : <code>recall_score<\/code> mesure le rappel de la classe d'intérêt, ici la maligne", "correcte": false, "_justification": "<code>recall_score<\/code> ne sait pas quelle classe vous intéresse : par défaut il prend la classe étiquetée <code>1<\/code>, qui est ici « benign »."}, {"_texte": "0,929 : c'est <code>recall_score(y_test, pred_arbre, pos_label=0)<\/code>, la classe 0 étant « malignant »", "correcte": true, "_justification": "Mesuré : 39 malignes détectées sur 42 réelles. Les deux valeurs sont proches ici, rien ne le garantit en général, et c'est la seconde qui répond à la question médicale."}]}, {"_enonce": "À partir de <code>[[39, 3], [4, 68]]<\/code>, quelle est la précision de l'arbre pour la classe « malignant » (proportion de vraies malignes parmi les tumeurs prédites malignes) ?", "_multiple": false, "difficulte": "difficile", "theme": "Matrice de confusion", "source_fichier": "tp3-classification.md", "_source": "tp3-classification.md", "options": [{"_texte": "0,929 (39 sur 42)", "correcte": false, "_justification": "39/42 est le rappel de la classe maligne : on divise par les malignes réelles (39 + 3), pas par les prédites."}, {"_texte": "0,907 (39 sur 43)", "correcte": true, "_justification": "Les prédites malignes sont la première colonne : 39 + 4 = 43, dont 39 le sont réellement. C'est la ligne « malignant » de <code>classification_report<\/code> (0,91)."}, {"_texte": "0,958 (68 sur 71)", "correcte": false, "_justification": "68/71 est la précision de la classe « benign » : 68 sur les 71 prédites bénignes (68 + 3)."}, {"_texte": "0,939 (107 sur 114)", "correcte": false, "_justification": "107/114 est l'exactitude globale : la somme de la diagonale sur le total, toutes classes confondues."}]}, {"_enonce": "Sur le même partage, la forêt aléatoire (200 arbres) atteint 0,956 d'exactitude de test contre 0,939 pour l'arbre à profondeur 4. Quelle explication correspond au TP ?", "_multiple": false, "difficulte": "moyen", "theme": "Forêt aléatoire", "source_fichier": "tp3-classification.md", "_source": "tp3-classification.md", "options": [{"_texte": "Les arbres, entraînés sur des tirages différents, font des erreurs différentes : le vote majoritaire en annule une partie", "correcte": true, "_justification": "C'est l'argument de l'étape 4. Les importances de la forêt placent en tête <code>worst perimeter<\/code> (0,133), <code>worst area<\/code> (0,128) et <code>worst concave points<\/code> (0,108), des mesures de taille ou de contour."}, {"_texte": "Chaque arbre de la forêt est plus profond qu'un arbre unique, donc plus précis", "correcte": false, "_justification": "La force de la forêt ne vient pas de la profondeur. Chaque arbre est entraîné sur un tirage aléatoire d'exemples et de variables, ce qui les rend différents."}, {"_texte": "La forêt entraîne ses arbres l'un après l'autre, chacun corrigeant le précédent", "correcte": false, "_justification": "C'est le principe du boosting (XGBoost). La forêt entraîne ses arbres indépendamment."}, {"_texte": "La forêt a eu accès au jeu de test pour choisir ses arbres, d'où sa meilleure exactitude", "correcte": false, "_justification": "Aucun arbre ne voit le test : <code>fit<\/code> ne reçoit que <code>X_train<\/code> et <code>y_train<\/code>. Si le test servait à l'entraînement, le score ne vaudrait plus rien."}]}, {"_enonce": "Quelle phrase distingue correctement la forêt aléatoire et XGBoost ?", "_multiple": false, "difficulte": "moyen", "theme": "Boosting", "source_fichier": "tp3-classification.md", "_source": "tp3-classification.md", "options": [{"_texte": "XGBoost ne fait pas de partage entraînement/test, car il corrige ses erreurs tout seul", "correcte": false, "_justification": "Le partage s'applique à tous les modèles : corriger ses erreurs d'entraînement n'apprend rien sur les données neuves."}, {"_texte": "Les deux entraînent leurs arbres indépendamment, XGBoost étant simplement plus rapide", "correcte": false, "_justification": "Seule la forêt entraîne indépendamment. XGBoost construit ses arbres de façon séquentielle."}, {"_texte": "La forêt entraîne ses arbres indépendamment et les fait voter ; XGBoost les entraîne l'un après l'autre, chaque arbre corrigeant les erreurs de l'ensemble déjà construit", "correcte": true, "_justification": "C'est la définition donnée au début de l'étape 5. D'où l'importance du couple <code>learning_rate<\/code> et <code>n_estimators<\/code> pour XGBoost."}, {"_texte": "XGBoost entraîne un seul arbre très profond, la forêt en entraîne 200 peu profonds", "correcte": false, "_justification": "XGBoost aussi combine de nombreux arbres, ici 200 arbres de profondeur maximale 3."}]}, {"_enonce": "Un assistant écrit <code>xgb.XGBClassifier(use_label_encoder=True, eval_metric=&quot;logloss&quot;)<\/code>. Avec xgboost 3.4.1, que se passe-t-il vraiment ?", "_multiple": false, "difficulte": "moyen", "theme": "L'IA vous le donne en trois secondes", "source_fichier": "tp3-classification.md", "_source": "tp3-classification.md", "options": [{"_texte": "Une <code>TypeError<\/code> dès la création du modèle, le paramètre ayant été supprimé", "correcte": false, "_justification": "Mesuré : aucune erreur. Le constructeur accepte le paramètre, même s'il ne sert plus."}, {"_texte": "Le paramètre est accepté mais ignoré : un <code>UserWarning<\/code> « Parameters: { &quot;use_label_encoder&quot; } are not used » apparaît au moment du <code>fit<\/code>, pas à la création du modèle", "correcte": true, "_justification": "Mesuré. Le bloc <code>warnings.catch_warnings<\/code> du TP, qui ne crée que le modèle, n'affiche donc rien : l'avertissement n'apparaît qu'à l'entraînement (<code>fit<\/code>)."}, {"_texte": "L'encodage des étiquettes est activé, ce qui améliore la précision du modèle", "correcte": false, "_justification": "Les versions récentes encodent les étiquettes automatiquement. Le paramètre n'active plus rien."}, {"_texte": "Le modèle ne peut plus s'entraîner : <code>fit<\/code> échoue", "correcte": false, "_justification": "Mesuré : <code>fit<\/code> s'exécute normalement, avec simplement l'avertissement. Un code qui fonctionne n'est pas pour autant un code qui fait ce que son auteur croit."}]}, {"_enonce": "On entraîne XGBoost avec 200 arbres de profondeur 3 et <code>learning_rate<\/code> à 0,01, 0,1 puis 0,3. Les exactitudes de test valent 0,947, 0,947 et 0,956. Que peut-on en conclure ?", "_multiple": false, "difficulte": "difficile", "theme": "Boosting, learning_rate et n_estimators", "source_fichier": "tp3-classification.md", "_source": "tp3-classification.md", "options": [{"_texte": "<code>learning_rate<\/code> n'a aucun effet sur XGBoost", "correcte": false, "_justification": "Il en a un : il change la contribution de chaque arbre, donc le nombre d'arbres nécessaires. Sa conséquence n'est simplement pas détectable ici sur l'exactitude du test."}, {"_texte": "Le taux 0,3 est le meilleur : il bat nettement les deux autres", "correcte": false, "_justification": "L'écart est de 0,009, soit un seul exemple sur 114. Sur un test aussi petit, c'est du bruit, pas une victoire."}, {"_texte": "Le taux 0,01 sous-apprend : il est nettement moins bon que 0,1", "correcte": false, "_justification": "Mesuré : il fait 0,947, comme 0,1. Le sous-apprentissage attendu avec 200 arbres ne se voit pas sur l'exactitude de test de ce jeu."}, {"_texte": "Les trois réglages sont indiscernables sur ces 114 exemples : 0,009 d'écart vaut un seul exemple, il faut une validation croisée pour trancher", "correcte": true, "_justification": "0,956 − 0,947 = 1/114. L'étape « Pour aller plus loin » propose justement la validation croisée, plus robuste qu'un seul partage."}]}]};
+const form = document.getElementById('qcm');
+DATA.questions.forEach((q, i) => {
+  const multi = q._multiple;
+  const div = document.createElement('div');
+  div.className = 'q'; div.id = 'q'+i;
+  let badges = '';
+  if (q.difficulte) badges += `<span class="badge b-${q.difficulte}">${q.difficulte}</span>`;
+  if (q.theme) badges += `<span class="badge b-theme">${q.theme}</span>`;
+  const hint = multi ? ' <small>(plusieurs réponses)</small>' : '';
+  let html = `<span class="qmark" id="m${i}"></span><h3>Question ${i+1}${hint}${badges}</h3>`;
+  html += `<div class="enonce">${q._enonce}</div>`;
+  q.options.forEach((o, j) => {
+    const type = multi ? 'checkbox' : 'radio';
+    html += `<label class="opt" id="o${i}_${j}">`
+          + `<input type="${type}" name="q${i}" value="${j}">${o._texte}</label>`;
+    html += `<div class="just" id="j${i}_${j}">${o._justification||''}</div>`;
+  });
+  if (q.source_fichier) html += `<div class="src" id="s${i}">Source : ${q._source}</div>`;
+  div.innerHTML = html;
+  form.appendChild(div);
+});
+function grade(){
+  let correct = 0;
+  DATA.questions.forEach((q, i) => {
+    const chosen = [...form.querySelectorAll(`input[name=q${i}]:checked`)].map(e=>+e.value);
+    const good = q.options.map((o,j)=>o.correcte?j:-1).filter(j=>j>=0);
+    const ok = chosen.length===good.length && chosen.every(j=>good.includes(j));
+    if (ok) correct++;
+    q.options.forEach((o,j)=>{
+      const lab = document.getElementById(`o${i}_${j}`);
+      lab.classList.remove('correct','wrong');
+      if (o.correcte) lab.classList.add('correct');
+      else if (chosen.includes(j)) lab.classList.add('wrong');
+      const ju = document.getElementById(`j${i}_${j}`);
+      if (ju && o._justification) ju.classList.add('show');
+    });
+    const m = document.getElementById('m'+i);
+    m.textContent = ok ? '✓' : '✗';
+    m.style.color = ok ? 'var(--ok)' : 'var(--ko)';
+    m.classList.add('show');
+    const s = document.getElementById('s'+i); if (s) s.classList.add('show');
+  });
+  const n = DATA.questions.length;
+  const pct = Math.round(100*correct/n);
+  const sc = document.getElementById('score');
+  sc.textContent = `Score : ${correct} / ${n}  (${pct} %)`;
+  sc.style.color = pct>=50 ? 'var(--ok)' : 'var(--ko)';
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+</script>
+</body>
+</html>

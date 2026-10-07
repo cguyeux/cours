@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QCM — TP6 : Séries temporelles</title>
+<style>
+  :root { --ok:#1b8a5a; --ko:#c0392b; --accent:#2c5f8a; --bg:#f6f7f9; }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, "Segoe UI", Roboto, sans-serif; line-height:1.5;
+         max-width: 820px; margin: 0 auto; padding: 1.5rem; color:#1a1a1a; background:var(--bg); }
+  h1 { color: var(--accent); margin-bottom:.2rem; }
+  .meta { color:#666; font-size:.9rem; margin-bottom:1rem; }
+  .consignes { background:#eef3f8; border-left:4px solid var(--accent); padding:.6rem .9rem;
+               border-radius:4px; margin-bottom:1.2rem; }
+  .q { background:#fff; border:1px solid #e1e4e8; border-radius:8px; padding:1rem 1.2rem;
+       margin-bottom:1rem; box-shadow:0 1px 2px rgba(0,0,0,.04); }
+  .q h3 { margin:.1rem 0 .2rem; font-size:1.05rem; }
+  .badge { font-size:.72rem; font-weight:600; padding:.1rem .5rem; border-radius:10px;
+           margin-left:.4rem; vertical-align:middle; }
+  .b-facile{background:#e3f4ea;color:var(--ok);} .b-moyen{background:#fdf3e0;color:#b87600;}
+  .b-difficile{background:#fbe6e6;color:var(--ko);} .b-theme{background:#eef0f3;color:#555;}
+  .enonce { margin:.4rem 0 .8rem; }
+  .opt { display:block; padding:.45rem .6rem; border:1px solid #e1e4e8; border-radius:6px;
+         margin:.35rem 0; cursor:pointer; transition:background .12s; }
+  .opt:hover { background:#f0f4f8; }
+  .opt input { margin-right:.55rem; }
+  .opt.correct { border-color:var(--ok); background:#eaf7f0; }
+  .opt.wrong   { border-color:var(--ko); background:#fbecec; }
+  .just { font-size:.86rem; color:#555; margin:.2rem 0 0 1.7rem; display:none; }
+  .just.show { display:block; }
+  .src { font-size:.78rem; color:#888; margin-top:.5rem; display:none; }
+  .src.show { display:block; }
+  .bar { position:sticky; bottom:0; background:var(--bg); padding:.8rem 0; }
+  button { background:var(--accent); color:#fff; border:0; padding:.6rem 1.3rem;
+           font-size:1rem; border-radius:6px; cursor:pointer; }
+  button.ghost { background:#fff; color:var(--accent); border:1px solid var(--accent); margin-left:.5rem; }
+  #score { font-size:1.2rem; font-weight:700; margin-left:1rem; }
+  .qmark { float:right; font-weight:700; display:none; }
+  .qmark.show{display:inline;}
+</style>
+</head>
+<body>
+<h1>QCM — TP6 : Séries temporelles</h1>
+<div class="meta">Source : site/docs/ia-predictive/tp6-series-temporelles.md — 10 questions</div>
+<div class="consignes">Cochez la bonne réponse. Une seule réponse est correcte par question. Toutes les valeurs numériques citées sont celles mesurées pendant le TP (pandas 3.0.5, statsmodels 0.15.0, scikit-learn 1.9.1, jeu Bike Sharing Demand d'OpenML).</div>
+<form id="qcm"></form>
+<div class="bar">
+  <button type="button" onclick="grade()">Valider mes réponses</button>
+  <button type="button" class="ghost" onclick="location.reload()">Réinitialiser</button>
+  <span id="score"></span>
+</div>
+<script>
+const DATA = {"questions": [{"_enonce": "Sur la série horaire de locations de vélos, on compare la demande moyenne à 10 h en semaine et le week-end. Que mesure-t-on, et que dit-on ?", "_multiple": false, "difficulte": "facile", "theme": "Profils cycliques", "source_fichier": "tp6-series-temporelles.md", "_source": "tp6-series-temporelles.md", "options": [{"_texte": "Environ 211 en semaine contre environ 159 le week-end : les actifs sont déjà en route à 10 h", "correcte": false, "_justification": "Les valeurs sont inversées. En semaine, 10 h tombe dans le creux entre le pic de 8 h (387,8) et celui de 17 h (480,9)."}, {"_texte": "Des valeurs quasi identiques, puisque le cycle de 24 h est le même tous les jours", "correcte": false, "_justification": "Si le cycle était le même, la série n'aurait pas deux populations d'usagers. L'écart (158,6 contre 211,0) est justement ce qui motive l'étape 5."}, {"_texte": "Environ 159 en semaine contre environ 211 le week-end : à 10 h, la semaine est dans le creux entre les deux pics, le week-end est déjà proche de son plateau", "correcte": true, "_justification": "Mesuré : 158,6 en semaine et 211,0 le week-end. C'est le corrigé de l'exercice 1.1 : la même heure n'a pas le même sens selon le type de jour."}, {"_texte": "Environ 388 en semaine contre environ 288 le week-end, car 10 h est une heure de pointe", "correcte": false, "_justification": "Ces valeurs sont celles de 8 h (387,8 en semaine, 287,5 le week-end), pas de 10 h. Le pic de semaine est à 8 h et 17 h, pas à 10 h."}]}, {"_enonce": "On décompose la série avec <code>period=24<\/code>, puis avec <code>period=24*7<\/code>, et on calcule <code>1 - variance(résidu) / variance(série)<\/code>. Que trouve-t-on ?", "_multiple": false, "difficulte": "moyen", "theme": "Décomposition", "source_fichier": "tp6-series-temporelles.md", "_source": "tp6-series-temporelles.md", "options": [{"_texte": "Environ 25 % dans les deux cas (0,250 et 0,241) : aucune des deux décompositions n'explique l'essentiel de la variance", "correcte": true, "_justification": "Mesuré : 0,250 pour <code>period=24<\/code> et 0,241 pour <code>period=168<\/code>. Le résultat est surprenant : ajouter le cycle hebdomadaire n'améliore pas, il fait même un peu moins bien."}, {"_texte": "Environ 25 % avec <code>period=24<\/code> et environ 60 % avec <code>period=168<\/code>, car le cycle hebdomadaire contient le cycle quotidien", "correcte": false, "_justification": "Le cycle de 168 h contient bien celui de 24 h, mais la part expliquée ne grimpe pas : mesurée à 0,241, elle est même légèrement inférieure à 0,250."}, {"_texte": "Plus de 90 % dans les deux cas, car la série est très régulière", "correcte": false, "_justification": "Ce serait vrai d'une série quasi périodique. Ici, environ 75 % de la variance reste dans le résidu."}, {"_texte": "Une erreur, car <code>seasonal_decompose<\/code> n'accepte qu'une période égale à 24", "correcte": false, "_justification": "Aucune erreur : <code>period<\/code> est un paramètre libre, et l'exercice 2.1 en teste deux valeurs."}]}, {"_enonce": "Pourquoi la décomposition à période unique explique-t-elle si mal la variance de cette série ?", "_multiple": false, "difficulte": "difficile", "theme": "Décomposition", "source_fichier": "tp6-series-temporelles.md", "_source": "tp6-series-temporelles.md", "options": [{"_texte": "Parce que la série est trop courte : avec 17 379 points, <code>seasonal_decompose<\/code> ne peut pas estimer de saisonnalité", "correcte": false, "_justification": "17 379 heures représentent deux ans, largement assez pour estimer un motif de 24 ou 168 heures."}, {"_texte": "Parce que le modèle additif est faux : il faut toujours choisir <code>model=&quot;multiplicative&quot;<\/code> pour une série de comptages", "correcte": false, "_justification": "Rien dans la page ne le montre. Le défaut vient du fait qu'un seul profil est ajusté, quel que soit le modèle additif ou multiplicatif."}, {"_texte": "Parce que le bruit des mesures de météo domine le signal", "correcte": false, "_justification": "Le TP n'utilise aucune variable météo pour la décomposition, et il décrit au contraire un signal net (heures de pointe, week-ends)."}, {"_texte": "Parce qu'elle impose un profil moyen unique sur 24 h, qui ne colle ni aux jours de semaine (deux pics) ni aux week-ends (plateau) : il faut croiser l'heure et le type de jour", "correcte": true, "_justification": "C'est le diagnostic du corrigé de l'exercice 2.1, appuyé sur l'exercice 1.1 : deux profils différents ne se résument pas en un seul."}]}, {"_enonce": "Le test ADF appliqué à la série brute, sans différenciation, donne une statistique de −6,82 et une p-value de l'ordre de 2·10⁻⁹. Quelle conclusion est correcte ?", "_multiple": false, "difficulte": "moyen", "theme": "Stationnarité", "source_fichier": "tp6-series-temporelles.md", "_source": "tp6-series-temporelles.md", "options": [{"_texte": "Le test échoue : une série saisonnière n'est jamais stationnaire, donc il faut différencier", "correcte": false, "_justification": "Le test ne conclut pas à la non-stationnarité (p très inférieure à 0,05). Une oscillation régulière sans dérive reste stationnaire pour ce test."}, {"_texte": "Le test rejette la racine unitaire : la série est stationnaire au sens du test, bien qu'elle soit visiblement saisonnière, car l'ADF ne teste pas la saisonnalité", "correcte": true, "_justification": "Mesuré. C'est le résultat attendu de l'exercice 3.1 : l'ADF cherche une dérive de type marche aléatoire, pas un motif périodique."}, {"_texte": "La p-value est trop petite pour être fiable, il faut recommencer avec <code>period=24<\/code>", "correcte": false, "_justification": "L'ADF n'a aucun paramètre de période. Une p-value très faible est un résultat fort, pas un défaut."}, {"_texte": "La série contient une racine unitaire, puisque la p-value est inférieure à 0,05", "correcte": false, "_justification": "C'est l'inverse : l'hypothèse nulle de l'ADF est la présence d'une racine unitaire, et une p-value inférieure à 0,05 la rejette."}]}, {"_enonce": "Après une différenciation d'ordre 1, la statistique ADF vaut environ −30,1 au lieu de −6,8. Qu'en conclure pour le choix de <code>d<\/code> dans un ARIMA ?", "_multiple": false, "difficulte": "difficile", "theme": "Stationnarité", "source_fichier": "tp6-series-temporelles.md", "_source": "tp6-series-temporelles.md", "options": [{"_texte": "Que <code>d=1<\/code> est indispensable, puisque la statistique est plus négative", "correcte": false, "_justification": "Une statistique plus négative dit que la série différenciée est encore plus stationnaire, pas que la série brute ne l'était pas : elle l'était déjà."}, {"_texte": "Que la série brute était en réalité non stationnaire, et que le premier test était faux", "correcte": false, "_justification": "Le premier test était correct (p ≈ 2·10⁻⁹). Les deux séries sont stationnaires au sens de l'ADF."}, {"_texte": "Que <code>d=0<\/code> est déjà défendable : un ADF significatif n'oblige pas à différencier, et la différenciation retire une grande partie du niveau et du motif quotidien", "correcte": true, "_justification": "C'est la conclusion du corrigé de l'exercice 3.1 : le critère pour <code>d<\/code> est l'effet de la différenciation sur l'interprétabilité et les résidus, pas la seule p-value."}, {"_texte": "Que <code>d<\/code> doit être égal à la période saisonnière, soit 24", "correcte": false, "_justification": "<code>d<\/code> est un ordre de différenciation, pas une période. La saisonnalité relève d'un modèle SARIMA ou d'un ordre <code>p<\/code> suffisant."}]}, {"_enonce": "Un assistant écrit <code>AutoReg(train, lags=24, old_names=False)<\/code>. Que se passe-t-il avec la version de statsmodels du TP (0.15.0) ?", "_multiple": false, "difficulte": "facile", "theme": "Pièges d'API", "source_fichier": "tp6-series-temporelles.md", "_source": "tp6-series-temporelles.md", "options": [{"_texte": "Un simple avertissement de dépréciation, et le modèle s'ajuste quand même", "correcte": false, "_justification": "C'était la phase de transition d'anciennes versions. Ici, le paramètre n'existe plus et une erreur est levée."}, {"_texte": "Rien : le paramètre est ignoré silencieusement", "correcte": false, "_justification": "Python ne dit rien sur un argument inconnu seulement si la fonction accepte <code>**kwargs<\/code>, ce que ne fait pas <code>AutoReg<\/code>."}, {"_texte": "Une <code>ValueError<\/code> indiquant que <code>lags<\/code> doit être inférieur à 24", "correcte": false, "_justification": "La valeur de <code>lags<\/code> n'est pas en cause : c'est le nom d'argument <code>old_names<\/code> qui est refusé, par une <code>TypeError<\/code>."}, {"_texte": "Une <code>TypeError<\/code> : <code>AutoReg.__init__()<\/code> a reçu un argument <code>old_names<\/code> inattendu, ce paramètre ayant été retiré", "correcte": true, "_justification": "Mesuré avec statsmodels 0.15.0. Le code s'arrête, il faut simplement retirer le paramètre."}]}, {"_enonce": "Sur les 168 dernières heures, quel classement des MAE obtient-on, du meilleur au pire ?", "_multiple": false, "difficulte": "moyen", "theme": "Prévision classique", "source_fichier": "tp6-series-temporelles.md", "_source": "tp6-series-temporelles.md", "options": [{"_texte": "ARIMA(2,0,2), puis AR(24), puis la baseline plate : plus le modèle est sophistiqué, meilleur il est", "correcte": false, "_justification": "C'est l'intuition que l'exercice 4.1 vient démentir : ARIMA(2,0,2) est le pire des trois."}, {"_texte": "AR(24) (49,9), puis la baseline plate (65,5), puis ARIMA(2,0,2) (123,5)", "correcte": true, "_justification": "Mesuré. Le modèle « avancé » ARIMA(2,0,2) fait presque deux fois plus d'erreur que la baseline la plus simple."}, {"_texte": "La baseline plate, puis AR(24), puis ARIMA(2,0,2)", "correcte": false, "_justification": "La baseline plate (MAE 65,5) est battue par AR(24) (49,9) : elle n'est pas la meilleure."}, {"_texte": "AR(24) et ARIMA(2,0,2) à égalité, la baseline plate en dernier", "correcte": false, "_justification": "ARIMA(2,0,2) (123,5) est très loin d'AR(24) (49,9), et la baseline plate est meilleure que lui."}]}, {"_enonce": "Pourquoi ARIMA(2,0,2) perd-il contre la baseline plate dans l'exercice 4.1 ?", "_multiple": false, "difficulte": "difficile", "theme": "Prévision classique", "source_fichier": "tp6-series-temporelles.md", "_source": "tp6-series-temporelles.md", "options": [{"_texte": "Parce que <code>p=2<\/code> ne regarde que deux heures en arrière, trop court pour capturer le cycle de 24 h : l'ordre choisi compte plus que le choix du modèle", "correcte": true, "_justification": "C'est la leçon de l'exercice 4.1. Un <code>p<\/code> couvrant 24 heures, ou un SARIMA, retrouverait un comportement comparable à AR(24)."}, {"_texte": "Parce qu'ARIMA est un mauvais modèle pour les séries horaires", "correcte": false, "_justification": "Le corrigé le dit explicitement : la leçon n'est pas qu'ARIMA est mauvais, mais que son ordre était mal dimensionné."}, {"_texte": "Parce que <code>d=0<\/code> empêche le modèle de prévoir à plus d'un pas", "correcte": false, "_justification": "<code>d=0<\/code> signifie seulement qu'on ne différencie pas. Ce choix est défendable ici, l'ADF concluant à la stationnarité."}, {"_texte": "Parce que <code>forecast(steps=168)<\/code> n'est pas supporté par ARIMA", "correcte": false, "_justification": "<code>forecast<\/code> accepte un horizon de 168 pas, et le TP l'utilise : c'est la qualité de la prévision qui est en cause, pas la possibilité de la produire."}]}, {"_enonce": "Pourquoi construire la moyenne glissante par <code>serie.shift(1).rolling(24).mean()<\/code> plutôt que par <code>serie.rolling(24).mean()<\/code> ?", "_multiple": false, "difficulte": "moyen", "theme": "Variables retardées", "source_fichier": "tp6-series-temporelles.md", "_source": "tp6-series-temporelles.md", "options": [{"_texte": "Parce que <code>rolling(24)<\/code> sans <code>shift<\/code> lève une erreur à cause des valeurs manquantes", "correcte": false, "_justification": "<code>rolling<\/code> fonctionne très bien sans <code>shift<\/code> et ne lève aucune erreur : c'est ce qui rend la fuite silencieuse."}, {"_texte": "Parce que <code>shift(1)<\/code> rend la série stationnaire", "correcte": false, "_justification": "<code>shift<\/code> décale les valeurs, il ne différencie pas : la stationnarité n'a rien à voir avec ce choix."}, {"_texte": "Pour que la fenêtre ne contienne que des heures passées : sans <code>shift(1)<\/code>, elle inclurait la valeur à prédire, ce qui est une fuite de données", "correcte": true, "_justification": "C'est l'explication de l'étape 5. Sur ce jeu, l'effet mesuré est faible (MAE 14,4 avec fuite contre 14,8 sans, car <code>lag_1<\/code> domine déjà), mais le principe reste : une fuite peut être bien plus grave ailleurs."}, {"_texte": "Pour accélérer le calcul de la moyenne glissante", "correcte": false, "_justification": "Le décalage n'a aucun effet sur la vitesse. Il change ce que la moyenne contient, pas le coût du calcul."}]}, {"_enonce": "Quelle variable domine l'importance de la forêt aléatoire de l'étape 5, et que dit cela de sa supériorité (MAE 14,8) sur les modèles de l'étape 4 ?", "_multiple": false, "difficulte": "difficile", "theme": "Apprentissage supervisé", "source_fichier": "tp6-series-temporelles.md", "_source": "tp6-series-temporelles.md", "options": [{"_texte": "<code>heure<\/code>, à plus de 50 %, car le cycle quotidien est la source principale de signal", "correcte": false, "_justification": "<code>heure<\/code> ne porte qu'environ 6 % de l'importance (0,060). Le gros du signal est dans <code>lag_1<\/code>."}, {"_texte": "<code>lag_1<\/code>, à environ 69 % (<code>lag_168<\/code> suit à environ 16 %) : la forêt gagne surtout parce qu'elle connaît la dernière valeur réelle juste avant l'instant à prédire, ce que les modèles lancés une fois pour 7 jours n'ont pas", "correcte": true, "_justification": "Mesuré : 0,686 pour <code>lag_1<\/code> et 0,158 pour <code>lag_168<\/code>. Le modèle supervisé ne gagne pas parce qu'il est plus sophistiqué en soi."}, {"_texte": "<code>est_weekend<\/code>, car le profil diffère entre semaine et week-end", "correcte": false, "_justification": "<code>est_weekend<\/code> pèse environ 0 : l'information est déjà portée par <code>lag_1<\/code>, <code>lag_24<\/code> et <code>lag_168<\/code>."}, {"_texte": "<code>mois<\/code>, car la saison explique l'essentiel de la demande", "correcte": false, "_justification": "<code>mois<\/code> pèse environ 0,3 % (0,003) : sur un horizon de 7 jours, la saison varie à peine."}]}]};
+const form = document.getElementById('qcm');
+DATA.questions.forEach((q, i) => {
+  const multi = q._multiple;
+  const div = document.createElement('div');
+  div.className = 'q'; div.id = 'q'+i;
+  let badges = '';
+  if (q.difficulte) badges += `<span class="badge b-${q.difficulte}">${q.difficulte}</span>`;
+  if (q.theme) badges += `<span class="badge b-theme">${q.theme}</span>`;
+  const hint = multi ? ' <small>(plusieurs réponses)</small>' : '';
+  let html = `<span class="qmark" id="m${i}"></span><h3>Question ${i+1}${hint}${badges}</h3>`;
+  html += `<div class="enonce">${q._enonce}</div>`;
+  q.options.forEach((o, j) => {
+    const type = multi ? 'checkbox' : 'radio';
+    html += `<label class="opt" id="o${i}_${j}">`
+          + `<input type="${type}" name="q${i}" value="${j}">${o._texte}</label>`;
+    html += `<div class="just" id="j${i}_${j}">${o._justification||''}</div>`;
+  });
+  if (q.source_fichier) html += `<div class="src" id="s${i}">Source : ${q._source}</div>`;
+  div.innerHTML = html;
+  form.appendChild(div);
+});
+function grade(){
+  let correct = 0;
+  DATA.questions.forEach((q, i) => {
+    const chosen = [...form.querySelectorAll(`input[name=q${i}]:checked`)].map(e=>+e.value);
+    const good = q.options.map((o,j)=>o.correcte?j:-1).filter(j=>j>=0);
+    const ok = chosen.length===good.length && chosen.every(j=>good.includes(j));
+    if (ok) correct++;
+    q.options.forEach((o,j)=>{
+      const lab = document.getElementById(`o${i}_${j}`);
+      lab.classList.remove('correct','wrong');
+      if (o.correcte) lab.classList.add('correct');
+      else if (chosen.includes(j)) lab.classList.add('wrong');
+      const ju = document.getElementById(`j${i}_${j}`);
+      if (ju && o._justification) ju.classList.add('show');
+    });
+    const m = document.getElementById('m'+i);
+    m.textContent = ok ? '✓' : '✗';
+    m.style.color = ok ? 'var(--ok)' : 'var(--ko)';
+    m.classList.add('show');
+    const s = document.getElementById('s'+i); if (s) s.classList.add('show');
+  });
+  const n = DATA.questions.length;
+  const pct = Math.round(100*correct/n);
+  const sc = document.getElementById('score');
+  sc.textContent = `Score : ${correct} / ${n}  (${pct} %)`;
+  sc.style.color = pct>=50 ? 'var(--ok)' : 'var(--ko)';
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+</script>
+</body>
+</html>

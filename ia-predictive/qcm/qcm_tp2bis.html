@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QCM — TP2bis : Réduction de dimension</title>
+<style>
+  :root { --ok:#1b8a5a; --ko:#c0392b; --accent:#2c5f8a; --bg:#f6f7f9; }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, "Segoe UI", Roboto, sans-serif; line-height:1.5;
+         max-width: 820px; margin: 0 auto; padding: 1.5rem; color:#1a1a1a; background:var(--bg); }
+  h1 { color: var(--accent); margin-bottom:.2rem; }
+  .meta { color:#666; font-size:.9rem; margin-bottom:1rem; }
+  .consignes { background:#eef3f8; border-left:4px solid var(--accent); padding:.6rem .9rem;
+               border-radius:4px; margin-bottom:1.2rem; }
+  .q { background:#fff; border:1px solid #e1e4e8; border-radius:8px; padding:1rem 1.2rem;
+       margin-bottom:1rem; box-shadow:0 1px 2px rgba(0,0,0,.04); }
+  .q h3 { margin:.1rem 0 .2rem; font-size:1.05rem; }
+  .badge { font-size:.72rem; font-weight:600; padding:.1rem .5rem; border-radius:10px;
+           margin-left:.4rem; vertical-align:middle; }
+  .b-facile{background:#e3f4ea;color:var(--ok);} .b-moyen{background:#fdf3e0;color:#b87600;}
+  .b-difficile{background:#fbe6e6;color:var(--ko);} .b-theme{background:#eef0f3;color:#555;}
+  .enonce { margin:.4rem 0 .8rem; }
+  .opt { display:block; padding:.45rem .6rem; border:1px solid #e1e4e8; border-radius:6px;
+         margin:.35rem 0; cursor:pointer; transition:background .12s; }
+  .opt:hover { background:#f0f4f8; }
+  .opt input { margin-right:.55rem; }
+  .opt.correct { border-color:var(--ok); background:#eaf7f0; }
+  .opt.wrong   { border-color:var(--ko); background:#fbecec; }
+  .just { font-size:.86rem; color:#555; margin:.2rem 0 0 1.7rem; display:none; }
+  .just.show { display:block; }
+  .src { font-size:.78rem; color:#888; margin-top:.5rem; display:none; }
+  .src.show { display:block; }
+  .bar { position:sticky; bottom:0; background:var(--bg); padding:.8rem 0; }
+  button { background:var(--accent); color:#fff; border:0; padding:.6rem 1.3rem;
+           font-size:1rem; border-radius:6px; cursor:pointer; }
+  button.ghost { background:#fff; color:var(--accent); border:1px solid var(--accent); margin-left:.5rem; }
+  #score { font-size:1.2rem; font-weight:700; margin-left:1rem; }
+  .qmark { float:right; font-weight:700; display:none; }
+  .qmark.show{display:inline;}
+</style>
+</head>
+<body>
+<h1>QCM — TP2bis : Réduction de dimension</h1>
+<div class="meta">Source : site/docs/ia-predictive/tp2bis-reduction-dimension.md — 10 questions</div>
+<div class="consignes">Cochez la bonne réponse. Une seule réponse est correcte par question. Toutes les valeurs numériques citées sont celles mesurées pendant le TP (scikit-learn 1.9.1, jeu Iris, graine fixe).</div>
+<form id="qcm"></form>
+<div class="bar">
+  <button type="button" onclick="grade()">Valider mes réponses</button>
+  <button type="button" class="ghost" onclick="location.reload()">Réinitialiser</button>
+  <span id="score"></span>
+</div>
+<script>
+const DATA = {"questions": [{"_enonce": "Des points tirés uniformément dans <code>[0, 1]<\/code> sur chaque axe ont, en moyenne, un plus proche voisin à 0,035 en dimension 2, 0,624 en dimension 10 et 2,24 en dimension 50 (200 points). Quel est le bon enseignement ?", "_multiple": false, "difficulte": "moyen", "theme": "Fléau de la dimension", "source_fichier": "tp2bis-reduction-dimension.md", "_source": "tp2bis-reduction-dimension.md", "options": [{"_texte": "L'espace s'agrandit avec la dimension, ce qui explique que les points s'éloignent", "correcte": false, "_justification": "L'intervalle de chaque axe reste <code>[0, 1]<\/code> : ce n'est pas la taille de l'espace par axe, c'est le nombre d'axes qui fait croître les distances."}, {"_texte": "En dimension 50 les voisins sont environ 63 fois plus loin qu'en dimension 2 : la notion de « proche voisin » perd son sens discriminant", "correcte": true, "_justification": "Exercice 1.1 : mesuré 63,3. L'intervalle <code>[0, 1]<\/code> est le même, c'est le nombre d'axes qui change."}, {"_texte": "Les distances ne dépendent pas de la dimension, les écarts observés sont du hasard", "correcte": false, "_justification": "L'écart est systématique et énorme (facteur 63) : il n'est pas dû au hasard d'un tirage."}, {"_texte": "Plus la dimension est grande, plus les voisins se rapprochent, ce qui facilite la prédiction", "correcte": false, "_justification": "C'est l'inverse : les voisins s'éloignent, ce qui rend la prédiction par proximité plus difficile."}]}, {"_enonce": "Dans la construction de la PCA « à la main » sur Iris, que sont les vecteurs propres et les valeurs propres de la matrice de covariance des données centrées ?", "_multiple": false, "difficulte": "moyen", "theme": "PCA depuis sa définition", "source_fichier": "tp2bis-reduction-dimension.md", "_source": "tp2bis-reduction-dimension.md", "options": [{"_texte": "Les vecteurs propres sont les directions de l'espace, la valeur propre associée est la variance portée par chaque direction", "correcte": true, "_justification": "Étape 2 du TP. Les deux premières valeurs propres mesurées sont 2,938 et 0,92."}, {"_texte": "Les vecteurs propres sont les observations les plus extrêmes, les valeurs propres leurs distances à la moyenne", "correcte": false, "_justification": "Les vecteurs propres sont des directions, pas des observations."}, {"_texte": "Les vecteurs propres sont les classes d'Iris, les valeurs propres leurs effectifs", "correcte": false, "_justification": "La PCA ignore les étiquettes : les classes d'Iris n'interviennent pas dans le calcul."}, {"_texte": "Les vecteurs propres sont les variables d'origine triées par importance", "correcte": false, "_justification": "Ce sont des combinaisons linéaires des variables, pas les variables elles-mêmes, et leur tri vient des valeurs propres."}]}, {"_enonce": "Sur Iris standardisé, les valeurs propres sont 2,938, 0,92, 0,148 et 0,021 ; <code>PCA(n_components=2)<\/code> donne des ratios de 0,73 et 0,229. Quelle part de variance les deux axes retiennent-ils ?", "_multiple": false, "difficulte": "moyen", "theme": "Variance expliquée", "source_fichier": "tp2bis-reduction-dimension.md", "_source": "tp2bis-reduction-dimension.md", "options": [{"_texte": "Environ 50 % : deux axes sur quatre retiennent la moitié", "correcte": false, "_justification": "Les axes n'ont pas le même poids : le premier à lui seul porte 73 %."}, {"_texte": "Environ 95,8 %, mesurés sur les valeurs brutes de Iris sans standardiser", "correcte": false, "_justification": "Le chiffre est exact, pas le contexte : il vient des données standardisées. Sans standardiser, le premier axe porterait 92,5 % et le second 5,3 %, soit 97,8 %."}, {"_texte": "Environ 95,8 % : peu de perte, les 4 variables sont fortement redondantes", "correcte": true, "_justification": "Mesuré : 0,73 + 0,229 = 0,958."}, {"_texte": "Environ 4,03 %, la somme des deux plus petites valeurs propres", "correcte": false, "_justification": "Les deux plus petites valeurs propres (0,148 et 0,021) sont celles des axes écartés. La variance retenue est celle des deux plus grandes."}]}, {"_enonce": "Sur les trois premiers points d'Iris, <code>X_pca_manuel<\/code> donne une deuxième colonne <code>[-0.48, 0.674, 0.342]<\/code> et <code>PCA<\/code> de scikit-learn <code>[0.48, -0.674, -0.342]<\/code>. Que conclure ?", "_multiple": false, "difficulte": "moyen", "theme": "Signe des axes", "source_fichier": "tp2bis-reduction-dimension.md", "_source": "tp2bis-reduction-dimension.md", "options": [{"_texte": "L'une des deux implémentations est fausse, il faut chercher le bogue", "correcte": false, "_justification": "Aucune n'est fausse : les deux vérifient la définition d'un vecteur propre."}, {"_texte": "Le jeu de données a été modifié entre les deux calculs", "correcte": false, "_justification": "Les deux calculs partent du même <code>Xs<\/code> : la première colonne identique le confirme."}, {"_texte": "Il faut toujours préférer le signe de scikit-learn, qui est le seul correct", "correcte": false, "_justification": "Aucun signe n'est « le bon » : l'orientation d'un axe est arbitraire."}, {"_texte": "Rien d'anormal : si <code>v<\/code> est un vecteur propre, <code>-v<\/code> l'est aussi, deux implémentations peuvent choisir des signes différents", "correcte": true, "_justification": "Exercice 2.1. La première colonne coïncide exactement, la deuxième est de signe opposé."}]}, {"_enonce": "Un collègue lit un graphique PCA : « les points en haut sont ceux de la classe A, ceux d'en bas ceux de la classe B ». Quel défaut cette lecture a-t-elle ?", "_multiple": false, "difficulte": "difficile", "theme": "Interprétation des axes PCA", "source_fichier": "tp2bis-reduction-dimension.md", "_source": "tp2bis-reduction-dimension.md", "options": [{"_texte": "Aucun défaut : en PCA le haut correspond toujours aux valeurs fortes", "correcte": false, "_justification": "Rien ne garantit que le haut corresponde aux valeurs fortes : sur Iris, deux implémentations inversent précisément l'axe 2."}, {"_texte": "Le signe d'un axe étant arbitraire (deux implémentations donnent des signes opposés), seul compte la position relative des points, jamais « haut » ou « bas » absolus", "correcte": true, "_justification": "C'est la conclusion du corrigé de l'exercice 2.1 : l'orientation d'un axe PCA n'a pas de sens en elle-même."}, {"_texte": "Les points d'un graphique PCA ne peuvent jamais être regroupés par classe", "correcte": false, "_justification": "Au contraire : sur Iris, la PCA sépare déjà bien les classes (silhouette 0,401), simplement sans lire « haut » et « bas » absolus."}, {"_texte": "Le défaut est que la PCA exige des étiquettes pour tracer le graphique", "correcte": false, "_justification": "La PCA n'utilise pas d'étiquettes : elle ne dépend que des variables."}]}, {"_enonce": "Sur Iris standardisé, la silhouette contre les vraies espèces vaut 0,436 pour t-SNE avec <code>perplexity=5<\/code>, 0,525 avec 30 et 0,517 avec 50. Quel enseignement le TP en tire-t-il ?", "_multiple": false, "difficulte": "moyen", "theme": "t-SNE et perplexité", "source_fichier": "tp2bis-reduction-dimension.md", "_source": "tp2bis-reduction-dimension.md", "options": [{"_texte": "Plus la perplexité est grande, meilleur est le résultat : il faut toujours prendre la valeur maximale", "correcte": false, "_justification": "Mesuré : 50 (0,517) fait un peu moins bien que 30 (0,525). Ce n'est pas monotone."}, {"_texte": "La perplexité n'a pratiquement aucune influence, puisque les trois scores sont proches", "correcte": false, "_justification": "L'écart entre 5 (0,436) et 30 (0,525) est net. Le paramètre influe, et sa valeur dépend de la taille du jeu."}, {"_texte": "<code>perplexity=30<\/code> structure mieux les trois espèces que 5 : une perplexité trop basse ne capture qu'un voisinage trop étroit pour 150 points ; elle se traite comme un hyperparamètre à essayer", "correcte": true, "_justification": "Exercice 3.1. scikit-learn recommande une valeur entre 5 et 50."}, {"_texte": "La perplexité doit toujours valoir 5, valeur universelle recommandée par scikit-learn", "correcte": false, "_justification": "Il n'y a pas de valeur universelle : c'est un hyperparamètre, à choisir en fonction de la taille du jeu de données."}]}, {"_enonce": "Deux clusters sont très éloignés l'un de l'autre sur un graphique t-SNE. Que peut-on en déduire ?", "_multiple": false, "difficulte": "moyen", "theme": "Pièges de t-SNE", "source_fichier": "tp2bis-reduction-dimension.md", "_source": "tp2bis-reduction-dimension.md", "options": [{"_texte": "Rien de quantitatif sur leur différence : t-SNE préserve les voisinages locaux, pas les distances globales ni les tailles de clusters", "correcte": true, "_justification": "C'est le piège de l'encadré « L'IA vous le donne en trois secondes ». La seule lecture fiable est « ces points sont voisins »."}, {"_texte": "Que les deux groupes sont très différents, proportionnellement à la distance affichée", "correcte": false, "_justification": "C'est précisément l'abus d'interprétation classique : la distance entre clusters éloignés n'est pas garantie par t-SNE."}, {"_texte": "Que le graphique est faux et qu'il faut recommencer avec une autre graine", "correcte": false, "_justification": "Rien n'indique une erreur : un t-SNE correct peut montrer des clusters éloignés sans que cette distance soit interprétable."}, {"_texte": "Que les deux groupes ont forcément la même taille", "correcte": false, "_justification": "t-SNE ne garantit rien sur la taille relative des clusters non plus."}]}, {"_enonce": "Quelle différence pratique entre t-SNE et UMAP après l'entraînement ?", "_multiple": false, "difficulte": "difficile", "theme": "t-SNE contre UMAP", "source_fichier": "tp2bis-reduction-dimension.md", "_source": "tp2bis-reduction-dimension.md", "options": [{"_texte": "t-SNE peut projeter de nouveaux points, UMAP non", "correcte": false, "_justification": "C'est l'inverse : <code>TSNE<\/code> n'a pas de <code>transform<\/code>, <code>UMAP<\/code> en a une."}, {"_texte": "Aucune : ils ont exactement les mêmes méthodes", "correcte": false, "_justification": "<code>TSNE<\/code> n'a que <code>fit<\/code> et <code>fit_transform<\/code> pour projeter, pas de <code>transform<\/code> séparée."}, {"_texte": "UMAP n'a pas de paramètre aléatoire, t-SNE en a un", "correcte": false, "_justification": "Les deux dépendent d'un tirage aléatoire (<code>random_state<\/code>), d'où l'usage d'une graine fixe dans le TP."}, {"_texte": "UMAP peut projeter de nouveaux points avec <code>transform<\/code>, alors que <code>TSNE<\/code> de scikit-learn n'a pas de méthode <code>transform<\/code>", "correcte": true, "_justification": "Vérifié sur les objets : <code>hasattr(TSNE(), &quot;transform&quot;)<\/code> vaut <code>False<\/code>, <code>hasattr(umap.UMAP(), &quot;transform&quot;)<\/code> vaut <code>True<\/code>."}]}, {"_enonce": "Sur Iris standardisé, la silhouette contre les vraies espèces vaut 0,401 pour la PCA et 0,646 pour la LDA. Pourquoi LDA sépare-t-elle mieux ?", "_multiple": false, "difficulte": "moyen", "theme": "PCA contre LDA", "source_fichier": "tp2bis-reduction-dimension.md", "_source": "tp2bis-reduction-dimension.md", "options": [{"_texte": "LDA est un algorithme plus récent, donc toujours meilleur que la PCA", "correcte": false, "_justification": "Aucun lien avec l'âge : LDA gagne ici parce qu'elle utilise les étiquettes."}, {"_texte": "LDA optimise la séparation entre classes connues ; la PCA optimise la variance totale sans savoir que les classes existent", "correcte": true, "_justification": "Exercice 4.1. Rien ne garantit que la direction de plus grande variance soit celle qui sépare le mieux les classes."}, {"_texte": "La PCA ne fonctionne pas sur des données standardisées", "correcte": false, "_justification": "La PCA fonctionne parfaitement sur des données standardisées (c'est ce qu'on lui donne ici)."}, {"_texte": "LDA utilise 4 axes contre 2 pour la PCA", "correcte": false, "_justification": "Les deux sont ramenées à 2 composantes (<code>n_components=2<\/code>) : la comparaison se fait à dimension égale."}]}, {"_enonce": "Sur Iris (3 classes), <code>LinearDiscriminantAnalysis(n_components=3)<\/code> est-il possible, et quand préférer la PCA à la LDA ?", "_multiple": false, "difficulte": "difficile", "theme": "Contraintes de la LDA", "source_fichier": "tp2bis-reduction-dimension.md", "_source": "tp2bis-reduction-dimension.md", "options": [{"_texte": "Oui, on peut demander autant de composantes que de variables, soit 4 pour Iris", "correcte": false, "_justification": "Vérifié, c'est refusé : le maximum est <code>min(n_features, n_classes - 1)<\/code>, soit 2 pour Iris."}, {"_texte": "Non, car 3 classes exigent exactement 3 composantes, mais cette valeur est refusée", "correcte": false, "_justification": "C'est l'inverse : 3 classes autorisent au plus 2 composantes (nombre de classes moins un)."}, {"_texte": "Non, <code>ValueError<\/code> : <code>n_components<\/code> ne peut dépasser <code>min(n_features, n_classes - 1)<\/code>, soit 2 ; et la PCA reste la seule option sans étiquettes", "correcte": true, "_justification": "Vérifié : <code>ValueError: n_components cannot be larger than min(n_features, n_classes - 1)<\/code>. LDA a besoin d'étiquettes, la PCA non."}, {"_texte": "Oui, et la LDA est préférable à la PCA même sans étiquettes, car plus rapide", "correcte": false, "_justification": "La LDA exige des étiquettes (<code>fit_transform(Xs, y)<\/code>) : sans elles, elle n'est pas utilisable."}]}]};
+const form = document.getElementById('qcm');
+DATA.questions.forEach((q, i) => {
+  const multi = q._multiple;
+  const div = document.createElement('div');
+  div.className = 'q'; div.id = 'q'+i;
+  let badges = '';
+  if (q.difficulte) badges += `<span class="badge b-${q.difficulte}">${q.difficulte}</span>`;
+  if (q.theme) badges += `<span class="badge b-theme">${q.theme}</span>`;
+  const hint = multi ? ' <small>(plusieurs réponses)</small>' : '';
+  let html = `<span class="qmark" id="m${i}"></span><h3>Question ${i+1}${hint}${badges}</h3>`;
+  html += `<div class="enonce">${q._enonce}</div>`;
+  q.options.forEach((o, j) => {
+    const type = multi ? 'checkbox' : 'radio';
+    html += `<label class="opt" id="o${i}_${j}">`
+          + `<input type="${type}" name="q${i}" value="${j}">${o._texte}</label>`;
+    html += `<div class="just" id="j${i}_${j}">${o._justification||''}</div>`;
+  });
+  if (q.source_fichier) html += `<div class="src" id="s${i}">Source : ${q._source}</div>`;
+  div.innerHTML = html;
+  form.appendChild(div);
+});
+function grade(){
+  let correct = 0;
+  DATA.questions.forEach((q, i) => {
+    const chosen = [...form.querySelectorAll(`input[name=q${i}]:checked`)].map(e=>+e.value);
+    const good = q.options.map((o,j)=>o.correcte?j:-1).filter(j=>j>=0);
+    const ok = chosen.length===good.length && chosen.every(j=>good.includes(j));
+    if (ok) correct++;
+    q.options.forEach((o,j)=>{
+      const lab = document.getElementById(`o${i}_${j}`);
+      lab.classList.remove('correct','wrong');
+      if (o.correcte) lab.classList.add('correct');
+      else if (chosen.includes(j)) lab.classList.add('wrong');
+      const ju = document.getElementById(`j${i}_${j}`);
+      if (ju && o._justification) ju.classList.add('show');
+    });
+    const m = document.getElementById('m'+i);
+    m.textContent = ok ? '✓' : '✗';
+    m.style.color = ok ? 'var(--ok)' : 'var(--ko)';
+    m.classList.add('show');
+    const s = document.getElementById('s'+i); if (s) s.classList.add('show');
+  });
+  const n = DATA.questions.length;
+  const pct = Math.round(100*correct/n);
+  const sc = document.getElementById('score');
+  sc.textContent = `Score : ${correct} / ${n}  (${pct} %)`;
+  sc.style.color = pct>=50 ? 'var(--ok)' : 'var(--ko)';
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+</script>
+</body>
+</html>

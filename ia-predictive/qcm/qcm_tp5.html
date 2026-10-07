@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QCM — TP5 : Régression et validation croisée</title>
+<style>
+  :root { --ok:#1b8a5a; --ko:#c0392b; --accent:#2c5f8a; --bg:#f6f7f9; }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, "Segoe UI", Roboto, sans-serif; line-height:1.5;
+         max-width: 820px; margin: 0 auto; padding: 1.5rem; color:#1a1a1a; background:var(--bg); }
+  h1 { color: var(--accent); margin-bottom:.2rem; }
+  .meta { color:#666; font-size:.9rem; margin-bottom:1rem; }
+  .consignes { background:#eef3f8; border-left:4px solid var(--accent); padding:.6rem .9rem;
+               border-radius:4px; margin-bottom:1.2rem; }
+  .q { background:#fff; border:1px solid #e1e4e8; border-radius:8px; padding:1rem 1.2rem;
+       margin-bottom:1rem; box-shadow:0 1px 2px rgba(0,0,0,.04); }
+  .q h3 { margin:.1rem 0 .2rem; font-size:1.05rem; }
+  .badge { font-size:.72rem; font-weight:600; padding:.1rem .5rem; border-radius:10px;
+           margin-left:.4rem; vertical-align:middle; }
+  .b-facile{background:#e3f4ea;color:var(--ok);} .b-moyen{background:#fdf3e0;color:#b87600;}
+  .b-difficile{background:#fbe6e6;color:var(--ko);} .b-theme{background:#eef0f3;color:#555;}
+  .enonce { margin:.4rem 0 .8rem; }
+  .opt { display:block; padding:.45rem .6rem; border:1px solid #e1e4e8; border-radius:6px;
+         margin:.35rem 0; cursor:pointer; transition:background .12s; }
+  .opt:hover { background:#f0f4f8; }
+  .opt input { margin-right:.55rem; }
+  .opt.correct { border-color:var(--ok); background:#eaf7f0; }
+  .opt.wrong   { border-color:var(--ko); background:#fbecec; }
+  .just { font-size:.86rem; color:#555; margin:.2rem 0 0 1.7rem; display:none; }
+  .just.show { display:block; }
+  .src { font-size:.78rem; color:#888; margin-top:.5rem; display:none; }
+  .src.show { display:block; }
+  .bar { position:sticky; bottom:0; background:var(--bg); padding:.8rem 0; }
+  button { background:var(--accent); color:#fff; border:0; padding:.6rem 1.3rem;
+           font-size:1rem; border-radius:6px; cursor:pointer; }
+  button.ghost { background:#fff; color:var(--accent); border:1px solid var(--accent); margin-left:.5rem; }
+  #score { font-size:1.2rem; font-weight:700; margin-left:1rem; }
+  .qmark { float:right; font-weight:700; display:none; }
+  .qmark.show{display:inline;}
+</style>
+</head>
+<body>
+<h1>QCM — TP5 : Régression et validation croisée</h1>
+<div class="meta">Source : site/docs/ia-predictive/tp5-regression.md — 10 questions</div>
+<div class="consignes">Cochez la bonne réponse. Une seule réponse est correcte par question. Toutes les valeurs numériques citées sont celles mesurées en rejouant le TP (scikit-learn 1.9.1, pandas 3.0.5, jeu California Housing, random_state=42).</div>
+<form id="qcm"></form>
+<div class="bar">
+  <button type="button" onclick="grade()">Valider mes réponses</button>
+  <button type="button" class="ghost" onclick="location.reload()">Réinitialiser</button>
+  <span id="score"></span>
+</div>
+<script>
+const DATA = {"questions": [{"_enonce": "Sur California Housing, on prédit le prix médian d'un logement. Quelle métrique est inadaptée à cette régression ?", "_multiple": false, "difficulte": "facile", "theme": "Régression et classification", "source_fichier": "tp5-regression.md", "_source": "tp5-regression.md", "options": [{"_texte": "Le MAE, l'erreur absolue moyenne", "correcte": false, "_justification": "Le MAE est une métrique de régression : il mesure un écart moyen entre prix prédit et prix réel."}, {"_texte": "Le RMSE, la racine de l'erreur quadratique moyenne", "correcte": false, "_justification": "Le RMSE est une métrique de régression classique, qui pénalise davantage les grosses erreurs."}, {"_texte": "L'exactitude (proportion de prédictions exactes)", "correcte": true, "_justification": "Une sortie continue n'est presque jamais exactement égale à la valeur réelle : l'exactitude n'a pas de sens ici. On mesure des écarts (MAE, RMSE) ou une variance expliquée (R2)."}, {"_texte": "Le R2, la part de variance expliquée", "correcte": false, "_justification": "Le R2 est une métrique de régression : 0,623 pour l'arbre non limité du TP."}]}, {"_enonce": "Un arbre non limité obtient sur le test un MAE de 0,454 (prix en centaines de milliers de dollars). Quelle erreur moyenne cela représente-t-il ?", "_multiple": false, "difficulte": "facile", "theme": "Métriques de régression", "source_fichier": "tp5-regression.md", "_source": "tp5-regression.md", "options": [{"_texte": "Environ 45 400 $", "correcte": true, "_justification": "0,454 × 100 000 $ = 45 400 $ d'erreur absolue moyenne, comme l'indique le TP."}, {"_texte": "Environ 454 000 $", "correcte": false, "_justification": "Ce serait le cas si l'unité était le million de dollars. Ici, c'est la centaine de milliers."}, {"_texte": "Environ 4 540 $", "correcte": false, "_justification": "Un facteur dix de trop d'un côté : 0,454 centaine de milliers de dollars vaut bien 45 400 $."}, {"_texte": "Environ 454 $", "correcte": false, "_justification": "L'unité est la centaine de milliers de dollars : 0,454 × 100 000 vaut 45 400, pas 454."}]}, {"_enonce": "Sur le même test, le RMSE de l'arbre vaut 0,703 et son MAE 0,454. Pourquoi le RMSE n'est-il jamais inférieur au MAE ?", "_multiple": false, "difficulte": "moyen", "theme": "Métriques de régression", "source_fichier": "tp5-regression.md", "_source": "tp5-regression.md", "options": [{"_texte": "Parce que le MAE est arrondi à la baisse par scikit-learn", "correcte": false, "_justification": "Aucun arrondi de ce genre : les deux valeurs affichées sont simplement arrondies à trois décimales par le code du TP."}, {"_texte": "Parce que le RMSE est calculé sur le jeu d'entraînement et le MAE sur le test", "correcte": false, "_justification": "Les deux sont calculés ici avec <code>y_test<\/code> et <code>predictions<\/code>, sur les mêmes données."}, {"_texte": "Parce que le RMSE inclut l'écart-type de la cible, que le MAE ignore", "correcte": false, "_justification": "Le RMSE ne contient aucun écart-type de la cible : c'est la racine de la moyenne des carrés des erreurs."}, {"_texte": "Parce que le RMSE élève chaque erreur au carré avant de moyenner : une grosse erreur pèse plus que des petites de même somme", "correcte": true, "_justification": "Mesuré : la plus grosse erreur du test vaut 4,1, soit environ neuf fois le MAE. Le RMSE ne peut qu'être supérieur ou égal, avec égalité seulement si toutes les erreurs sont identiques."}]}, {"_enonce": "L'arbre non limité a un R2 de 0,623 sur le test. Que signifie cette valeur ?", "_multiple": false, "difficulte": "moyen", "theme": "Métriques de régression", "source_fichier": "tp5-regression.md", "_source": "tp5-regression.md", "options": [{"_texte": "Le modèle prédit correctement 62,3 % des logements", "correcte": false, "_justification": "Le R2 n'est pas une proportion de prédictions justes : une prédiction de régression n'est pas « juste » ou « fausse »."}, {"_texte": "Le modèle explique 62,3 % de la variance du prix : un modèle qui prédirait toujours le prix moyen aurait un R2 voisin de 0", "correcte": true, "_justification": "Mesuré : un prédicteur constant égal à la moyenne d'entraînement obtient un R2 de −0,0002 sur le test. Le R2 se lit donc par rapport à cette référence."}, {"_texte": "L'erreur moyenne est de 62,3 % du prix médian", "correcte": false, "_justification": "Le R2 n'est pas une erreur relative. L'erreur moyenne est le MAE (0,454)."}, {"_texte": "Le modèle se trompe sur 37,7 % des logements", "correcte": false, "_justification": "Le R2 n'indique pas de pourcentage de prédictions fausses : cette lecture est celle d'une exactitude de classification."}]}, {"_enonce": "Un assistant propose <code>mean_squared_error(y_test, predictions, squared=False)<\/code> pour obtenir le RMSE. Avec scikit-learn 1.9.1, que se passe-t-il, et que faut-il écrire ?", "_multiple": false, "difficulte": "moyen", "theme": "L'IA vous le donne en trois secondes", "source_fichier": "tp5-regression.md", "_source": "tp5-regression.md", "options": [{"_texte": "Un simple avertissement de dépréciation, le résultat étant correct", "correcte": false, "_justification": "Le temps des avertissements est passé : le paramètre a été retiré et l'appel échoue."}, {"_texte": "Rien de particulier : le code fonctionne et renvoie le RMSE de 0,703", "correcte": false, "_justification": "Il ne fonctionne plus. C'est pour cela que le TP utilise <code>root_mean_squared_error<\/code> dès l'étape 1."}, {"_texte": "Une <code>TypeError<\/code> : le paramètre <code>squared<\/code> a été retiré. On utilise <code>root_mean_squared_error(y_test, predictions)<\/code>", "correcte": true, "_justification": "Mesuré : <code>got an unexpected keyword argument 'squared'<\/code>. La fonction dédiée <code>root_mean_squared_error<\/code> l'a remplacé."}, {"_texte": "Le code renvoie le MSE sans la racine, <code>squared=False<\/code> étant simplement ignoré", "correcte": false, "_justification": "Le paramètre n'est pas ignoré : il provoque une erreur explicite, ce qui évite un résultat faux silencieux."}]}, {"_enonce": "Avec <code>scoring=&quot;neg_root_mean_squared_error&quot;<\/code> et <code>KFold(5)<\/code>, <code>cross_val_score<\/code> renvoie cinq valeurs de −0,705 à −0,737 pour un arbre de profondeur 5. Quel est le RMSE moyen à rapporter ?", "_multiple": false, "difficulte": "moyen", "theme": "Validation croisée", "source_fichier": "tp5-regression.md", "_source": "tp5-regression.md", "options": [{"_texte": "0,723, l'opposé de la moyenne : <code>-scores.mean()<\/code>", "correcte": true, "_justification": "Mesuré : −0,723 en moyenne, soit un RMSE de 0,723 avec un écart-type de 0,010. Les scores <code>neg_*<\/code> suivent la règle « plus grand est meilleur », pour que les outils de sélection puissent toujours maximiser."}, {"_texte": "−0,723, la moyenne des scores telle qu'elle sort de <code>cross_val_score<\/code>", "correcte": false, "_justification": "Un RMSE négatif n'existe pas : le signe est une convention de scikit-learn, à retirer avant de rapporter le résultat."}, {"_texte": "0,010, l'écart-type des cinq scores", "correcte": false, "_justification": "L'écart-type (0,010) mesure la dispersion d'un partage à l'autre, pas l'erreur du modèle."}, {"_texte": "0,737, le pire des cinq scores en valeur absolue", "correcte": false, "_justification": "Le RMSE moyen est une moyenne, pas un extrême."}]}, {"_enonce": "Quel est l'apport de la validation croisée par rapport à un simple partage entraînement/test, pour régler un hyperparamètre ?", "_multiple": false, "difficulte": "moyen", "theme": "Validation croisée", "source_fichier": "tp5-regression.md", "_source": "tp5-regression.md", "options": [{"_texte": "Elle entraîne plus vite, car chaque modèle voit moins de données", "correcte": false, "_justification": "Elle est plus coûteuse : le modèle est entraîné cinq fois, ici avec <code>cv=5<\/code>."}, {"_texte": "Elle supprime tout risque de surapprentissage, quel que soit le modèle", "correcte": false, "_justification": "Elle ne supprime aucun risque : elle rend l'estimation du score plus robuste, c'est tout."}, {"_texte": "Elle remplace le jeu de test, qu'on peut alors supprimer du protocole", "correcte": false, "_justification": "Le TP garde le test pour l'évaluation finale (étape 3). La validation croisée se fait sur <code>X_train<\/code> seul."}, {"_texte": "Elle évite de régler l'hyperparamètre en regardant encore et encore le même jeu de test, en moyennant plusieurs partages de l'entraînement", "correcte": true, "_justification": "Régler sur le test finit par surapprendre ce jeu précis. La moyenne sur cinq partages donne une estimation moins dépendante d'un tirage."}]}, {"_enonce": "Par validation croisée, le RMSE vaut 0,724 pour l'arbre, 0,534 pour le boosting de gradient et 0,511 pour la forêt. Réentraînée sur tout <code>X_train<\/code>, la forêt obtient 0,506 sur le test. Que conclure ?", "_multiple": false, "difficulte": "moyen", "theme": "Comparer plusieurs modèles", "source_fichier": "tp5-regression.md", "_source": "tp5-regression.md", "options": [{"_texte": "Il faut refaire le choix du modèle sur le jeu de test, qui est plus fiable que la validation croisée", "correcte": false, "_justification": "Choisir sur le test le rendrait inutilisable comme évaluation finale. C'est ce que la validation croisée permet d'éviter."}, {"_texte": "La forêt est la meilleure et son score de test est cohérent avec celui de validation croisée : l'estimation n'était pas un coup de chance", "correcte": true, "_justification": "0,506 contre 0,511 : l'écart est minime. Un test très différent aurait signalé un jeu non représentatif ou une fuite de données."}, {"_texte": "La forêt est suspecte : son RMSE de test est inférieur à celui de validation croisée, ce qui est impossible", "correcte": false, "_justification": "Ce n'est pas impossible : le modèle final voit tout <code>X_train<\/code> (et non quatre cinquièmes), ce qui l'aide légèrement. L'écart de 0,005 reste faible."}, {"_texte": "Le boosting de gradient est le meilleur, car il est plus récent que la forêt", "correcte": false, "_justification": "Ancienneté ou modernité ne comptent pas : c'est le RMSE mesuré qui décide, et la forêt (0,511) bat le boosting (0,534) ici."}]}, {"_enonce": "Pour <code>max_depth<\/code> de 2 à 10, le RMSE de validation croisée vaut 0,653 à 7, 0,637 à 8, 0,633 à 9 et 0,643 à 10. Que peut-on dire ?", "_multiple": false, "difficulte": "difficile", "theme": "max_depth, sous- et surapprentissage", "source_fichier": "tp5-regression.md", "_source": "tp5-regression.md", "options": [{"_texte": "L'optimum est à la profondeur 9 : le RMSE baisse presque sans arrêt de 2 à 9, puis remonte, signature d'un optimum et non d'un plateau", "correcte": true, "_justification": "Mesuré : 0,859 à la profondeur 2, 0,633 à la 9, 0,643 à la 10. C'est le compromis entre sous-apprentissage (profondeur trop faible) et surapprentissage (trop forte)."}, {"_texte": "Le RMSE est constant au-delà de 7, le choix n'a donc aucune importance", "correcte": false, "_justification": "Il ne l'est pas : de 7 à 9 il passe de 0,653 à 0,633, puis remonte."}, {"_texte": "L'optimum est à la profondeur 2, la plus simple, car un arbre simple généralise toujours mieux", "correcte": false, "_justification": "À la profondeur 2, le RMSE est le pire (0,859) : l'arbre est trop simple, c'est le sous-apprentissage."}, {"_texte": "La profondeur 10 est la meilleure, car un arbre plus profond capte toujours plus de structure", "correcte": false, "_justification": "Mesuré : à 10, le RMSE remonte à 0,643. Au-delà de l'optimum, l'arbre commence à mémoriser le bruit."}]}, {"_enonce": "<code>df_profondeur<\/code> a pour colonnes <code>max_depth<\/code> (2 à 10) et <code>rmse_cv<\/code>, et pour index 0 à 8. Quelle expression renvoie directement la profondeur optimale (9) ?", "_multiple": false, "difficulte": "difficile", "theme": "max_depth, sous- et surapprentissage", "source_fichier": "tp5-regression.md", "_source": "tp5-regression.md", "options": [{"_texte": "<code>df_profondeur[&quot;rmse_cv&quot;].min()<\/code>", "correcte": false, "_justification": "Cela renvoie 0,633, la valeur minimale du RMSE, pas la profondeur qui la produit."}, {"_texte": "<code>df_profondeur[&quot;max_depth&quot;].max()<\/code>", "correcte": false, "_justification": "Cela renvoie 10, la plus grande profondeur testée, qui n'est pas la meilleure."}, {"_texte": "<code>df_profondeur.loc[df_profondeur[&quot;rmse_cv&quot;].idxmin(), &quot;max_depth&quot;]<\/code>", "correcte": true, "_justification": "Mesuré : renvoie 9. <code>idxmin()<\/code> trouve la ligne, <code>.loc[..., &quot;max_depth&quot;]<\/code> lit la profondeur de cette ligne. C'est la logique que <code>GridSearchCV<\/code> automatise."}, {"_texte": "<code>df_profondeur[&quot;rmse_cv&quot;].idxmin()<\/code>", "correcte": false, "_justification": "Mesuré : cela renvoie 7, l'étiquette d'index de la ligne minimale, pas la profondeur. L'index commence à 0, la profondeur à 2."}]}]};
+const form = document.getElementById('qcm');
+DATA.questions.forEach((q, i) => {
+  const multi = q._multiple;
+  const div = document.createElement('div');
+  div.className = 'q'; div.id = 'q'+i;
+  let badges = '';
+  if (q.difficulte) badges += `<span class="badge b-${q.difficulte}">${q.difficulte}</span>`;
+  if (q.theme) badges += `<span class="badge b-theme">${q.theme}</span>`;
+  const hint = multi ? ' <small>(plusieurs réponses)</small>' : '';
+  let html = `<span class="qmark" id="m${i}"></span><h3>Question ${i+1}${hint}${badges}</h3>`;
+  html += `<div class="enonce">${q._enonce}</div>`;
+  q.options.forEach((o, j) => {
+    const type = multi ? 'checkbox' : 'radio';
+    html += `<label class="opt" id="o${i}_${j}">`
+          + `<input type="${type}" name="q${i}" value="${j}">${o._texte}</label>`;
+    html += `<div class="just" id="j${i}_${j}">${o._justification||''}</div>`;
+  });
+  if (q.source_fichier) html += `<div class="src" id="s${i}">Source : ${q._source}</div>`;
+  div.innerHTML = html;
+  form.appendChild(div);
+});
+function grade(){
+  let correct = 0;
+  DATA.questions.forEach((q, i) => {
+    const chosen = [...form.querySelectorAll(`input[name=q${i}]:checked`)].map(e=>+e.value);
+    const good = q.options.map((o,j)=>o.correcte?j:-1).filter(j=>j>=0);
+    const ok = chosen.length===good.length && chosen.every(j=>good.includes(j));
+    if (ok) correct++;
+    q.options.forEach((o,j)=>{
+      const lab = document.getElementById(`o${i}_${j}`);
+      lab.classList.remove('correct','wrong');
+      if (o.correcte) lab.classList.add('correct');
+      else if (chosen.includes(j)) lab.classList.add('wrong');
+      const ju = document.getElementById(`j${i}_${j}`);
+      if (ju && o._justification) ju.classList.add('show');
+    });
+    const m = document.getElementById('m'+i);
+    m.textContent = ok ? '✓' : '✗';
+    m.style.color = ok ? 'var(--ok)' : 'var(--ko)';
+    m.classList.add('show');
+    const s = document.getElementById('s'+i); if (s) s.classList.add('show');
+  });
+  const n = DATA.questions.length;
+  const pct = Math.round(100*correct/n);
+  const sc = document.getElementById('score');
+  sc.textContent = `Score : ${correct} / ${n}  (${pct} %)`;
+  sc.style.color = pct>=50 ? 'var(--ok)' : 'var(--ko)';
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+</script>
+</body>
+</html>

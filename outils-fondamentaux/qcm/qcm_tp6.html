@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QCM du TP6 : Géométrie du plan</title>
+<style>
+  :root { --ok:#1b8a5a; --ko:#c0392b; --accent:#2c5f8a; --bg:#f6f7f9; }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, "Segoe UI", Roboto, sans-serif; line-height:1.5;
+         max-width: 820px; margin: 0 auto; padding: 1.5rem; color:#1a1a1a; background:var(--bg); }
+  h1 { color: var(--accent); margin-bottom:.2rem; }
+  .meta { color:#666; font-size:.9rem; margin-bottom:1rem; }
+  .consignes { background:#eef3f8; border-left:4px solid var(--accent); padding:.6rem .9rem;
+               border-radius:4px; margin-bottom:1.2rem; }
+  .q { background:#fff; border:1px solid #e1e4e8; border-radius:8px; padding:1rem 1.2rem;
+       margin-bottom:1rem; box-shadow:0 1px 2px rgba(0,0,0,.04); }
+  .q h3 { margin:.1rem 0 .2rem; font-size:1.05rem; }
+  .badge { font-size:.72rem; font-weight:600; padding:.1rem .5rem; border-radius:10px;
+           margin-left:.4rem; vertical-align:middle; }
+  .b-facile{background:#e3f4ea;color:var(--ok);} .b-moyen{background:#fdf3e0;color:#b87600;}
+  .b-difficile{background:#fbe6e6;color:var(--ko);} .b-theme{background:#eef0f3;color:#555;}
+  .enonce { margin:.4rem 0 .8rem; }
+  .opt { display:block; padding:.45rem .6rem; border:1px solid #e1e4e8; border-radius:6px;
+         margin:.35rem 0; cursor:pointer; transition:background .12s; }
+  .opt:hover { background:#f0f4f8; }
+  .opt input { margin-right:.55rem; }
+  .opt.correct { border-color:var(--ok); background:#eaf7f0; }
+  .opt.wrong   { border-color:var(--ko); background:#fbecec; }
+  .just { font-size:.86rem; color:#555; margin:.2rem 0 0 1.7rem; display:none; }
+  .just.show { display:block; }
+  .src { font-size:.78rem; color:#888; margin-top:.5rem; display:none; }
+  .src.show { display:block; }
+  .bar { position:sticky; bottom:0; background:var(--bg); padding:.8rem 0; }
+  button { background:var(--accent); color:#fff; border:0; padding:.6rem 1.3rem;
+           font-size:1rem; border-radius:6px; cursor:pointer; }
+  button.ghost { background:#fff; color:var(--accent); border:1px solid var(--accent); margin-left:.5rem; }
+  #score { font-size:1.2rem; font-weight:700; margin-left:1rem; }
+  .qmark { float:right; font-weight:700; display:none; }
+  .qmark.show{display:inline;}
+</style>
+</head>
+<body>
+<h1>QCM du TP6 : Géométrie du plan</h1>
+<div class="meta">Source : docs/outils-fondamentaux/tp6-geometrie-plan.md — 10 questions</div>
+<div class="consignes">Une seule bonne réponse par question, sauf mention contraire. Vous pouvez consulter le mémento.</div>
+<form id="qcm"></form>
+<div class="bar">
+  <button type="button" onclick="grade()">Valider mes réponses</button>
+  <button type="button" class="ghost" onclick="location.reload()">Réinitialiser</button>
+  <span id="score"></span>
+</div>
+<script>
+const DATA = {"questions": [{"_enonce": "Que vaut le produit scalaire de <code>(1, 2)<\/code> et <code>(3, 4)<\/code> ?", "_multiple": false, "difficulte": "facile", "theme": "Vecteurs", "source_fichier": "tp6-geometrie-plan.md", "_source": "tp6-geometrie-plan.md", "options": [{"_texte": "<code>11<\/code>", "correcte": true, "_justification": "<code>1 * 3 + 2 * 4 = 11<\/code>."}, {"_texte": "<code>-2<\/code>", "correcte": false, "_justification": "<code>1 * 4 - 2 * 3 = -2<\/code> est le déterminant, pas le produit scalaire."}, {"_texte": "<code>(3, 8)<\/code>", "correcte": false, "_justification": "C'est le produit terme à terme ; le produit scalaire est un nombre, pas un vecteur."}, {"_texte": "<code>10<\/code>", "correcte": false, "_justification": "Erreur de calcul : <code>1 * 3 + 2 * 4<\/code> vaut 11."}]}, {"_enonce": "Pourquoi le corrigé écrit-il <code>math.hypot(x, y)<\/code> plutôt que <code>math.sqrt(x * x + y * y)<\/code> pour la norme ?", "_multiple": false, "difficulte": "facile", "theme": "Vecteurs", "source_fichier": "tp6-geometrie-plan.md", "_source": "tp6-geometrie-plan.md", "options": [{"_texte": "Parce que les carrés <code>x * x + y * y<\/code> peuvent déborder vers l'infini pour de grandes coordonnées, alors que <code>hypot<\/code> évite ce débordement", "correcte": true, "_justification": "Au delà de <code>1e154<\/code>, le carré d'un flottant vaut <code>inf<\/code> ; <code>hypot<\/code> calcule la norme sans passer par les carrés."}, {"_texte": "Parce que <code>math.sqrt<\/code> n'accepte pas les sommes", "correcte": false, "_justification": "<code>math.sqrt<\/code> accepte n'importe quel flottant positif."}, {"_texte": "Parce que <code>hypot<\/code> est exact alors que <code>sqrt<\/code> est approché", "correcte": false, "_justification": "Les deux renvoient des flottants approchés ; la différence est le débordement, pas l'exactitude."}, {"_texte": "Uniquement pour écrire moins de caractères", "correcte": false, "_justification": "La raison est numérique, pas typographique."}]}, {"_enonce": "Que représente la valeur absolue du déterminant <code>u[0] * v[1] - u[1] * v[0]<\/code> de deux vecteurs du plan ?", "_multiple": false, "difficulte": "moyen", "theme": "Déterminant", "source_fichier": "tp6-geometrie-plan.md", "_source": "tp6-geometrie-plan.md", "options": [{"_texte": "L'aire du parallélogramme construit sur les deux vecteurs", "correcte": true, "_justification": "C'est l'interprétation géométrique du déterminant 2 x 2, d'où découle la formule du lacet."}, {"_texte": "La longueur de la somme des deux vecteurs", "correcte": false, "_justification": "La longueur d'un vecteur se calcule avec la norme, pas avec le déterminant."}, {"_texte": "Le cosinus de l'angle entre les deux vecteurs", "correcte": false, "_justification": "Le cosinus vient du produit scalaire divisé par les normes."}, {"_texte": "La distance entre les deux extrémités des vecteurs", "correcte": false, "_justification": "Une distance est une norme de différence, pas un déterminant."}]}, {"_enonce": "<code>orientation(A, B, C)<\/code> renvoie <code>1<\/code>. Qu'en déduit-on ?", "_multiple": false, "difficulte": "moyen", "theme": "Déterminant", "source_fichier": "tp6-geometrie-plan.md", "_source": "tp6-geometrie-plan.md", "options": [{"_texte": "Le trajet A puis B puis C tourne à gauche, dans le sens inverse des aiguilles d'une montre", "correcte": true, "_justification": "Un déterminant strictement positif de AB et AC signifie une rotation dans le sens direct."}, {"_texte": "Le trajet tourne à droite", "correcte": false, "_justification": "Tourner à droite correspond à un déterminant négatif, donc à <code>-1<\/code>."}, {"_texte": "Les trois points sont alignés", "correcte": false, "_justification": "Trois points alignés donnent un déterminant nul, donc <code>0<\/code>."}, {"_texte": "C est plus loin de A que B", "correcte": false, "_justification": "L'orientation ne dit rien des distances."}]}, {"_enonce": "Dans la formule du lacet, à quoi sert l'indice <code>(i + 1) % n<\/code> ?", "_multiple": false, "difficulte": "moyen", "theme": "Aire", "source_fichier": "tp6-geometrie-plan.md", "_source": "tp6-geometrie-plan.md", "options": [{"_texte": "À relier le dernier sommet au premier, pour fermer le polygone", "correcte": true, "_justification": "Quand <code>i<\/code> vaut <code>n - 1<\/code>, <code>(i + 1) % n<\/code> vaut <code>0<\/code> : le côté qui suit le dernier sommet revient au premier."}, {"_texte": "À éviter une division par zéro", "correcte": false, "_justification": "Il n'y a aucune division dans la formule du lacet."}, {"_texte": "À trier les sommets dans le sens direct", "correcte": false, "_justification": "La formule ne trie rien ; elle parcourt les sommets dans l'ordre donné."}, {"_texte": "À ignorer le dernier sommet, qui est un doublon du premier", "correcte": false, "_justification": "Au contraire, le dernier sommet est bien pris en compte, et relié au premier."}]}, {"_enonce": "Quelle est l'aire de la maison <code>[(0, 0), (2, 0), (2, 1.5), (1, 2.5), (0, 1.5)]<\/code> ?", "_multiple": false, "difficulte": "facile", "theme": "Aire", "source_fichier": "tp6-geometrie-plan.md", "_source": "tp6-geometrie-plan.md", "options": [{"_texte": "<code>4.0<\/code>", "correcte": true, "_justification": "Un rectangle de 2 par 1,5, soit 3, surmonté d'un triangle de base 2 et de hauteur 1, soit 1."}, {"_texte": "<code>5.0<\/code>", "correcte": false, "_justification": "C'est l'aire du rectangle englobant 2 par 2,5, pas celle de la maison."}, {"_texte": "<code>3.0<\/code>", "correcte": false, "_justification": "C'est l'aire du rectangle seul, sans le toit."}, {"_texte": "<code>4.5<\/code>", "correcte": false, "_justification": "Le toit est un triangle, d'aire base fois hauteur sur 2, soit 1 et non 1,5."}]}, {"_enonce": "Dans le lancer de rayon, comment décide-t-on qu'un point est à l'intérieur du polygone ?", "_multiple": false, "difficulte": "difficile", "theme": "Point dans un polygone", "source_fichier": "tp6-geometrie-plan.md", "_source": "tp6-geometrie-plan.md", "options": [{"_texte": "Le rayon horizontal partant du point traverse un nombre impair de côtés", "correcte": true, "_justification": "Chaque traversée fait passer de l'intérieur à l'extérieur ou l'inverse ; un nombre impair de traversées signifie qu'on était dedans au départ."}, {"_texte": "Le point est plus proche du centre du polygone que tous les sommets", "correcte": false, "_justification": "Ce critère est faux pour tout polygone non convexe, et même pour un rectangle allongé."}, {"_texte": "Le déterminant avec chaque côté est positif", "correcte": false, "_justification": "Ce critère ne fonctionne que pour un polygone convexe parcouru dans le sens direct, pas pour la maison ni pour l'étoile."}, {"_texte": "L'aire du polygone diminue quand on y ajoute le point", "correcte": false, "_justification": "Ajouter un sommet ne fait pas diminuer une aire de manière fiable, et ce n'est pas l'algorithme du TP."}]}, {"_enonce": "Pourquoi la condition d'encadrement du lancer de rayon s'écrit-elle <code>(y1 &gt; y) != (y2 &gt; y)<\/code>, avec une inégalité stricte, plutôt que <code>y1 &lt;= y &lt;= y2 or y2 &lt;= y &lt;= y1<\/code> ?", "_multiple": false, "difficulte": "difficile", "theme": "Point dans un polygone", "source_fichier": "tp6-geometrie-plan.md", "_source": "tp6-geometrie-plan.md", "options": [{"_texte": "Pour qu'un rayon passant exactement par un sommet ne compte ce sommet que pour un seul des deux côtés qui s'y rejoignent", "correcte": true, "_justification": "Avec des inégalités larges, le sommet serait compté deux fois et le résultat basculerait à tort."}, {"_texte": "Parce que <code>!=<\/code> est plus rapide que <code>or<\/code>", "correcte": false, "_justification": "La vitesse n'est pas en cause ; c'est un problème de cas limite."}, {"_texte": "Parce que Python n'accepte pas les doubles inégalités", "correcte": false, "_justification": "<code>a &lt;= x &lt;= b<\/code> est parfaitement valide en Python."}, {"_texte": "Pour exclure les polygones non convexes", "correcte": false, "_justification": "Le lancer de rayon fonctionne justement sur les polygones non convexes."}]}, {"_enonce": "La méthode de Monte-Carlo estime l'aire de la maison avec 200 000 points et obtient deux chiffres justes. Combien de points faut-il, en ordre de grandeur, pour en gagner un de plus ?", "_multiple": false, "difficulte": "moyen", "theme": "Monte-Carlo", "source_fichier": "tp6-geometrie-plan.md", "_source": "tp6-geometrie-plan.md", "options": [{"_texte": "Cent fois plus, soit 20 millions", "correcte": true, "_justification": "L'erreur décroît comme un sur racine de N : diviser l'erreur par 10 exige de multiplier N par 100."}, {"_texte": "Dix fois plus, soit 2 millions", "correcte": false, "_justification": "Ce serait vrai si l'erreur décroissait comme un sur N ; elle ne décroît que comme un sur racine de N."}, {"_texte": "Deux fois plus", "correcte": false, "_justification": "Doubler N ne divise l'erreur que par racine de 2, soit 1,4."}, {"_texte": "Le même nombre, en changeant la graine", "correcte": false, "_justification": "Changer la graine change le résultat, pas sa précision moyenne."}]}, {"_enonce": "Pourquoi le corrigé de <code>angle<\/code> écrit-il <code>cosinus = max(-1.0, min(1.0, cosinus))<\/code> avant d'appeler <code>math.acos<\/code> ?", "_multiple": false, "difficulte": "moyen", "theme": "Flottants", "source_fichier": "tp6-geometrie-plan.md", "_source": "tp6-geometrie-plan.md", "options": [{"_texte": "Parce que, par arrondi, le quotient peut légèrement dépasser 1 pour deux vecteurs parallèles, et <code>acos<\/code> refuserait alors de répondre", "correcte": true, "_justification": "Le TP montre qu'on peut obtenir <code>1.0000000000000002<\/code>, hors du domaine de <code>acos<\/code>."}, {"_texte": "Parce que <code>acos<\/code> ne connaît que les angles aigus", "correcte": false, "_justification": "<code>acos<\/code> renvoie un angle entre 0 et pi, aigu ou obtus."}, {"_texte": "Pour convertir le résultat en degrés", "correcte": false, "_justification": "La conversion en degrés est faite par <code>math.degrees<\/code>, après <code>acos<\/code>."}, {"_texte": "Pour que l'angle soit toujours positif", "correcte": false, "_justification": "<code>acos<\/code> renvoie déjà une valeur positive ; le problème est le domaine d'entrée, pas le signe de sortie."}]}]};
+const form = document.getElementById('qcm');
+DATA.questions.forEach((q, i) => {
+  const multi = q._multiple;
+  const div = document.createElement('div');
+  div.className = 'q'; div.id = 'q'+i;
+  let badges = '';
+  if (q.difficulte) badges += `<span class="badge b-${q.difficulte}">${q.difficulte}</span>`;
+  if (q.theme) badges += `<span class="badge b-theme">${q.theme}</span>`;
+  const hint = multi ? ' <small>(plusieurs réponses)</small>' : '';
+  let html = `<span class="qmark" id="m${i}"></span><h3>Question ${i+1}${hint}${badges}</h3>`;
+  html += `<div class="enonce">${q._enonce}</div>`;
+  q.options.forEach((o, j) => {
+    const type = multi ? 'checkbox' : 'radio';
+    html += `<label class="opt" id="o${i}_${j}">`
+          + `<input type="${type}" name="q${i}" value="${j}">${o._texte}</label>`;
+    html += `<div class="just" id="j${i}_${j}">${o._justification||''}</div>`;
+  });
+  if (q.source_fichier) html += `<div class="src" id="s${i}">Source : ${q._source}</div>`;
+  div.innerHTML = html;
+  form.appendChild(div);
+});
+function grade(){
+  let correct = 0;
+  DATA.questions.forEach((q, i) => {
+    const chosen = [...form.querySelectorAll(`input[name=q${i}]:checked`)].map(e=>+e.value);
+    const good = q.options.map((o,j)=>o.correcte?j:-1).filter(j=>j>=0);
+    const ok = chosen.length===good.length && chosen.every(j=>good.includes(j));
+    if (ok) correct++;
+    q.options.forEach((o,j)=>{
+      const lab = document.getElementById(`o${i}_${j}`);
+      lab.classList.remove('correct','wrong');
+      if (o.correcte) lab.classList.add('correct');
+      else if (chosen.includes(j)) lab.classList.add('wrong');
+      const ju = document.getElementById(`j${i}_${j}`);
+      if (ju && o._justification) ju.classList.add('show');
+    });
+    const m = document.getElementById('m'+i);
+    m.textContent = ok ? '✓' : '✗';
+    m.style.color = ok ? 'var(--ok)' : 'var(--ko)';
+    m.classList.add('show');
+    const s = document.getElementById('s'+i); if (s) s.classList.add('show');
+  });
+  const n = DATA.questions.length;
+  const pct = Math.round(100*correct/n);
+  const sc = document.getElementById('score');
+  sc.textContent = `Score : ${correct} / ${n}  (${pct} %)`;
+  sc.style.color = pct>=50 ? 'var(--ok)' : 'var(--ko)';
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+</script>
+</body>
+</html>

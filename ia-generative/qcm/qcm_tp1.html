@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QCM — TP1 : Premiers pas LangChain &amp; Mistral</title>
+<style>
+  :root { --ok:#1b8a5a; --ko:#c0392b; --accent:#2c5f8a; --bg:#f6f7f9; }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, "Segoe UI", Roboto, sans-serif; line-height:1.5;
+         max-width: 820px; margin: 0 auto; padding: 1.5rem; color:#1a1a1a; background:var(--bg); }
+  h1 { color: var(--accent); margin-bottom:.2rem; }
+  .meta { color:#666; font-size:.9rem; margin-bottom:1rem; }
+  .consignes { background:#eef3f8; border-left:4px solid var(--accent); padding:.6rem .9rem;
+               border-radius:4px; margin-bottom:1.2rem; }
+  .q { background:#fff; border:1px solid #e1e4e8; border-radius:8px; padding:1rem 1.2rem;
+       margin-bottom:1rem; box-shadow:0 1px 2px rgba(0,0,0,.04); }
+  .q h3 { margin:.1rem 0 .2rem; font-size:1.05rem; }
+  .badge { font-size:.72rem; font-weight:600; padding:.1rem .5rem; border-radius:10px;
+           margin-left:.4rem; vertical-align:middle; }
+  .b-facile{background:#e3f4ea;color:var(--ok);} .b-moyen{background:#fdf3e0;color:#b87600;}
+  .b-difficile{background:#fbe6e6;color:var(--ko);} .b-theme{background:#eef0f3;color:#555;}
+  .enonce { margin:.4rem 0 .8rem; }
+  .opt { display:block; padding:.45rem .6rem; border:1px solid #e1e4e8; border-radius:6px;
+         margin:.35rem 0; cursor:pointer; transition:background .12s; }
+  .opt:hover { background:#f0f4f8; }
+  .opt input { margin-right:.55rem; }
+  .opt.correct { border-color:var(--ok); background:#eaf7f0; }
+  .opt.wrong   { border-color:var(--ko); background:#fbecec; }
+  .just { font-size:.86rem; color:#555; margin:.2rem 0 0 1.7rem; display:none; }
+  .just.show { display:block; }
+  .src { font-size:.78rem; color:#888; margin-top:.5rem; display:none; }
+  .src.show { display:block; }
+  .bar { position:sticky; bottom:0; background:var(--bg); padding:.8rem 0; }
+  button { background:var(--accent); color:#fff; border:0; padding:.6rem 1.3rem;
+           font-size:1rem; border-radius:6px; cursor:pointer; }
+  button.ghost { background:#fff; color:var(--accent); border:1px solid var(--accent); margin-left:.5rem; }
+  #score { font-size:1.2rem; font-weight:700; margin-left:1rem; }
+  .qmark { float:right; font-weight:700; display:none; }
+  .qmark.show{display:inline;}
+</style>
+</head>
+<body>
+<h1>QCM — TP1 : Premiers pas LangChain &amp; Mistral</h1>
+<div class="meta">Source : site/docs/ia-generative/tp1-premiers-pas.md — 10 questions</div>
+<div class="consignes">Cochez la ou les bonnes réponses. Sauf mention contraire, une seule réponse est correcte.</div>
+<form id="qcm"></form>
+<div class="bar">
+  <button type="button" onclick="grade()">Valider mes réponses</button>
+  <button type="button" class="ghost" onclick="location.reload()">Réinitialiser</button>
+  <span id="score"></span>
+</div>
+<script>
+const DATA = {"questions": [{"_enonce": "D'après le TP, comment qualifie-t-on LangChain vis-à-vis des modèles de langage ?", "_multiple": false, "difficulte": "facile", "theme": "Notions LangChain", "source_fichier": "tp1-premiers-pas.md", "_source": "tp1-premiers-pas.md", "options": [{"_texte": "Un framework agnostique vis-à-vis des modèles", "correcte": true, "_justification": "L'étape 2 précise que « LangChain est un framework agnostique vis-à-vis des modèles » et facilite l'invocation de différents LLM (Mistral, OpenAI, etc.)."}, {"_texte": "Un modèle de langage propriétaire développé par Mistral AI", "correcte": false, "_justification": "LangChain n'est pas un modèle ni un produit de Mistral : c'est un framework d'orchestration qui sait piloter plusieurs LLM."}, {"_texte": "Une bibliothèque liée exclusivement à OpenAI", "correcte": false, "_justification": "Le TP indique au contraire qu'il facilite l'invocation de différents LLM, pas seulement OpenAI ; il est agnostique."}, {"_texte": "Un fournisseur de clés API pour les LLM", "correcte": false, "_justification": "Les clés API proviennent des fournisseurs de modèles (Mistral, OpenAI) ; LangChain orchestre l'usage de ces modèles."}]}, {"_enonce": "Quelle commande le TP propose-t-il pour installer les bibliothèques nécessaires à l'étape de préparation de l'environnement ?", "_multiple": false, "difficulte": "facile", "theme": "Environnement Python", "source_fichier": "tp1-premiers-pas.md", "_source": "tp1-premiers-pas.md", "options": [{"_texte": "<code>pip install langchain langchain-mistralai langchain-openai python-dotenv<\/code>", "correcte": true, "_justification": "C'est exactement la commande d'installation donnée à l'étape 1 du TP."}, {"_texte": "<code>pip install mistral openai dotenv<\/code>", "correcte": false, "_justification": "Les noms de paquets sont incorrects : le TP utilise <code>langchain-mistralai<\/code>, <code>langchain-openai<\/code> et <code>python-dotenv<\/code>."}, {"_texte": "<code>conda install langchain mistralai<\/code>", "correcte": false, "_justification": "Le TP utilise <code>pip<\/code>, pas <code>conda<\/code>, et le paquet d'intégration s'appelle <code>langchain-mistralai<\/code>."}, {"_texte": "<code>pip install langchain-core langgraph<\/code>", "correcte": false, "_justification": "Ces paquets ne sont pas ceux listés à l'étape 1 ; LangGraph n'est cité que dans « Pour aller plus loin »."}]}, {"_enonce": "À quoi sert le paquet <code>python-dotenv<\/code> selon le TP ?", "_multiple": false, "difficulte": "facile", "theme": "Environnement Python", "source_fichier": "tp1-premiers-pas.md", "_source": "tp1-premiers-pas.md", "options": [{"_texte": "Charger les variables d'environnement sans les écrire dans le code", "correcte": true, "_justification": "Le TP précise : « <code>python-dotenv<\/code> permet de charger vos variables d'environnement sans les écrire dans le code »."}, {"_texte": "Créer automatiquement l'environnement virtuel <code>mon_env<\/code>", "correcte": false, "_justification": "L'environnement virtuel se crée avec <code>python -m venv mon_env<\/code>, pas avec <code>python-dotenv<\/code>."}, {"_texte": "Chiffrer la clé API Mistral sur le serveur", "correcte": false, "_justification": "Le TP ne mentionne aucun chiffrement ; dotenv charge des variables depuis un fichier <code>.env<\/code>."}, {"_texte": "Installer les dépendances LangChain", "correcte": false, "_justification": "L'installation des dépendances se fait via <code>pip install<\/code>, pas via <code>python-dotenv<\/code>."}]}, {"_enonce": "Dans le premier script d'invocation (<code>tp1_mistral.py<\/code>), quel modèle et quelle température sont utilisés pour instancier <code>ChatMistralAI<\/code> ?", "_multiple": false, "difficulte": "moyen", "theme": "Invocation Mistral", "source_fichier": "tp1-premiers-pas.md", "_source": "tp1-premiers-pas.md", "options": [{"_texte": "<code>model=&quot;mistral-large-latest&quot;<\/code> et <code>temperature=0<\/code>", "correcte": true, "_justification": "Le script de l'étape 3 instancie <code>ChatMistralAI(model=&quot;mistral-large-latest&quot;, temperature=0)<\/code>."}, {"_texte": "<code>model=&quot;gpt-4.1&quot;<\/code> et <code>temperature=0.7<\/code>", "correcte": false, "_justification": "<code>gpt-4.1<\/code> n'est évoqué que pour une comparaison optionnelle avec <code>ChatOpenAI<\/code> ; <code>temperature=0.7<\/code> est suggérée dans l'exercice 3.2, pas dans le script initial."}, {"_texte": "<code>model=&quot;mistral-small&quot;<\/code> et <code>temperature=1<\/code>", "correcte": false, "_justification": "Ce nom de modèle n'apparaît pas dans le TP, et la température initiale est 0."}, {"_texte": "<code>model=&quot;mistral-large-latest&quot;<\/code> et <code>temperature=0.7<\/code>", "correcte": false, "_justification": "Le bon modèle, mais la température initiale du script est 0 ; 0.7 n'est testée qu'à l'exercice 3.2."}]}, {"_enonce": "Le TP recommande, pour sécuriser la récupération de la clé API dans le script, d'utiliser :", "_multiple": false, "difficulte": "moyen", "theme": "Gestion de la clé API", "source_fichier": "tp1-premiers-pas.md", "_source": "tp1-premiers-pas.md", "options": [{"_texte": "<code>os.environ[&quot;MISTRAL_API_KEY&quot;]<\/code> ou <code>os.getenv<\/code> après avoir ajouté <code>import os<\/code>", "correcte": true, "_justification": "L'étape 3 demande explicitement d'ajouter <code>import os<\/code> et d'utiliser <code>os.environ[&quot;MISTRAL_API_KEY&quot;]<\/code> (ou <code>os.getenv<\/code>) pour sécuriser la récupération de la clé."}, {"_texte": "Écrire la clé en clair directement dans le paramètre <code>api_key<\/code>", "correcte": false, "_justification": "C'est l'inverse de la recommandation : le TP rappelle de ne pas partager la clé et privilégie la variable d'environnement ; <code>api_key=&quot;...&quot;<\/code> est seulement noté comme facultatif."}, {"_texte": "Stocker la clé dans une variable globale nommée <code>KEY<\/code>", "correcte": false, "_justification": "Le TP ne mentionne aucune variable globale <code>KEY<\/code> ; il s'appuie sur les variables d'environnement."}, {"_texte": "La saisir au clavier via <code>input()<\/code> à chaque exécution", "correcte": false, "_justification": "Aucune saisie par <code>input()<\/code> de la clé n'est proposée dans le TP pour la sécurisation."}]}, {"_enonce": "Dans le script <code>tp1_chain.py<\/code>, la chaîne est construite par <code>chain = prompt | model | output_parser<\/code>. Que représente l'opérateur <code>|<\/code> et l'ordre des composants ?", "_multiple": false, "difficulte": "moyen", "theme": "Chaînes et prompts", "source_fichier": "tp1-premiers-pas.md", "_source": "tp1-premiers-pas.md", "options": [{"_texte": "Une composition d'étapes prompt → modèle → parser, exécutées dans cet ordre", "correcte": true, "_justification": "Le TP indique que LangChain facilite « la composition d'étapes (prompt → modèle → parser) », exactement ce qu'exprime <code>prompt | model | output_parser<\/code>."}, {"_texte": "Un OU logique entre trois invocations indépendantes du modèle", "correcte": false, "_justification": "L'opérateur <code>|<\/code> ici n'est pas un OU logique : il chaîne les composants en pipeline séquentiel."}, {"_texte": "Une exécution en parallèle des trois composants", "correcte": false, "_justification": "Les composants ne s'exécutent pas en parallèle mais en séquence : la sortie de l'un alimente l'entrée du suivant."}, {"_texte": "Un simple commentaire sans effet sur l'exécution", "correcte": false, "_justification": "C'est une construction fonctionnelle qui définit la chaîne réellement invoquée via <code>chain.invoke(...)<\/code>."}]}, {"_enonce": "À l'étape 5, comment le prompt hiérarchisé est-il construit avec <code>ChatPromptTemplate.from_messages([...])<\/code> ?", "_multiple": false, "difficulte": "moyen", "theme": "Prompt hiérarchisé", "source_fichier": "tp1-premiers-pas.md", "_source": "tp1-premiers-pas.md", "options": [{"_texte": "En combinant un message <code>&quot;system&quot;<\/code> et un message <code>&quot;user&quot;<\/code> contenant <code>{input}<\/code>", "correcte": true, "_justification": "Le code de l'étape 5 combine <code>(&quot;system&quot;, &quot;Vous êtes un rédacteur...&quot;)<\/code> et <code>(&quot;user&quot;, &quot;{input}&quot;)<\/code>, illustrant la combinaison d'un message système et d'un message utilisateur."}, {"_texte": "Uniquement avec un message <code>&quot;assistant&quot;<\/code> prérempli", "correcte": false, "_justification": "Aucun message de rôle <code>assistant<\/code> n'est utilisé ; le TP combine les rôles <code>system<\/code> et <code>user<\/code>."}, {"_texte": "Avec trois messages <code>&quot;user&quot;<\/code> successifs", "correcte": false, "_justification": "Le prompt ne contient pas trois messages utilisateur : un message système et un message utilisateur."}, {"_texte": "Sans variable de substitution, le texte étant entièrement figé", "correcte": false, "_justification": "Le message utilisateur contient bien la variable <code>{input}<\/code>, substituée lors de <code>chain.invoke({&quot;input&quot;: ...})<\/code>."}]}, {"_enonce": "Quel attribut le TP fait-il afficher pour inspecter la consommation de tokens et estimer un coût (exercices 3.1, 5.1 et 5.2) ?", "_multiple": false, "difficulte": "moyen", "theme": "Métadonnées et coûts", "source_fichier": "tp1-premiers-pas.md", "_source": "tp1-premiers-pas.md", "options": [{"_texte": "<code>usage_metadata<\/code> (avec <code>input_tokens<\/code> et <code>output_tokens<\/code>)", "correcte": true, "_justification": "L'exercice 3.1 demande d'afficher <code>response.usage_metadata<\/code> et de calculer un coût à partir d'<code>input_tokens<\/code> et <code>output_tokens<\/code> ; l'étape 5 réutilise <code>result.usage_metadata<\/code>."}, {"_texte": "<code>response.cost<\/code>", "correcte": false, "_justification": "Aucun attribut <code>cost<\/code> n'est mentionné : le coût est calculé manuellement à partir des tokens de <code>usage_metadata<\/code>."}, {"_texte": "<code>response.tokens_total<\/code>", "correcte": false, "_justification": "Cet attribut n'apparaît pas dans le TP ; l'inspection passe par <code>usage_metadata<\/code>."}, {"_texte": "<code>response.metadata.price<\/code>", "correcte": false, "_justification": "Le TP ne fournit pas de prix automatique ; il faut estimer le coût en s'appuyant sur le tarif public et les tokens."}]}, {"_enonce": "Parmi les usages suivants, lesquels le TP cite-t-il comme facilités par LangChain ? (plusieurs réponses possibles)", "_multiple": true, "difficulte": "moyen", "theme": "Notions LangChain", "source_fichier": "tp1-premiers-pas.md", "_source": "tp1-premiers-pas.md", "options": [{"_texte": "L'automatisation des prompts via des chaînes", "correcte": true, "_justification": "L'étape 2 liste « l'automatisation des prompts via des chaînes »."}, {"_texte": "La gestion d'agents (raisonnement multi-étapes)", "correcte": true, "_justification": "L'étape 2 mentionne « la gestion d'agents (raisonnement multi-étapes) »."}, {"_texte": "L'intégration de vector stores et d'embeddings pour les applications RAG", "correcte": true, "_justification": "L'étape 2 cite « l'intégration de vector stores et d'embeddings pour les applications RAG »."}, {"_texte": "L'entraînement (fine-tuning) de nouveaux modèles de langage", "correcte": false, "_justification": "Le TP ne présente pas LangChain comme un outil d'entraînement de modèles ; il sert à orchestrer des LLM existants."}, {"_texte": "La création de comptes Mistral AI et la facturation", "correcte": false, "_justification": "La création de compte se fait sur le site Mistral (étape 0) ; ce n'est pas une fonction de LangChain."}]}, {"_enonce": "L'exercice 4.2 demande de produire des réponses au format JSON avec les clés <code>setup<\/code> et <code>punchline<\/code>. Quelle approche est cohérente avec ce que propose le TP ?", "_multiple": false, "difficulte": "difficile", "theme": "Chaînes et prompts", "source_fichier": "tp1-premiers-pas.md", "_source": "tp1-premiers-pas.md", "options": [{"_texte": "Adapter le prompt pour imposer la structure JSON, puis utiliser un <code>StrOutputParser()<\/code> ou un parser JSON", "correcte": true, "_justification": "L'exercice 4.2 indique explicitement d'« adapter le prompt » et d'« utiliser <code>StrOutputParser()<\/code> ou un parser JSON » pour obtenir le format JSON."}, {"_texte": "Modifier la température à 0.7 pour que le modèle renvoie automatiquement du JSON", "correcte": false, "_justification": "La température (exercices 3.2 et 4.3) influence la créativité des réponses, pas leur format de sortie."}, {"_texte": "Changer le modèle pour <code>gpt-4.1<\/code> car Mistral ne sait pas produire de JSON", "correcte": false, "_justification": "Le TP n'impose aucun changement de modèle pour le JSON ; il agit sur le prompt et le parser, et <code>mistral-large-latest<\/code> reste utilisé."}, {"_texte": "Remplacer la chaîne par une boucle <code>for<\/code> qui parse manuellement chaque caractère", "correcte": false, "_justification": "Le TP ne propose pas de parsing caractère par caractère ; il s'appuie sur un parser (StrOutputParser ou parser JSON) et le prompt."}]}]};
+const form = document.getElementById('qcm');
+DATA.questions.forEach((q, i) => {
+  const multi = q._multiple;
+  const div = document.createElement('div');
+  div.className = 'q'; div.id = 'q'+i;
+  let badges = '';
+  if (q.difficulte) badges += `<span class="badge b-${q.difficulte}">${q.difficulte}</span>`;
+  if (q.theme) badges += `<span class="badge b-theme">${q.theme}</span>`;
+  const hint = multi ? ' <small>(plusieurs réponses)</small>' : '';
+  let html = `<span class="qmark" id="m${i}"></span><h3>Question ${i+1}${hint}${badges}</h3>`;
+  html += `<div class="enonce">${q._enonce}</div>`;
+  q.options.forEach((o, j) => {
+    const type = multi ? 'checkbox' : 'radio';
+    html += `<label class="opt" id="o${i}_${j}">`
+          + `<input type="${type}" name="q${i}" value="${j}">${o._texte}</label>`;
+    html += `<div class="just" id="j${i}_${j}">${o._justification||''}</div>`;
+  });
+  if (q.source_fichier) html += `<div class="src" id="s${i}">Source : ${q._source}</div>`;
+  div.innerHTML = html;
+  form.appendChild(div);
+});
+function grade(){
+  let correct = 0;
+  DATA.questions.forEach((q, i) => {
+    const chosen = [...form.querySelectorAll(`input[name=q${i}]:checked`)].map(e=>+e.value);
+    const good = q.options.map((o,j)=>o.correcte?j:-1).filter(j=>j>=0);
+    const ok = chosen.length===good.length && chosen.every(j=>good.includes(j));
+    if (ok) correct++;
+    q.options.forEach((o,j)=>{
+      const lab = document.getElementById(`o${i}_${j}`);
+      lab.classList.remove('correct','wrong');
+      if (o.correcte) lab.classList.add('correct');
+      else if (chosen.includes(j)) lab.classList.add('wrong');
+      const ju = document.getElementById(`j${i}_${j}`);
+      if (ju && o._justification) ju.classList.add('show');
+    });
+    const m = document.getElementById('m'+i);
+    m.textContent = ok ? '✓' : '✗';
+    m.style.color = ok ? 'var(--ok)' : 'var(--ko)';
+    m.classList.add('show');
+    const s = document.getElementById('s'+i); if (s) s.classList.add('show');
+  });
+  const n = DATA.questions.length;
+  const pct = Math.round(100*correct/n);
+  const sc = document.getElementById('score');
+  sc.textContent = `Score : ${correct} / ${n}  (${pct} %)`;
+  sc.style.color = pct>=50 ? 'var(--ok)' : 'var(--ko)';
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+</script>
+</body>
+</html>

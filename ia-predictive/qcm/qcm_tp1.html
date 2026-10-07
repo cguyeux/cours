@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QCM — TP1 : Manipuler des données avec pandas</title>
+<style>
+  :root { --ok:#1b8a5a; --ko:#c0392b; --accent:#2c5f8a; --bg:#f6f7f9; }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, "Segoe UI", Roboto, sans-serif; line-height:1.5;
+         max-width: 820px; margin: 0 auto; padding: 1.5rem; color:#1a1a1a; background:var(--bg); }
+  h1 { color: var(--accent); margin-bottom:.2rem; }
+  .meta { color:#666; font-size:.9rem; margin-bottom:1rem; }
+  .consignes { background:#eef3f8; border-left:4px solid var(--accent); padding:.6rem .9rem;
+               border-radius:4px; margin-bottom:1.2rem; }
+  .q { background:#fff; border:1px solid #e1e4e8; border-radius:8px; padding:1rem 1.2rem;
+       margin-bottom:1rem; box-shadow:0 1px 2px rgba(0,0,0,.04); }
+  .q h3 { margin:.1rem 0 .2rem; font-size:1.05rem; }
+  .badge { font-size:.72rem; font-weight:600; padding:.1rem .5rem; border-radius:10px;
+           margin-left:.4rem; vertical-align:middle; }
+  .b-facile{background:#e3f4ea;color:var(--ok);} .b-moyen{background:#fdf3e0;color:#b87600;}
+  .b-difficile{background:#fbe6e6;color:var(--ko);} .b-theme{background:#eef0f3;color:#555;}
+  .enonce { margin:.4rem 0 .8rem; }
+  .opt { display:block; padding:.45rem .6rem; border:1px solid #e1e4e8; border-radius:6px;
+         margin:.35rem 0; cursor:pointer; transition:background .12s; }
+  .opt:hover { background:#f0f4f8; }
+  .opt input { margin-right:.55rem; }
+  .opt.correct { border-color:var(--ok); background:#eaf7f0; }
+  .opt.wrong   { border-color:var(--ko); background:#fbecec; }
+  .just { font-size:.86rem; color:#555; margin:.2rem 0 0 1.7rem; display:none; }
+  .just.show { display:block; }
+  .src { font-size:.78rem; color:#888; margin-top:.5rem; display:none; }
+  .src.show { display:block; }
+  .bar { position:sticky; bottom:0; background:var(--bg); padding:.8rem 0; }
+  button { background:var(--accent); color:#fff; border:0; padding:.6rem 1.3rem;
+           font-size:1rem; border-radius:6px; cursor:pointer; }
+  button.ghost { background:#fff; color:var(--accent); border:1px solid var(--accent); margin-left:.5rem; }
+  #score { font-size:1.2rem; font-weight:700; margin-left:1rem; }
+  .qmark { float:right; font-weight:700; display:none; }
+  .qmark.show{display:inline;}
+</style>
+</head>
+<body>
+<h1>QCM — TP1 : Manipuler des données avec pandas</h1>
+<div class="meta">Source : site/docs/ia-predictive/tp1-pandas.md — 10 questions</div>
+<div class="consignes">Cochez la bonne réponse. Une seule réponse est correcte par question. Toutes les valeurs numériques citées sont celles mesurées pendant le TP (pandas 3.0.5, jeu Iris de scikit-learn).</div>
+<form id="qcm"></form>
+<div class="bar">
+  <button type="button" onclick="grade()">Valider mes réponses</button>
+  <button type="button" class="ghost" onclick="location.reload()">Réinitialiser</button>
+  <span id="score"></span>
+</div>
+<script>
+const DATA = {"questions": [{"_enonce": "Dans le TP, <code>df<\/code> contient quatre mesures numériques et la colonne <code>Species<\/code>. Combien de colonnes <code>df.describe()<\/code> résume-t-il par défaut, et pourquoi ?", "_multiple": false, "difficulte": "facile", "theme": "Explorer un DataFrame", "source_fichier": "tp1-pandas.md", "_source": "tp1-pandas.md", "options": [{"_texte": "Quatre : les colonnes numériques seulement, car une moyenne ou un écart-type n'a pas de sens pour du texte", "correcte": true, "_justification": "C'est le résultat attendu de l'exercice 1.1. <code>Species<\/code> est du texte, <code>describe()<\/code> l'écarte."}, {"_texte": "Cinq : <code>describe()<\/code> résume toutes les colonnes, texte compris", "correcte": false, "_justification": "Par défaut, <code>describe()<\/code> ne porte que sur les colonnes numériques. Le texte demanderait un paramètre explicite et des statistiques d'un autre type (effectifs, valeur la plus fréquente)."}, {"_texte": "Une seule : celle de l'espèce, qui sert de clé de regroupement", "correcte": false, "_justification": "<code>describe()<\/code> ne regroupe rien. Le regroupement par espèce relève de <code>groupby<\/code>, vu à l'étape 5."}, {"_texte": "Zéro : <code>describe()<\/code> échoue dès qu'une colonne de texte est présente", "correcte": false, "_justification": "Il n'échoue pas, il écarte la colonne de texte. C'est <code>df.mean()<\/code> sur le DataFrame entier qui échoue, ce qui est une autre situation."}]}, {"_enonce": "<code>df.iloc[10:20]<\/code> renvoie 10 lignes. Combien de lignes renvoie <code>df.loc[10:20]<\/code> sur ce même DataFrame, dont l'index va de 0 à 149 ?", "_multiple": false, "difficulte": "moyen", "theme": "Sélectionner par étiquette ou par position", "source_fichier": "tp1-pandas.md", "_source": "tp1-pandas.md", "options": [{"_texte": "10 lignes, comme <code>iloc<\/code>, car les deux notations sont équivalentes tant que l'index est une suite de nombres", "correcte": false, "_justification": "Les deux ne sont équivalentes que pour l'entrée de la tranche, pas pour sa sortie : elles ne traitent pas la borne de fin de la même façon."}, {"_texte": "9 lignes, car <code>loc<\/code> exclut aussi la borne de début", "correcte": false, "_justification": "<code>loc<\/code> n'exclut jamais la borne de début. Seule la borne de fin diffère de <code>iloc<\/code>."}, {"_texte": "11 lignes, car <code>loc<\/code> travaille par étiquette et inclut la borne de fin, alors que <code>iloc<\/code> travaille par position et l'exclut", "correcte": true, "_justification": "Mesuré : <code>len(df.loc[10:20])<\/code> vaut 11 et <code>len(df.iloc[10:20])<\/code> vaut 10. C'est la différence entre <code>loc<\/code> et <code>iloc<\/code> que l'étape 2 demande de savoir expliquer."}, {"_texte": "Une erreur, car <code>loc<\/code> n'accepte pas de tranche", "correcte": false, "_justification": "<code>loc<\/code> accepte les tranches d'étiquettes, et c'est ce que fait l'exemple de l'étape 2 avec <code>df.loc[10:20, [...]]<\/code>."}]}, {"_enonce": "Quelle expression sélectionne les fleurs dont <code>SepalLengthCm<\/code> dépasse 5,5 ET dont <code>PetalLengthCm<\/code> est inférieure à 4,0 ?", "_multiple": false, "difficulte": "moyen", "theme": "Filtrer des lignes", "source_fichier": "tp1-pandas.md", "_source": "tp1-pandas.md", "options": [{"_texte": "<code>df[(df[&quot;SepalLengthCm&quot;] &gt; 5.5) and (df[&quot;PetalLengthCm&quot;] &lt; 4.0)]<\/code>", "correcte": false, "_justification": "Le mot <code>and<\/code> demande à Python la valeur de vérité d'une série entière, ce qui lève une <code>ValueError<\/code> (« The truth value of a Series is ambiguous »). Sur des séries, le « et » s'écrit <code>&amp;<\/code>."}, {"_texte": "<code>df[df[&quot;SepalLengthCm&quot;] &gt; 5.5 &amp; df[&quot;PetalLengthCm&quot;] &lt; 4.0]<\/code>", "correcte": false, "_justification": "Sans parenthèses, <code>&amp;<\/code> est prioritaire sur les comparaisons : Python évalue d'abord <code>5.5 &amp; df[&quot;PetalLengthCm&quot;]<\/code>, ce qui lève une <code>TypeError<\/code>."}, {"_texte": "<code>df[(df[&quot;SepalLengthCm&quot;] &gt; 5.5) &amp; (df[&quot;PetalLengthCm&quot;] &lt; 4.0)]<\/code>", "correcte": true, "_justification": "C'est la forme de l'étape 2 : <code>&amp;<\/code> entre deux conditions entre parenthèses. Elle renvoie 7 fleurs."}, {"_texte": "<code>df[df[&quot;SepalLengthCm&quot;] &gt; 5.5, df[&quot;PetalLengthCm&quot;] &lt; 4.0]<\/code>", "correcte": false, "_justification": "La virgule dans des crochets simples est lue comme une sélection de colonnes, pas comme un « et » logique entre deux conditions."}]}, {"_enonce": "Après <code>df_travail = df_travail[df_travail[&quot;SepalLengthCm&quot;] &gt;= 5.0]<\/code>, <code>df_travail<\/code> compte 128 lignes. Pourquoi l'exercice 3.1 compare-t-il <code>pd.cut()<\/code> à <code>df<\/code> et non à <code>df_travail<\/code> ?", "_multiple": false, "difficulte": "moyen", "theme": "Transformer un DataFrame", "source_fichier": "tp1-pandas.md", "_source": "tp1-pandas.md", "options": [{"_texte": "Parce que <code>pd.cut()<\/code> ne s'applique qu'à un DataFrame qui n'a jamais été filtré", "correcte": false, "_justification": "<code>pd.cut()<\/code> s'applique à n'importe quelle colonne numérique, filtrée ou non."}, {"_texte": "Parce que le filtre <code>&gt;= 5.0<\/code> a retiré les 22 fleurs « petite » de <code>df_travail<\/code> : seul <code>df<\/code>, jamais modifié, redonne les effectifs 22, 93 et 35", "correcte": true, "_justification": "150 − 22 = 128. Un <code>df_travail<\/code> filtré donnerait 0 « petite » et un total faux, sans la moindre erreur. <code>df<\/code> reste la référence stable."}, {"_texte": "Parce que <code>df_travail<\/code> a été trié et que <code>pd.cut()<\/code> exige des données dans l'ordre d'origine", "correcte": false, "_justification": "<code>pd.cut()<\/code> n'exige aucun ordre. Le tri ne change pas les effectifs, c'est le filtre qui les change."}, {"_texte": "Parce que <code>df_travail<\/code> est une copie, et que <code>pd.cut()<\/code> ne travaille que sur l'objet d'origine", "correcte": false, "_justification": "Une copie contient les mêmes données au moment de la copie. Ce qui compte ici est la perte de lignes due au filtre, pas la copie."}]}, {"_enonce": "Cinq valeurs de <code>PetalWidthCm<\/code> ont été rendues manquantes dans <code>df_nan<\/code> (150 lignes). Combien de lignes restent après <code>fillna(moyenne)<\/code> puis après <code>dropna()<\/code> ?", "_multiple": false, "difficulte": "moyen", "theme": "Valeurs manquantes", "source_fichier": "tp1-pandas.md", "_source": "tp1-pandas.md", "options": [{"_texte": "150 après <code>fillna<\/code>, 145 après <code>dropna<\/code>", "correcte": true, "_justification": "<code>fillna<\/code> garde toutes les lignes en inventant une valeur, <code>dropna<\/code> en supprime 5 et perd aussi l'information des quatre autres colonnes de ces lignes."}, {"_texte": "145 après <code>fillna<\/code>, 145 après <code>dropna<\/code>", "correcte": false, "_justification": "<code>fillna<\/code> ne supprime aucune ligne : il remplace les trous, le nombre de lignes ne bouge pas."}, {"_texte": "150 après les deux : <code>dropna<\/code> ne supprime que les colonnes entières vides", "correcte": false, "_justification": "Par défaut, <code>dropna()<\/code> supprime les lignes contenant au moins une valeur manquante, pas des colonnes."}, {"_texte": "150 après <code>fillna<\/code>, 0 après <code>dropna<\/code>, car une ligne incomplète fait échouer toute la table", "correcte": false, "_justification": "Seules les 5 lignes concernées sont supprimées : il en reste 145."}]}, {"_enonce": "Qu'obtient-on avec <code>df.mean()<\/code> sur le DataFrame <code>df<\/code> complet (quatre colonnes numériques et <code>Species<\/code>), avec les versions récentes de pandas ?", "_multiple": false, "difficulte": "moyen", "theme": "Agrégations", "source_fichier": "tp1-pandas.md", "_source": "tp1-pandas.md", "options": [{"_texte": "La moyenne des quatre colonnes numériques, la colonne <code>Species<\/code> étant ignorée silencieusement", "correcte": false, "_justification": "C'était le comportement d'anciennes versions de pandas. Avec une version récente, rien n'est ignoré en silence : c'est le piège de l'encadré « L'IA vous le donne en trois secondes »."}, {"_texte": "Une <code>TypeError<\/code>, parce qu'une moyenne de texte n'a pas de sens. Il faut sélectionner les colonnes numériques, ou passer <code>numeric_only=True<\/code>", "correcte": true, "_justification": "Mesuré avec pandas 3.0.5 : <code>TypeError: Cannot perform reduction 'mean' with string dtype<\/code>. Un code recopié d'un assistant entraîné sur d'anciennes versions casse ainsi."}, {"_texte": "Une moyenne de 0 pour <code>Species<\/code>, le texte étant converti en zéro", "correcte": false, "_justification": "Pandas ne convertit jamais du texte en zéro pour calculer une moyenne."}, {"_texte": "Un DataFrame vide, sans erreur", "correcte": false, "_justification": "Il y a bien une erreur explicite. Un résultat vide ou absurde serait plus dangereux, et c'est le cas du séparateur CSV, pas de la moyenne."}]}, {"_enonce": "Dans le tableau croisé <code>pd.crosstab(df[&quot;Species&quot;], taille)<\/code> (150 fleurs), que lit-on sur la ligne <em>setosa<\/em> ?", "_multiple": false, "difficulte": "moyen", "theme": "Tableau croisé", "source_fichier": "tp1-pandas.md", "_source": "tp1-pandas.md", "options": [{"_texte": "20 « petite », 30 « moyenne », 0 « grande »", "correcte": true, "_justification": "Mesuré. Aucune <em>setosa<\/em> n'est « grande », alors que <em>virginica<\/em> en compte 26 et seulement 1 « petite » : le tableau montre l'étalement de chaque espèce, ce que les moyennes seules ne disent pas."}, {"_texte": "50 « petite », 0 « moyenne », 0 « grande »", "correcte": false, "_justification": "Les <em>setosa<\/em> se répartissent sur deux catégories, 20 « petite » et 30 « moyenne », pas sur une seule."}, {"_texte": "0 « petite », 0 « moyenne », 50 « grande »", "correcte": false, "_justification": "C'est l'inverse : les <em>setosa<\/em> ont les sépales les plus courts, aucune n'est « grande »."}, {"_texte": "17 « petite », 17 « moyenne », 16 « grande », une répartition uniforme", "correcte": false, "_justification": "Les trois espèces ne sont pas réparties uniformément sur les tailles. C'est précisément ce que le tableau met en évidence."}]}, {"_enonce": "Un fichier écrit avec <code>sep=&quot;;&quot;<\/code> est relu par <code>pd.read_csv(&quot;iris_pv.csv&quot;)<\/code> sans préciser le séparateur. Que se passe-t-il ?", "_multiple": false, "difficulte": "moyen", "theme": "Fichiers CSV", "source_fichier": "tp1-pandas.md", "_source": "tp1-pandas.md", "options": [{"_texte": "Une erreur de lecture, car le séparateur par défaut est la virgule", "correcte": false, "_justification": "Aucune erreur n'est levée : c'est ce qui rend le piège dangereux."}, {"_texte": "Pandas détecte seul le point-virgule et renvoie le bon DataFrame de 5 colonnes", "correcte": false, "_justification": "Pas par défaut : sans <code>sep=&quot;;&quot;<\/code>, <code>read_csv<\/code> attend des virgules."}, {"_texte": "Un DataFrame à une seule colonne, tout le contenu de chaque ligne étant collé ensemble, sans aucune erreur", "correcte": true, "_justification": "Mesuré : la forme est <code>(150, 1)<\/code> au lieu de <code>(150, 5)<\/code>. Vérifier <code>df.shape<\/code> juste après tout chargement est le réflexe à prendre."}, {"_texte": "Un DataFrame de 5 colonnes dont les valeurs sont toutes <code>NaN<\/code>", "correcte": false, "_justification": "Le contenu est lu, mais dans une seule colonne : rien n'est converti en <code>NaN<\/code>."}]}, {"_enonce": "On convertit <code>Species<\/code> en type <code>category<\/code>, on écrit <code>df<\/code> en CSV, puis on le relit avec <code>pd.read_csv<\/code>. Que renvoie <code>df.equals(df_relu)<\/code> ?", "_multiple": false, "difficulte": "difficile", "theme": "Fichiers CSV", "source_fichier": "tp1-pandas.md", "_source": "tp1-pandas.md", "options": [{"_texte": "<code>True<\/code>, car les valeurs sont identiques", "correcte": false, "_justification": "Les valeurs le sont, pas les types : <code>equals<\/code> compare aussi les types des colonnes."}, {"_texte": "<code>False<\/code>, car le CSV ne connaît que du texte : le type <code>category<\/code> redevient une simple chaîne de caractères à la relecture", "correcte": true, "_justification": "Mesuré : <code>False<\/code>. Un format comme Parquet préserve les types, le CSV, universel et lisible, ne le fait jamais."}, {"_texte": "Une erreur, car une colonne <code>category<\/code> ne peut pas être exportée en CSV", "correcte": false, "_justification": "L'export fonctionne. Le problème apparaît seulement à la relecture."}, {"_texte": "<code>True<\/code> à condition d'ajouter <code>index=False<\/code>, et <code>False<\/code> sinon", "correcte": false, "_justification": "<code>index=False<\/code> règle un autre problème, celui de l'index écrit comme colonne supplémentaire. Il ne rend pas le type <code>category<\/code> au rechargement."}]}, {"_enonce": "Sur la matrice de corrélation des quatre mesures d'Iris, quelle affirmation est exacte ?", "_multiple": false, "difficulte": "difficile", "theme": "Visualiser", "source_fichier": "tp1-pandas.md", "_source": "tp1-pandas.md", "options": [{"_texte": "La plus forte corrélation hors diagonale lie <code>SepalLengthCm<\/code> et <code>SepalWidthCm<\/code>", "correcte": false, "_justification": "Elle vaut −0,12 : c'est l'une des plus faibles en valeur absolue."}, {"_texte": "Toutes les corrélations hors diagonale sont positives", "correcte": false, "_justification": "<code>SepalWidthCm<\/code> est négativement corrélée aux trois autres colonnes (−0,12, −0,43 et −0,37)."}, {"_texte": "La diagonale vaut 0, car une colonne n'est pas corrélée à elle-même", "correcte": false, "_justification": "Une colonne est parfaitement corrélée à elle-même : la diagonale vaut 1."}, {"_texte": "La plus forte corrélation hors diagonale lie <code>PetalLengthCm<\/code> et <code>PetalWidthCm<\/code> (0,96), et <code>SepalWidthCm<\/code> est la seule corrélée négativement aux autres", "correcte": true, "_justification": "Mesuré. La heatmap fait ressortir d'un coup d'œil ce qu'un tableau de nombres demande de chercher activement."}]}]};
+const form = document.getElementById('qcm');
+DATA.questions.forEach((q, i) => {
+  const multi = q._multiple;
+  const div = document.createElement('div');
+  div.className = 'q'; div.id = 'q'+i;
+  let badges = '';
+  if (q.difficulte) badges += `<span class="badge b-${q.difficulte}">${q.difficulte}</span>`;
+  if (q.theme) badges += `<span class="badge b-theme">${q.theme}</span>`;
+  const hint = multi ? ' <small>(plusieurs réponses)</small>' : '';
+  let html = `<span class="qmark" id="m${i}"></span><h3>Question ${i+1}${hint}${badges}</h3>`;
+  html += `<div class="enonce">${q._enonce}</div>`;
+  q.options.forEach((o, j) => {
+    const type = multi ? 'checkbox' : 'radio';
+    html += `<label class="opt" id="o${i}_${j}">`
+          + `<input type="${type}" name="q${i}" value="${j}">${o._texte}</label>`;
+    html += `<div class="just" id="j${i}_${j}">${o._justification||''}</div>`;
+  });
+  if (q.source_fichier) html += `<div class="src" id="s${i}">Source : ${q._source}</div>`;
+  div.innerHTML = html;
+  form.appendChild(div);
+});
+function grade(){
+  let correct = 0;
+  DATA.questions.forEach((q, i) => {
+    const chosen = [...form.querySelectorAll(`input[name=q${i}]:checked`)].map(e=>+e.value);
+    const good = q.options.map((o,j)=>o.correcte?j:-1).filter(j=>j>=0);
+    const ok = chosen.length===good.length && chosen.every(j=>good.includes(j));
+    if (ok) correct++;
+    q.options.forEach((o,j)=>{
+      const lab = document.getElementById(`o${i}_${j}`);
+      lab.classList.remove('correct','wrong');
+      if (o.correcte) lab.classList.add('correct');
+      else if (chosen.includes(j)) lab.classList.add('wrong');
+      const ju = document.getElementById(`j${i}_${j}`);
+      if (ju && o._justification) ju.classList.add('show');
+    });
+    const m = document.getElementById('m'+i);
+    m.textContent = ok ? '✓' : '✗';
+    m.style.color = ok ? 'var(--ok)' : 'var(--ko)';
+    m.classList.add('show');
+    const s = document.getElementById('s'+i); if (s) s.classList.add('show');
+  });
+  const n = DATA.questions.length;
+  const pct = Math.round(100*correct/n);
+  const sc = document.getElementById('score');
+  sc.textContent = `Score : ${correct} / ${n}  (${pct} %)`;
+  sc.style.color = pct>=50 ? 'var(--ok)' : 'var(--ko)';
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+</script>
+</body>
+</html>

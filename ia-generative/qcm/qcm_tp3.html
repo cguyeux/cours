@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QCM — TP3 : Systèmes RAG et bases vectorielles</title>
+<style>
+  :root { --ok:#1b8a5a; --ko:#c0392b; --accent:#2c5f8a; --bg:#f6f7f9; }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, "Segoe UI", Roboto, sans-serif; line-height:1.5;
+         max-width: 820px; margin: 0 auto; padding: 1.5rem; color:#1a1a1a; background:var(--bg); }
+  h1 { color: var(--accent); margin-bottom:.2rem; }
+  .meta { color:#666; font-size:.9rem; margin-bottom:1rem; }
+  .consignes { background:#eef3f8; border-left:4px solid var(--accent); padding:.6rem .9rem;
+               border-radius:4px; margin-bottom:1.2rem; }
+  .q { background:#fff; border:1px solid #e1e4e8; border-radius:8px; padding:1rem 1.2rem;
+       margin-bottom:1rem; box-shadow:0 1px 2px rgba(0,0,0,.04); }
+  .q h3 { margin:.1rem 0 .2rem; font-size:1.05rem; }
+  .badge { font-size:.72rem; font-weight:600; padding:.1rem .5rem; border-radius:10px;
+           margin-left:.4rem; vertical-align:middle; }
+  .b-facile{background:#e3f4ea;color:var(--ok);} .b-moyen{background:#fdf3e0;color:#b87600;}
+  .b-difficile{background:#fbe6e6;color:var(--ko);} .b-theme{background:#eef0f3;color:#555;}
+  .enonce { margin:.4rem 0 .8rem; }
+  .opt { display:block; padding:.45rem .6rem; border:1px solid #e1e4e8; border-radius:6px;
+         margin:.35rem 0; cursor:pointer; transition:background .12s; }
+  .opt:hover { background:#f0f4f8; }
+  .opt input { margin-right:.55rem; }
+  .opt.correct { border-color:var(--ok); background:#eaf7f0; }
+  .opt.wrong   { border-color:var(--ko); background:#fbecec; }
+  .just { font-size:.86rem; color:#555; margin:.2rem 0 0 1.7rem; display:none; }
+  .just.show { display:block; }
+  .src { font-size:.78rem; color:#888; margin-top:.5rem; display:none; }
+  .src.show { display:block; }
+  .bar { position:sticky; bottom:0; background:var(--bg); padding:.8rem 0; }
+  button { background:var(--accent); color:#fff; border:0; padding:.6rem 1.3rem;
+           font-size:1rem; border-radius:6px; cursor:pointer; }
+  button.ghost { background:#fff; color:var(--accent); border:1px solid var(--accent); margin-left:.5rem; }
+  #score { font-size:1.2rem; font-weight:700; margin-left:1rem; }
+  .qmark { float:right; font-weight:700; display:none; }
+  .qmark.show{display:inline;}
+</style>
+</head>
+<body>
+<h1>QCM — TP3 : Systèmes RAG et bases vectorielles</h1>
+<div class="meta">Source : site/docs/ia-generative/tp3-rag-vecteurs.md — 9 questions</div>
+<div class="consignes">Cochez la ou les bonnes réponses. Sauf mention contraire, une seule réponse est correcte.</div>
+<form id="qcm"></form>
+<div class="bar">
+  <button type="button" onclick="grade()">Valider mes réponses</button>
+  <button type="button" class="ghost" onclick="location.reload()">Réinitialiser</button>
+  <span id="score"></span>
+</div>
+<script>
+const DATA = {"questions": [{"_enonce": "Selon l'introduction du TP, que produit un <em>embedding<\/em> à partir d'un texte ?", "_multiple": false, "difficulte": "facile", "theme": "Notion d'embedding", "source_fichier": "tp3-rag-vecteurs.md", "_source": "tp3-rag-vecteurs.md", "options": [{"_texte": "Un vecteur numérique tel que deux textes proches sémantiquement deviennent deux vecteurs proches dans l'espace vectoriel", "correcte": true, "_justification": "L'étape 1 énonce : « Un embedding transforme un texte en vecteur numérique. Deux textes proches sémantiquement deviennent deux vecteurs proches dans l'espace vectoriel. »"}, {"_texte": "Une chaîne de caractères compressée sans perte qui peut être reconstruite à l'identique", "correcte": false, "_justification": "Le TP ne présente pas l'embedding comme une compression réversible du texte, mais comme une représentation vectorielle de la sémantique."}, {"_texte": "Une probabilité d'appartenance du texte à une catégorie prédéfinie", "correcte": false, "_justification": "Aucune notion de classification probabiliste n'est associée à l'embedding dans le TP ; l'embedding est un vecteur numérique."}, {"_texte": "Un résumé en langage naturel généré par le LLM", "correcte": false, "_justification": "Le résumé en langage naturel relève de la génération (RAG, étape 6), pas de l'embedding qui produit un vecteur numérique."}]}, {"_enonce": "Dans l'étape 2, quelle classe de scikit-learn est utilisée pour construire la représentation <em>Bag of Words<\/em> ?", "_multiple": false, "difficulte": "facile", "theme": "Bag of Words", "source_fichier": "tp3-rag-vecteurs.md", "_source": "tp3-rag-vecteurs.md", "options": [{"_texte": "<code>CountVectorizer<\/code>", "correcte": true, "_justification": "Le code de l'étape 2 importe <code>from sklearn.feature_extraction.text import CountVectorizer<\/code> puis appelle <code>vectorizer.fit_transform(corpus)<\/code>."}, {"_texte": "<code>TfidfVectorizer<\/code>", "correcte": false, "_justification": "Le TP utilise <code>CountVectorizer<\/code> ; <code>TfidfVectorizer<\/code> n'apparaît pas dans le code de l'étape 2."}, {"_texte": "<code>SentenceTransformer<\/code>", "correcte": false, "_justification": "<code>SentenceTransformer<\/code> est utilisé à l'étape 3 pour les embeddings par Transformers, pas pour le Bag of Words."}, {"_texte": "<code>HuggingFaceEmbeddings<\/code>", "correcte": false, "_justification": "<code>HuggingFaceEmbeddings<\/code> sert à construire le vector store FAISS (étape 7), pas la représentation Bag of Words."}]}, {"_enonce": "À l'étape 3, le modèle <code>sentence-transformers/all-MiniLM-L6-v2<\/code> est instancié avec l'argument <code>device=&quot;cpu&quot;<\/code>. Selon l'exercice 3.2, pourquoi forcer ce paramètre ?", "_multiple": false, "difficulte": "moyen", "theme": "Embeddings par Transformers", "source_fichier": "tp3-rag-vecteurs.md", "_source": "tp3-rag-vecteurs.md", "options": [{"_texte": "Pour éviter une erreur remontée sur certaines machines lorsqu'on exécute le code sans cette option", "correcte": true, "_justification": "L'exercice 3.2 demande : « Pourquoi force-t-on <code>device=&quot;cpu&quot;<\/code> ? Essayez sans cette option et observez l'erreur remontée sur votre machine. » Le but est d'éviter cette erreur."}, {"_texte": "Pour augmenter la dimension des vecteurs produits", "correcte": false, "_justification": "Le choix du <code>device<\/code> n'influe pas sur la taille des vecteurs ; celle-ci dépend du modèle (cf. exercice 3.1)."}, {"_texte": "Pour activer le support multilingue du modèle", "correcte": false, "_justification": "Le support multilingue dépend du choix d'un modèle multilingue (note de l'étape 3), pas du paramètre <code>device<\/code>."}, {"_texte": "Pour chiffrer les calculs et protéger les données", "correcte": false, "_justification": "Le paramètre <code>device<\/code> sélectionne le matériel de calcul (CPU/GPU), il n'a aucun rôle de chiffrement."}]}, {"_enonce": "L'étape 4 définit <code>cosine_similarity(A, B)<\/code> comme le produit scalaire de A et B divisé par le produit de leurs normes. Quelle valeur attend-on, selon l'exercice 4.1, pour deux phrases très différentes ?", "_multiple": false, "difficulte": "moyen", "theme": "Similarité cosinus", "source_fichier": "tp3-rag-vecteurs.md", "_source": "tp3-rag-vecteurs.md", "options": [{"_texte": "Une similarité plus faible que pour deux phrases proches sémantiquement", "correcte": true, "_justification": "La similarité cosinus mesure la proximité sémantique (étape 1) ; l'exercice 4.1 invite à observer ce comportement : deux phrases très différentes donnent un score plus bas que deux phrases proches."}, {"_texte": "Une similarité exactement égale à 1", "correcte": false, "_justification": "Une valeur proche de 1 traduit deux vecteurs alignés, donc des textes très proches, ce qui est l'inverse de phrases très différentes."}, {"_texte": "Une valeur strictement supérieure à 1", "correcte": false, "_justification": "Par construction (division par le produit des normes), la similarité cosinus est bornée et ne dépasse pas 1 ; elle ne peut être supérieure à 1."}, {"_texte": "Une erreur de division par zéro systématique", "correcte": false, "_justification": "La division par zéro ne survient que si une norme est nulle (vecteur nul), pas du simple fait que les phrases diffèrent."}]}, {"_enonce": "À l'étape 5, la fonction <code>embed<\/code> appelle l'API OpenAI avec <code>model=&quot;text-embedding-3-large&quot;<\/code> et <code>dimensions=3072<\/code>. Que demande l'exercice 5.2 et quel paramètre y est concerné ?", "_multiple": false, "difficulte": "moyen", "theme": "Embeddings OpenAI", "source_fichier": "tp3-rag-vecteurs.md", "_source": "tp3-rag-vecteurs.md", "options": [{"_texte": "Réduire <code>dimensions<\/code> à 256 et observer empiriquement l'impact sur la qualité", "correcte": true, "_justification": "L'exercice 5.2 dit : « Réduisez <code>dimensions<\/code> à 256. Quel impact sur la qualité (à tester empiriquement) ? »"}, {"_texte": "Changer le modèle pour <code>all-MiniLM-L6-v2<\/code> et comparer", "correcte": false, "_justification": "La comparaison avec sentence-transformers relève de l'exercice 5.1 ; l'exercice 5.2 porte sur la réduction du paramètre <code>dimensions<\/code> à 256."}, {"_texte": "Augmenter <code>dimensions<\/code> à 6144 pour doubler la précision", "correcte": false, "_justification": "Le TP demande de réduire <code>dimensions<\/code> à 256, pas de l'augmenter."}, {"_texte": "Fixer un quota dans le tableau de bord OpenAI", "correcte": false, "_justification": "Fixer un quota est l'objet de l'encadré « Attention » (l'API est payante), pas de l'exercice 5.2 portant sur le paramètre <code>dimensions<\/code>."}]}, {"_enonce": "Dans l'étape 6, le prompt impose : « Answer the question using ONLY the context provided. » Quels objectifs pédagogiques sont visés par cette étape et ses exercices ? (plusieurs réponses possibles)", "_multiple": true, "difficulte": "difficile", "theme": "Pipeline RAG de base", "source_fichier": "tp3-rag-vecteurs.md", "_source": "tp3-rag-vecteurs.md", "options": [{"_texte": "Contraindre le modèle à répondre uniquement à partir du contexte fourni", "correcte": true, "_justification": "Le prompt de l'étape 6 contient explicitement « Answer the question using ONLY the context provided. »"}, {"_texte": "Modifier la consigne pour forcer une réponse en français", "correcte": true, "_justification": "L'exercice 6.1 demande : « Modifiez la consigne pour forcer l'IA à répondre en français. »"}, {"_texte": "Faire répondre « Je ne sais pas » lorsque le contexte ne contient pas l'information", "correcte": true, "_justification": "L'exercice 6.2 demande d'ajouter une validation : « si le contexte ne contient pas l'information, le modèle doit répondre « Je ne sais pas ». »"}, {"_texte": "Indexer automatiquement le PDF <code>Guyeux_2024.pdf<\/code> dans un vector store", "correcte": false, "_justification": "L'indexation du PDF dans FAISS est l'objet des étapes 7 et 8, pas de l'étape 6 qui passe le contexte « en dur » dans le prompt."}, {"_texte": "Entraîner un nouveau modèle d'embeddings sur le corpus", "correcte": false, "_justification": "Le TP utilise des modèles d'embeddings préexistants ; aucun entraînement de modèle n'est demandé."}]}, {"_enonce": "À l'étape 7, quelle combinaison d'outils est utilisée pour indexer le PDF <code>images/Guyeux_2024.pdf<\/code> et y faire une recherche ?", "_multiple": false, "difficulte": "moyen", "theme": "Vector store FAISS", "source_fichier": "tp3-rag-vecteurs.md", "_source": "tp3-rag-vecteurs.md", "options": [{"_texte": "<code>PyPDFLoader<\/code> pour charger/découper le PDF, <code>HuggingFaceEmbeddings<\/code> pour les vecteurs, puis <code>FAISS.from_documents<\/code> et <code>similarity_search<\/code>", "correcte": true, "_justification": "Le code de l'étape 7 charge le PDF via <code>PyPDFLoader(...).load_and_split()<\/code>, crée les embeddings avec <code>HuggingFaceEmbeddings(...)<\/code>, indexe via <code>FAISS.from_documents(pages, embeddings)<\/code> et interroge avec <code>faiss_index.similarity_search(...)<\/code>."}, {"_texte": "<code>CountVectorizer<\/code> pour les vecteurs, puis une recherche par mots-clés exacts", "correcte": false, "_justification": "<code>CountVectorizer<\/code> est l'outil Bag of Words de l'étape 2 ; l'étape 7 utilise des embeddings HuggingFace et une recherche par similarité, pas une recherche par mots-clés."}, {"_texte": "<code>YoutubeLoader<\/code> pour charger le document, puis <code>OpenAIEmbeddings<\/code>", "correcte": false, "_justification": "<code>YoutubeLoader<\/code> apparaît à l'étape 10 (autres loaders) ; l'étape 7 charge un PDF avec <code>PyPDFLoader<\/code>."}, {"_texte": "<code>RecursiveCharacterTextSplitter<\/code> seul, sans aucun modèle d'embeddings", "correcte": false, "_justification": "Le text splitter est introduit à l'étape 9 ; un vector store FAISS nécessite des embeddings, fournis ici par <code>HuggingFaceEmbeddings<\/code>."}]}, {"_enonce": "Aux étapes 7 et 8, quelle est la principale différence de code entre les deux constructions du vector store FAISS ?", "_multiple": false, "difficulte": "moyen", "theme": "FAISS : embeddings HuggingFace vs OpenAI", "source_fichier": "tp3-rag-vecteurs.md", "_source": "tp3-rag-vecteurs.md", "options": [{"_texte": "L'étape 8 remplace <code>HuggingFaceEmbeddings<\/code> par <code>OpenAIEmbeddings()<\/code> lors de l'appel à <code>FAISS.from_documents<\/code>", "correcte": true, "_justification": "L'étape 8 écrit <code>FAISS.from_documents(pages, OpenAIEmbeddings())<\/code>, là où l'étape 7 passait <code>embeddings = HuggingFaceEmbeddings(...)<\/code>. L'exercice 8.1 invite d'ailleurs à comparer les temps d'indexation OpenAI vs HuggingFace."}, {"_texte": "L'étape 8 remplace FAISS par Milvus comme vector store", "correcte": false, "_justification": "Les deux étapes utilisent FAISS ; Milvus n'est évoqué qu'en astuce/comparaison, pas employé dans le code."}, {"_texte": "L'étape 8 abandonne <code>PyPDFLoader<\/code> au profit de <code>YoutubeLoader<\/code>", "correcte": false, "_justification": "Les deux étapes chargent le PDF avec <code>PyPDFLoader<\/code> ; <code>YoutubeLoader<\/code> relève de l'étape 10."}, {"_texte": "L'étape 8 supprime l'appel à <code>similarity_search<\/code>", "correcte": false, "_justification": "L'étape 8 conserve <code>faiss_index.similarity_search(&quot;Is there a lineage 10 in M.tuberculosis?&quot;, k=2)<\/code> ; seule la classe d'embeddings change."}]}, {"_enonce": "À l'étape 9, le <code>RecursiveCharacterTextSplitter<\/code> est instancié avec <code>chunk_size=500<\/code>, <code>chunk_overlap=200<\/code> et <code>separators=[&quot;\\n\\n&quot;, &quot;\\n&quot;, &quot;. &quot;]<\/code>. Que demande l'exercice 9.1 à propos de ces paramètres ?", "_multiple": false, "difficulte": "moyen", "theme": "Splitting et nettoyage des textes", "source_fichier": "tp3-rag-vecteurs.md", "_source": "tp3-rag-vecteurs.md", "options": [{"_texte": "Tester différents couples <code>chunk_size<\/code> / <code>chunk_overlap<\/code> et observer l'évolution de la cohérence des réponses", "correcte": true, "_justification": "L'exercice 9.1 dit : « Testez différents couples <code>chunk_size<\/code> / <code>chunk_overlap<\/code>. Comment évolue la cohérence des réponses ? »"}, {"_texte": "Supprimer tout chevauchement en fixant <code>chunk_overlap=0<\/code> de manière définitive", "correcte": false, "_justification": "L'exercice invite à faire varier le chevauchement, pas à l'annuler définitivement."}, {"_texte": "Remplacer les separators par une expression régulière unique", "correcte": false, "_justification": "L'exercice 9.1 porte sur <code>chunk_size<\/code>/<code>chunk_overlap<\/code>, pas sur la réécriture des <code>separators<\/code> en regex."}, {"_texte": "Indexer directement le PDF sans découpage", "correcte": false, "_justification": "C'est l'inverse : l'exercice 9.2 propose justement d'impliquer le splitter dans le pipeline FAISS, donc de re-splitter le PDF avant indexation."}]}]};
+const form = document.getElementById('qcm');
+DATA.questions.forEach((q, i) => {
+  const multi = q._multiple;
+  const div = document.createElement('div');
+  div.className = 'q'; div.id = 'q'+i;
+  let badges = '';
+  if (q.difficulte) badges += `<span class="badge b-${q.difficulte}">${q.difficulte}</span>`;
+  if (q.theme) badges += `<span class="badge b-theme">${q.theme}</span>`;
+  const hint = multi ? ' <small>(plusieurs réponses)</small>' : '';
+  let html = `<span class="qmark" id="m${i}"></span><h3>Question ${i+1}${hint}${badges}</h3>`;
+  html += `<div class="enonce">${q._enonce}</div>`;
+  q.options.forEach((o, j) => {
+    const type = multi ? 'checkbox' : 'radio';
+    html += `<label class="opt" id="o${i}_${j}">`
+          + `<input type="${type}" name="q${i}" value="${j}">${o._texte}</label>`;
+    html += `<div class="just" id="j${i}_${j}">${o._justification||''}</div>`;
+  });
+  if (q.source_fichier) html += `<div class="src" id="s${i}">Source : ${q._source}</div>`;
+  div.innerHTML = html;
+  form.appendChild(div);
+});
+function grade(){
+  let correct = 0;
+  DATA.questions.forEach((q, i) => {
+    const chosen = [...form.querySelectorAll(`input[name=q${i}]:checked`)].map(e=>+e.value);
+    const good = q.options.map((o,j)=>o.correcte?j:-1).filter(j=>j>=0);
+    const ok = chosen.length===good.length && chosen.every(j=>good.includes(j));
+    if (ok) correct++;
+    q.options.forEach((o,j)=>{
+      const lab = document.getElementById(`o${i}_${j}`);
+      lab.classList.remove('correct','wrong');
+      if (o.correcte) lab.classList.add('correct');
+      else if (chosen.includes(j)) lab.classList.add('wrong');
+      const ju = document.getElementById(`j${i}_${j}`);
+      if (ju && o._justification) ju.classList.add('show');
+    });
+    const m = document.getElementById('m'+i);
+    m.textContent = ok ? '✓' : '✗';
+    m.style.color = ok ? 'var(--ok)' : 'var(--ko)';
+    m.classList.add('show');
+    const s = document.getElementById('s'+i); if (s) s.classList.add('show');
+  });
+  const n = DATA.questions.length;
+  const pct = Math.round(100*correct/n);
+  const sc = document.getElementById('score');
+  sc.textContent = `Score : ${correct} / ${n}  (${pct} %)`;
+  sc.style.color = pct>=50 ? 'var(--ok)' : 'var(--ko)';
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+</script>
+</body>
+</html>

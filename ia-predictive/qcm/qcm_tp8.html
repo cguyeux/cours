@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QCM — TP8 : Prétraitement des variables</title>
+<style>
+  :root { --ok:#1b8a5a; --ko:#c0392b; --accent:#2c5f8a; --bg:#f6f7f9; }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, "Segoe UI", Roboto, sans-serif; line-height:1.5;
+         max-width: 820px; margin: 0 auto; padding: 1.5rem; color:#1a1a1a; background:var(--bg); }
+  h1 { color: var(--accent); margin-bottom:.2rem; }
+  .meta { color:#666; font-size:.9rem; margin-bottom:1rem; }
+  .consignes { background:#eef3f8; border-left:4px solid var(--accent); padding:.6rem .9rem;
+               border-radius:4px; margin-bottom:1.2rem; }
+  .q { background:#fff; border:1px solid #e1e4e8; border-radius:8px; padding:1rem 1.2rem;
+       margin-bottom:1rem; box-shadow:0 1px 2px rgba(0,0,0,.04); }
+  .q h3 { margin:.1rem 0 .2rem; font-size:1.05rem; }
+  .badge { font-size:.72rem; font-weight:600; padding:.1rem .5rem; border-radius:10px;
+           margin-left:.4rem; vertical-align:middle; }
+  .b-facile{background:#e3f4ea;color:var(--ok);} .b-moyen{background:#fdf3e0;color:#b87600;}
+  .b-difficile{background:#fbe6e6;color:var(--ko);} .b-theme{background:#eef0f3;color:#555;}
+  .enonce { margin:.4rem 0 .8rem; }
+  .opt { display:block; padding:.45rem .6rem; border:1px solid #e1e4e8; border-radius:6px;
+         margin:.35rem 0; cursor:pointer; transition:background .12s; }
+  .opt:hover { background:#f0f4f8; }
+  .opt input { margin-right:.55rem; }
+  .opt.correct { border-color:var(--ok); background:#eaf7f0; }
+  .opt.wrong   { border-color:var(--ko); background:#fbecec; }
+  .just { font-size:.86rem; color:#555; margin:.2rem 0 0 1.7rem; display:none; }
+  .just.show { display:block; }
+  .src { font-size:.78rem; color:#888; margin-top:.5rem; display:none; }
+  .src.show { display:block; }
+  .bar { position:sticky; bottom:0; background:var(--bg); padding:.8rem 0; }
+  button { background:var(--accent); color:#fff; border:0; padding:.6rem 1.3rem;
+           font-size:1rem; border-radius:6px; cursor:pointer; }
+  button.ghost { background:#fff; color:var(--accent); border:1px solid var(--accent); margin-left:.5rem; }
+  #score { font-size:1.2rem; font-weight:700; margin-left:1rem; }
+  .qmark { float:right; font-weight:700; display:none; }
+  .qmark.show{display:inline;}
+</style>
+</head>
+<body>
+<h1>QCM — TP8 : Prétraitement des variables</h1>
+<div class="meta">Source : site/docs/ia-predictive/tp8-pretraitement.md — 10 questions</div>
+<div class="consignes">Cochez la bonne réponse. Une seule réponse est correcte par question. Toutes les valeurs numériques citées sont celles mesurées pendant le TP (scikit-learn 1.9.1, jeu Adult Income d'OpenML, découpage 80/20 stratifié, random_state=42).</div>
+<form id="qcm"></form>
+<div class="bar">
+  <button type="button" onclick="grade()">Valider mes réponses</button>
+  <button type="button" class="ghost" onclick="location.reload()">Réinitialiser</button>
+  <span id="score"></span>
+</div>
+<script>
+const DATA = {"questions": [{"_enonce": "Sur Adult Income, l'information mutuelle calculée sur <code>X_train[colonnes_num]<\/code> ne classe jamais <code>marital-status<\/code>, alors que la forêt aléatoire la place très haut. Pourquoi ?", "_multiple": false, "difficulte": "facile", "theme": "Sélection de variables", "source_fichier": "tp8-pretraitement.md", "_source": "tp8-pretraitement.md", "options": [{"_texte": "Parce que <code>marital-status<\/code> n'a aucune dépendance statistique avec le revenu", "correcte": false, "_justification": "Faux : la forêt lui donne l'une des plus fortes importances (0,134 pour <code>Married-civ-spouse<\/code>). La dépendance existe, elle n'a simplement pas été calculée."}, {"_texte": "Parce que l'information mutuelle ne détecte que les relations linéaires", "correcte": false, "_justification": "Au contraire, elle ne suppose aucune relation linéaire, comme le dit l'énoncé de l'étape 1."}, {"_texte": "Parce que la forêt aléatoire est toujours plus fiable qu'une méthode statistique", "correcte": false, "_justification": "Aucune méthode n'est plus fiable en soi. La différence vient du périmètre des variables données à chaque méthode."}, {"_texte": "Parce que l'information mutuelle n'a été calculée que sur les six colonnes numériques : la méthode ne pouvait pas voir les variables catégorielles, par construction", "correcte": true, "_justification": "C'est la leçon de l'exercice 1.1 : la méthode choisie détermine ce qu'elle peut voir. Comparer deux méthodes demande de leur donner accès aux mêmes variables."}]}, {"_enonce": "Parmi les importances de la forêt aléatoire (200 arbres, profondeur 12), quelle liste correspond aux trois premières colonnes mesurées ?", "_multiple": false, "difficulte": "moyen", "theme": "Sélection de variables", "source_fichier": "tp8-pretraitement.md", "_source": "tp8-pretraitement.md", "options": [{"_texte": "<code>capital-gain<\/code> (0,158), <code>marital-status_Married-civ-spouse<\/code> (0,134), <code>education-num<\/code> (0,111), puis <code>relationship_Husband<\/code> (0,098) juste derrière", "correcte": true, "_justification": "Mesuré. <code>capital-gain<\/code> arrive en tête dans les deux classements, et les catégorielles <code>marital-status<\/code> et <code>relationship<\/code> comptent parmi les plus importantes."}, {"_texte": "<code>age<\/code>, <code>fnlwgt<\/code>, <code>hours-per-week<\/code>, les trois variables numériques les plus continues", "correcte": false, "_justification": "<code>age<\/code> n'arrive qu'en cinquième position (0,061), et <code>fnlwgt<\/code>, un poids d'échantillonnage, n'est pas dans le haut du classement."}, {"_texte": "<code>sex<\/code>, <code>race<\/code>, <code>native-country<\/code>, les variables démographiques de base", "correcte": false, "_justification": "Aucune de ces variables n'apparaît dans le haut du classement mesuré."}, {"_texte": "<code>capital-loss<\/code>, <code>capital-gain<\/code>, <code>workclass<\/code>, les variables financières et professionnelles", "correcte": false, "_justification": "<code>capital-gain<\/code> est bien en tête, mais <code>capital-loss<\/code> n'arrive qu'à 0,041 et <code>workclass<\/code> n'est pas dans le haut du classement."}]}, {"_enonce": "Le pipeline complet transforme <code>X_train<\/code> de forme (39073, 14) en (39073, 105). D'où viennent ces colonnes ?", "_multiple": false, "difficulte": "moyen", "theme": "Encodage", "source_fichier": "tp8-pretraitement.md", "_source": "tp8-pretraitement.md", "options": [{"_texte": "Le <code>StandardScaler<\/code> crée de nouvelles colonnes, une par statistique calculée", "correcte": false, "_justification": "Le <code>StandardScaler<\/code> remplace chaque colonne numérique par sa version centrée-réduite : il ne change pas le nombre de colonnes."}, {"_texte": "L'imputeur ajoute une colonne par valeur manquante remplacée", "correcte": false, "_justification": "<code>SimpleImputer<\/code> remplace les trous sur place, sans ajouter de colonne."}, {"_texte": "Les 6 colonnes numériques restent des colonnes, et les 8 variables catégorielles, dont <code>native-country<\/code> à 41 modalités, se déploient en 99 colonnes binaires par encodage one-hot", "correcte": true, "_justification": "6 + 99 = 105. Un one-hot crée une colonne par modalité, ce qui fait vite exploser le nombre de colonnes."}, {"_texte": "Les 14 colonnes sont toutes encodées en one-hot, y compris <code>age<\/code> et <code>capital-gain<\/code>", "correcte": false, "_justification": "Les colonnes numériques ne sont pas encodées en one-hot : elles passent par imputation et standardisation, et ne représentent que 6 colonnes en sortie."}]}, {"_enonce": "Quelle séquence respecte l'absence de fuite de données pour un <code>ColumnTransformer<\/code> avec <code>StandardScaler<\/code> ?", "_multiple": false, "difficulte": "moyen", "theme": "Pipeline sans fuite", "source_fichier": "tp8-pretraitement.md", "_source": "tp8-pretraitement.md", "options": [{"_texte": "<code>fit_transform<\/code> sur l'ensemble <code>X<\/code>, puis séparation train/test", "correcte": false, "_justification": "C'est exactement la fuite décrite à l'étape 2 : les statistiques du test servent à normaliser le train."}, {"_texte": "<code>fit_transform<\/code> sur <code>X_train<\/code>, puis <code>transform<\/code> seul sur <code>X_test<\/code>", "correcte": true, "_justification": "Le scaler et l'imputeur apprennent leurs paramètres (moyennes, médianes) sur le train seulement, et le test les subit sans les influencer."}, {"_texte": "<code>fit_transform<\/code> sur <code>X_train<\/code>, puis <code>fit_transform<\/code> à nouveau sur <code>X_test<\/code>", "correcte": false, "_justification": "Réajuster sur le test lui fait utiliser ses propres statistiques : les deux ensembles ne sont plus mis à la même échelle."}, {"_texte": "<code>fit<\/code> sur <code>X_test<\/code>, puis <code>transform<\/code> sur <code>X_train<\/code>", "correcte": false, "_justification": "C'est l'inverse de la règle : l'ajustement se fait sur le train, jamais sur le test."}]}, {"_enonce": "On remplace <code>StandardScaler<\/code> par <code>&quot;passthrough&quot;<\/code> pour les numériques d'une <code>LogisticRegression(max_iter=2000)<\/code>. Que mesure-t-on ?", "_multiple": false, "difficulte": "moyen", "theme": "Normalisation", "source_fichier": "tp8-pretraitement.md", "_source": "tp8-pretraitement.md", "options": [{"_texte": "Aucun changement : la régression logistique est insensible à l'échelle des variables", "correcte": false, "_justification": "C'est vrai des arbres, pas d'un modèle optimisé par descente de gradient : <code>capital-gain<\/code> va jusqu'à plus de 90 000 et <code>age<\/code> de 17 à 90."}, {"_texte": "Une erreur <code>ValueError<\/code> : la régression logistique refuse des variables non standardisées", "correcte": false, "_justification": "Aucune erreur, seulement un avertissement de non-convergence et des métriques légèrement inférieures."}, {"_texte": "Des métriques meilleures, car on garde l'échelle d'origine des variables", "correcte": false, "_justification": "Elles sont inférieures : accuracy 0,846 contre 0,852, f1 0,644 contre 0,656."}, {"_texte": "Un <code>ConvergenceWarning<\/code> et des métriques un peu plus faibles (accuracy 0,846 contre 0,852, f1 0,644 contre 0,656)", "correcte": true, "_justification": "Mesuré. La standardisation change la vitesse de convergence de l'optimisation, elle n'est pas cosmétique."}]}, {"_enonce": "Un <code>OneHotEncoder(handle_unknown=&quot;error&quot;)<\/code> est ajusté sur un train sans <code>Holand-Netherlands<\/code>, puis appliqué à un test qui en contient une ligne. Que se passe-t-il ?", "_multiple": false, "difficulte": "moyen", "theme": "Encodage", "source_fichier": "tp8-pretraitement.md", "_source": "tp8-pretraitement.md", "options": [{"_texte": "La ligne est supprimée silencieusement du test", "correcte": false, "_justification": "Le comportement par défaut est de lever une erreur, pas de supprimer la ligne."}, {"_texte": "La catégorie reçoit automatiquement la modalité la plus fréquente", "correcte": false, "_justification": "C'est le travail de l'imputeur, pas de l'encodeur, et seulement pour les valeurs manquantes."}, {"_texte": "Une <code>ValueError<\/code> : « Found unknown categories ['Holand-Netherlands'] in column 7 during transform », le pipeline plante", "correcte": true, "_justification": "Mesuré. <code>handle_unknown=&quot;ignore&quot;<\/code> traiterait la catégorie comme « toutes les colonnes de cette variable à zéro » au lieu de planter."}, {"_texte": "Rien : <code>OneHotEncoder<\/code> crée une nouvelle colonne pour toute catégorie nouvelle à la transformation", "correcte": false, "_justification": "Le nombre de colonnes est fixé à l'ajustement. Une catégorie inconnue est refusée, ou ignorée si on le demande."}]}, {"_enonce": "Sur <code>hours-per-week<\/code>, avec Q1 = 40 et Q3 = 45, quelle proportion de lignes l'IQR marque-t-il comme aberrantes, et que donne le z-score <code>|z| &gt; 3<\/code> ?", "_multiple": false, "difficulte": "difficile", "theme": "Valeurs aberrantes", "source_fichier": "tp8-pretraitement.md", "_source": "tp8-pretraitement.md", "options": [{"_texte": "1,4 % pour l'IQR et 27,8 % pour le z-score, car le z-score est la méthode la plus sensible", "correcte": false, "_justification": "Les valeurs sont inversées : c'est l'IQR qui marque 27,8 % de lignes, le z-score 1,4 %."}, {"_texte": "27,8 % hors des bornes [32,5 ; 52,5] pour l'IQR, contre 1,4 % pour le z-score : l'IQR, minuscule ici (5), exclut des temps partiels et des heures supplémentaires ordinaires", "correcte": true, "_justification": "Mesuré. L'IQR suppose une distribution assez étalée, ce qui casse sur une variable très concentrée autour du temps plein."}, {"_texte": "Environ 0,4 % pour les deux méthodes, comme pour <code>age<\/code>", "correcte": false, "_justification": "0,4 % est la part mesurée pour <code>age<\/code> avec l'IQR, une variable plus étalée. Sur <code>hours-per-week<\/code>, les deux méthodes divergent beaucoup."}, {"_texte": "Environ 8 % pour les deux méthodes, comme pour <code>capital-gain<\/code>", "correcte": false, "_justification": "8,2 % est la part IQR pour <code>capital-gain<\/code>. Pour <code>hours-per-week<\/code>, l'IQR marque 27,8 % et le z-score 1,4 %."}]}, {"_enonce": "Sur <code>capital-gain<\/code>, les bornes IQR mesurées sont (0,0 ; 0,0) et 8,2 % des lignes sont hors bornes. Pourquoi ces bornes ?", "_multiple": false, "difficulte": "difficile", "theme": "Valeurs aberrantes", "source_fichier": "tp8-pretraitement.md", "_source": "tp8-pretraitement.md", "options": [{"_texte": "Parce que plus de 75 % des valeurs sont nulles : Q1 = Q3 = 0, donc l'IQR vaut 0, et toute valeur non nulle est déclarée aberrante", "correcte": true, "_justification": "Mesuré : Q1 = Q3 = 0, 8,2 % de lignes non nulles. L'IQR rend un résultat, mais il ne veut plus rien dire sur cette variable."}, {"_texte": "Parce que le TP a volontairement supprimé les valeurs extrêmes de <code>capital-gain<\/code>", "correcte": false, "_justification": "Rien n'a été supprimé : <code>capital-gain<\/code> va jusqu'à plus de 90 000 dans les données."}, {"_texte": "Parce que <code>quantile<\/code> ne fonctionne pas sur des colonnes entières", "correcte": false, "_justification": "<code>quantile<\/code> fonctionne sur les colonnes entières : le résultat 0 est ici exact."}, {"_texte": "Parce que les valeurs de <code>capital-gain<\/code> sont négatives pour la plupart", "correcte": false, "_justification": "Il n'y a pas de gain négatif : les valeurs sont nulles ou positives."}]}, {"_enonce": "Un modèle qui prédit toujours « revenu ≤ 50 000 $ » est évalué sur le test. Que valent son accuracy et son f1, comparés à la régression logistique ?", "_multiple": false, "difficulte": "moyen", "theme": "Déséquilibre de classes", "source_fichier": "tp8-pretraitement.md", "_source": "tp8-pretraitement.md", "options": [{"_texte": "Accuracy de 0,5 et f1 de 0,5, comme un tirage au hasard", "correcte": false, "_justification": "Ce n'est pas un tirage aléatoire : prédire toujours la classe majoritaire donne l'accuracy de cette classe (0,761), et un f1 nul sur la minoritaire."}, {"_texte": "Accuracy de 0,239 et f1 de 1,0, car il ne prédit que la classe minoritaire", "correcte": false, "_justification": "C'est le profil d'un modèle qui prédit toujours la classe minoritaire, ce qui n'est pas le cas ici."}, {"_texte": "Accuracy de 0,761 et f1 de 0,761, la même valeur pour les deux métriques", "correcte": false, "_justification": "Le f1 est calculé sur la classe minoritaire : sans aucune prédiction positive, il vaut exactement 0."}, {"_texte": "Accuracy d'environ 0,761 et f1 de 0,0, contre 0,852 et 0,656 pour la régression logistique : l'accuracy seule cache qu'il ne trouve aucun haut revenu", "correcte": true, "_justification": "Mesuré. 76,1 % des personnes gagnent 50 000 $ ou moins : l'accuracy récompense mécaniquement la classe majoritaire."}]}, {"_enonce": "En passant de <code>LogisticRegression<\/code> à <code>LogisticRegression(class_weight=&quot;balanced&quot;)<\/code>, que mesure-t-on sur le test ?", "_multiple": false, "difficulte": "difficile", "theme": "Déséquilibre de classes", "source_fichier": "tp8-pretraitement.md", "_source": "tp8-pretraitement.md", "options": [{"_texte": "Le rappel de la classe minoritaire monte de 0,589 à 0,844 et le f1 de 0,656 à 0,677, mais l'accuracy recule de 0,852 à 0,807 : plus de faux positifs pour moins de hauts revenus ratés", "correcte": true, "_justification": "Mesuré. Le bon choix dépend du coût métier d'un faux négatif face à un faux positif, pas d'une métrique générique."}, {"_texte": "Toutes les métriques progressent : la pondération est un gain gratuit", "correcte": false, "_justification": "L'accuracy recule de 0,852 à 0,807 : le gain sur le rappel se paie sur une autre métrique."}, {"_texte": "Le rappel baisse et l'accuracy monte, car le modèle devient plus prudent", "correcte": false, "_justification": "C'est l'inverse : le rappel monte fortement (0,844) et l'accuracy baisse (0,807)."}, {"_texte": "Rien ne change, car la pondération ne s'applique qu'avec des arbres", "correcte": false, "_justification": "<code>class_weight<\/code> agit sur la fonction de perte de la régression logistique : les métriques changent nettement."}]}]};
+const form = document.getElementById('qcm');
+DATA.questions.forEach((q, i) => {
+  const multi = q._multiple;
+  const div = document.createElement('div');
+  div.className = 'q'; div.id = 'q'+i;
+  let badges = '';
+  if (q.difficulte) badges += `<span class="badge b-${q.difficulte}">${q.difficulte}</span>`;
+  if (q.theme) badges += `<span class="badge b-theme">${q.theme}</span>`;
+  const hint = multi ? ' <small>(plusieurs réponses)</small>' : '';
+  let html = `<span class="qmark" id="m${i}"></span><h3>Question ${i+1}${hint}${badges}</h3>`;
+  html += `<div class="enonce">${q._enonce}</div>`;
+  q.options.forEach((o, j) => {
+    const type = multi ? 'checkbox' : 'radio';
+    html += `<label class="opt" id="o${i}_${j}">`
+          + `<input type="${type}" name="q${i}" value="${j}">${o._texte}</label>`;
+    html += `<div class="just" id="j${i}_${j}">${o._justification||''}</div>`;
+  });
+  if (q.source_fichier) html += `<div class="src" id="s${i}">Source : ${q._source}</div>`;
+  div.innerHTML = html;
+  form.appendChild(div);
+});
+function grade(){
+  let correct = 0;
+  DATA.questions.forEach((q, i) => {
+    const chosen = [...form.querySelectorAll(`input[name=q${i}]:checked`)].map(e=>+e.value);
+    const good = q.options.map((o,j)=>o.correcte?j:-1).filter(j=>j>=0);
+    const ok = chosen.length===good.length && chosen.every(j=>good.includes(j));
+    if (ok) correct++;
+    q.options.forEach((o,j)=>{
+      const lab = document.getElementById(`o${i}_${j}`);
+      lab.classList.remove('correct','wrong');
+      if (o.correcte) lab.classList.add('correct');
+      else if (chosen.includes(j)) lab.classList.add('wrong');
+      const ju = document.getElementById(`j${i}_${j}`);
+      if (ju && o._justification) ju.classList.add('show');
+    });
+    const m = document.getElementById('m'+i);
+    m.textContent = ok ? '✓' : '✗';
+    m.style.color = ok ? 'var(--ok)' : 'var(--ko)';
+    m.classList.add('show');
+    const s = document.getElementById('s'+i); if (s) s.classList.add('show');
+  });
+  const n = DATA.questions.length;
+  const pct = Math.round(100*correct/n);
+  const sc = document.getElementById('score');
+  sc.textContent = `Score : ${correct} / ${n}  (${pct} %)`;
+  sc.style.color = pct>=50 ? 'var(--ok)' : 'var(--ko)';
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+</script>
+</body>
+</html>

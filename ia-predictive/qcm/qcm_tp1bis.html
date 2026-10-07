@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QCM — TP1bis : Données géographiques avec GeoPandas</title>
+<style>
+  :root { --ok:#1b8a5a; --ko:#c0392b; --accent:#2c5f8a; --bg:#f6f7f9; }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, "Segoe UI", Roboto, sans-serif; line-height:1.5;
+         max-width: 820px; margin: 0 auto; padding: 1.5rem; color:#1a1a1a; background:var(--bg); }
+  h1 { color: var(--accent); margin-bottom:.2rem; }
+  .meta { color:#666; font-size:.9rem; margin-bottom:1rem; }
+  .consignes { background:#eef3f8; border-left:4px solid var(--accent); padding:.6rem .9rem;
+               border-radius:4px; margin-bottom:1.2rem; }
+  .q { background:#fff; border:1px solid #e1e4e8; border-radius:8px; padding:1rem 1.2rem;
+       margin-bottom:1rem; box-shadow:0 1px 2px rgba(0,0,0,.04); }
+  .q h3 { margin:.1rem 0 .2rem; font-size:1.05rem; }
+  .badge { font-size:.72rem; font-weight:600; padding:.1rem .5rem; border-radius:10px;
+           margin-left:.4rem; vertical-align:middle; }
+  .b-facile{background:#e3f4ea;color:var(--ok);} .b-moyen{background:#fdf3e0;color:#b87600;}
+  .b-difficile{background:#fbe6e6;color:var(--ko);} .b-theme{background:#eef0f3;color:#555;}
+  .enonce { margin:.4rem 0 .8rem; }
+  .opt { display:block; padding:.45rem .6rem; border:1px solid #e1e4e8; border-radius:6px;
+         margin:.35rem 0; cursor:pointer; transition:background .12s; }
+  .opt:hover { background:#f0f4f8; }
+  .opt input { margin-right:.55rem; }
+  .opt.correct { border-color:var(--ok); background:#eaf7f0; }
+  .opt.wrong   { border-color:var(--ko); background:#fbecec; }
+  .just { font-size:.86rem; color:#555; margin:.2rem 0 0 1.7rem; display:none; }
+  .just.show { display:block; }
+  .src { font-size:.78rem; color:#888; margin-top:.5rem; display:none; }
+  .src.show { display:block; }
+  .bar { position:sticky; bottom:0; background:var(--bg); padding:.8rem 0; }
+  button { background:var(--accent); color:#fff; border:0; padding:.6rem 1.3rem;
+           font-size:1rem; border-radius:6px; cursor:pointer; }
+  button.ghost { background:#fff; color:var(--accent); border:1px solid var(--accent); margin-left:.5rem; }
+  #score { font-size:1.2rem; font-weight:700; margin-left:1rem; }
+  .qmark { float:right; font-weight:700; display:none; }
+  .qmark.show{display:inline;}
+</style>
+</head>
+<body>
+<h1>QCM — TP1bis : Données géographiques avec GeoPandas</h1>
+<div class="meta">Source : site/docs/ia-predictive/tp1bis-geopandas.md — 10 questions</div>
+<div class="consignes">Cochez la bonne réponse. Une seule réponse est correcte par question. Toutes les valeurs numériques citées sont celles mesurées pendant le TP (geopandas 1.1.4, shapely 2.1.2, pandas 3.0.5, territoires fictifs du TP).</div>
+<form id="qcm"></form>
+<div class="bar">
+  <button type="button" onclick="grade()">Valider mes réponses</button>
+  <button type="button" class="ghost" onclick="location.reload()">Réinitialiser</button>
+  <span id="score"></span>
+</div>
+<script>
+const DATA = {"questions": [{"_enonce": "Un <code>GeoDataFrame<\/code> se distingue d'un <code>DataFrame<\/code> pandas ordinaire par quoi, et que devient <code>value_counts()<\/code> sur sa colonne <code>groupe<\/code> ?", "_multiple": false, "difficulte": "facile", "theme": "GeoDataFrame", "source_fichier": "tp1bis-geopandas.md", "_source": "tp1bis-geopandas.md", "options": [{"_texte": "Par un index obligatoirement spatial ; <code>value_counts()<\/code> est remplacé par une méthode <code>geo_counts()<\/code>", "correcte": false, "_justification": "Il n'existe pas de <code>geo_counts()<\/code>. Un <code>GeoDataFrame<\/code> hérite de toutes les méthodes pandas."}, {"_texte": "Par une colonne <code>geometry<\/code> portant une forme par ligne ; <code>value_counts()<\/code> fonctionne comme sur n'importe quel DataFrame (3 « nord », 2 « sud »)", "correcte": true, "_justification": "C'est le résultat attendu de l'exercice 1.1 : tout ce qui ne touche pas à la géométrie reste du pandas."}, {"_texte": "Par le fait qu'il ne contient que des nombres ; <code>value_counts()<\/code> échoue sur du texte", "correcte": false, "_justification": "Un <code>GeoDataFrame<\/code> contient des colonnes de texte, d'entiers, etc., comme un DataFrame, plus la géométrie. <code>value_counts()<\/code> compte très bien du texte."}, {"_texte": "Par un CRS unique pour toutes les colonnes ; <code>value_counts()<\/code> renvoie alors les aires", "correcte": false, "_justification": "<code>value_counts()<\/code> compte les occurrences, il ne calcule aucune aire. Le CRS est attaché à la colonne géométrie, pas à toutes les colonnes."}]}, {"_enonce": "<code>territoires.total_bounds<\/code> renvoie <code>[0. 42. 8. 48.]<\/code>. Comment lire ce tableau ?", "_multiple": false, "difficulte": "facile", "theme": "Emprise", "source_fichier": "tp1bis-geopandas.md", "_source": "tp1bis-geopandas.md", "options": [{"_texte": "Les coordonnées du centre du premier territoire suivies de son aire", "correcte": false, "_justification": "<code>total_bounds<\/code> porte sur l'ensemble et ne contient ni centre ni aire : ce sont quatre bornes."}, {"_texte": "(latitude min, longitude min, latitude max, longitude max)", "correcte": false, "_justification": "L'ordre est x puis y, donc longitude puis latitude. Ici <code>[0, 42, 8, 48]<\/code> se lit : longitude de 0 à 8, latitude de 42 à 48. L'inverser fausserait toute lecture (c'est la convention de shapely et geopandas)."}, {"_texte": "Les populations minimale et maximale puis deux nombres de territoires", "correcte": false, "_justification": "<code>total_bounds<\/code> ne regarde que la géométrie, jamais les colonnes de données."}, {"_texte": "(longitude min, latitude min, longitude max, latitude max) de l'ensemble des territoires", "correcte": true, "_justification": "Exercice 1.1. Les territoires vont de 0 à 8 degrés de longitude et de 42 à 48 degrés de latitude."}]}, {"_enonce": "<code>territoires.geometry.area<\/code> est calculé en <code>EPSG:4326<\/code> et donne <code>[9.0, 6.0, 9.0, 6.0, 18.0]<\/code>. Que penser de ces nombres ?", "_multiple": false, "difficulte": "moyen", "theme": "Piège du CRS", "source_fichier": "tp1bis-geopandas.md", "_source": "tp1bis-geopandas.md", "options": [{"_texte": "Ce sont des « degrés carrés », sans usage physique : geopandas avertit « Results from 'area' are likely incorrect » et il faut reprojeter dans un CRS métrique", "correcte": true, "_justification": "Mesuré : l'avertissement est bien émis, et le nombre s'affiche quand même. C'est le piège de l'encadré « L'IA vous le donne en trois secondes »."}, {"_texte": "Ce sont des kilomètres carrés, geopandas convertit automatiquement les degrés", "correcte": false, "_justification": "geopandas ne convertit rien : il calcule sur les coordonnées telles quelles. Les vraies surfaces, après reprojection en Lambert-93, valent de 51 101 à 157 569 km²."}, {"_texte": "Ce sont des mètres carrés, <code>EPSG:4326<\/code> étant le système métrique international", "correcte": false, "_justification": "<code>EPSG:4326<\/code> est le système GPS en degrés de longitude et de latitude, pas un système métrique."}, {"_texte": "Ce sont des hectares, unité par défaut pour une GeoDataFrame", "correcte": false, "_justification": "Il n'y a pas d'unité par défaut en hectares : l'unité est celle des coordonnées, ici le degré."}]}, {"_enonce": "Après <code>to_crs(epsg=2154)<\/code>, <code>Griselle<\/code> mesure 157 569 km². Après <code>to_crs(epsg=3857)<\/code>, combien environ ?", "_multiple": false, "difficulte": "moyen", "theme": "Choix de la projection", "source_fichier": "tp1bis-geopandas.md", "_source": "tp1bis-geopandas.md", "options": [{"_texte": "157 569 km², car une reprojection ne change jamais une aire", "correcte": false, "_justification": "Une reprojection change les coordonnées, donc les aires calculées dessus : 157 569 en Lambert-93, 315 883 en Web Mercator."}, {"_texte": "Environ 315 883 km², et c'est la valeur à privilégier car Web Mercator est le standard le plus répandu", "correcte": false, "_justification": "La première partie est exacte, pas la conclusion : répandu n'est pas adapté. Lambert-93 est construit pour limiter la déformation des surfaces en France, Web Mercator pour conserver les angles."}, {"_texte": "Environ 315 883 km², soit le double : Web Mercator dilate fortement les surfaces loin de l'équateur", "correcte": true, "_justification": "Mesuré : 315 883 km² contre 157 569 en Lambert-93. Web Mercator sert à afficher une carte web, pas à mesurer des surfaces."}, {"_texte": "18 km², l'aire en degrés carrés ne dépend pas du CRS projeté", "correcte": false, "_justification": "18 est l'aire en degrés carrés dans <code>EPSG:4326<\/code>. Dans un CRS projeté, les coordonnées sont en mètres, et l'aire change."}]}, {"_enonce": "Quelle distance obtient-on entre Paris et Lyon avec <code>distance()<\/code> sur les données reprojetées en Lambert-93, divisée par 1000 ?", "_multiple": false, "difficulte": "moyen", "theme": "Distances", "source_fichier": "tp1bis-geopandas.md", "_source": "tp1bis-geopandas.md", "options": [{"_texte": "Environ 3,97, la distance « en degrés » de <code>EPSG:4326<\/code>", "correcte": false, "_justification": "Mesuré : 3,97 est bien ce qu'on obtient sur les données en degrés, mais c'est un nombre sans unité physique, et geopandas avertit que le résultat est probablement incorrect. Pas une distance en km."}, {"_texte": "Environ 391 km", "correcte": true, "_justification": "Mesuré : 391,4 km pour Lyon, 660,1 pour Marseille, 587,6 pour Toulouse, 499,1 pour Bordeaux (les routes sont plus longues, c'est une distance à vol d'oiseau)."}, {"_texte": "Environ 391 000 km, <code>distance()<\/code> renvoyant des millimètres", "correcte": false, "_justification": "<code>distance()<\/code> renvoie l'unité du CRS : le mètre en Lambert-93. Divisé par 1000 on obtient des kilomètres, soit 391,4."}, {"_texte": "Exactement 0, <code>distance()<\/code> mesure l'écart à soi-même", "correcte": false, "_justification": "La distance de Paris à Paris vaut bien 0 (c'est la première valeur de la série), mais l'écart à Lyon n'est pas nul."}]}, {"_enonce": "On crée un buffer de 50 km autour de chacune des cinq villes (<code>buffer(50_000)<\/code> sur les données en Lambert-93). Que dire des cinq aires ?", "_multiple": false, "difficulte": "moyen", "theme": "Zones tampons", "source_fichier": "tp1bis-geopandas.md", "_source": "tp1bis-geopandas.md", "options": [{"_texte": "Elles diffèrent, car Paris est plus au nord et la déformation de la projection change l'aire", "correcte": false, "_justification": "En Lambert-93, la déformation est négligeable sur la France, et le buffer est construit dans le plan projeté : les aires sont identiques."}, {"_texte": "Elles valent exactement 7 853,98 km², le buffer étant un cercle parfait", "correcte": false, "_justification": "Shapely approche un cercle par un polygone à nombre fini de côtés : l'aire obtenue (7 841) est un peu inférieure à celle du cercle idéal."}, {"_texte": "Elles valent 50 000 km², le rayon étant donné en mètres", "correcte": false, "_justification": "50 000 est le rayon en mètres, pas une aire. L'aire d'un disque est \\( \\pi r^2 \\), soit environ 7,85 milliards de m²."}, {"_texte": "Elles sont identiques, environ 7 841 km², légèrement sous \\( \\pi \\times 50^2 \\approx 7\\,854 \\) km² car le cercle est approché par un polygone", "correcte": true, "_justification": "Mesuré : 7 841 km² pour les cinq. Le rayon est identique partout, donc l'aire aussi, à l'approximation polygonale près."}]}, {"_enonce": "Dans <code>gpd.sjoin(villes, territoires, how=&quot;left&quot;, predicate=&quot;within&quot;)<\/code>, quelles villes n'obtiennent aucun <code>nom<\/code> de territoire, et pourquoi ?", "_multiple": false, "difficulte": "moyen", "theme": "Jointure spatiale", "source_fichier": "tp1bis-geopandas.md", "_source": "tp1bis-geopandas.md", "options": [{"_texte": "Marseille et Toulouse, car ce sont des villes du sud et les territoires « sud » sont trop petits", "correcte": false, "_justification": "Mesuré : Marseille est dans Griselle et Toulouse dans Bleuma. Les deux villes sans territoire sont Paris et Bordeaux."}, {"_texte": "Aucune : un <code>how=&quot;left&quot;<\/code> complète toujours avec le territoire le plus proche", "correcte": false, "_justification": "<code>how=&quot;left&quot;<\/code> ne crée pas de correspondance, il garde la ligne avec un <code>NaN<\/code> quand la relation <code>within<\/code> n'est vérifiée avec aucun polygone."}, {"_texte": "Paris (latitude 48,86 au-delà de la limite nord, 48) et Bordeaux (longitude −0,58 au-delà de la limite ouest, 0)", "correcte": true, "_justification": "Exercice 4.1. Lyon tombe dans Rougie, Marseille dans Griselle, Toulouse dans Bleuma : seules deux villes sont hors de l'emprise."}, {"_texte": "Lyon seulement, car elle est exactement sur une frontière entre deux rectangles", "correcte": false, "_justification": "Lyon (4,84 ; 45,76) est à l'intérieur de Rougie (longitude de 3 à 5, latitude de 45 à 48). Elle n'est pas sur une frontière."}]}, {"_enonce": "Si l'on remplace <code>how=&quot;left&quot;<\/code> par <code>how=&quot;inner&quot;<\/code> (le défaut de <code>sjoin<\/code>), combien de villes restent dans le résultat, et quel danger cela représente-t-il ?", "_multiple": false, "difficulte": "difficile", "theme": "Jointure spatiale", "source_fichier": "tp1bis-geopandas.md", "_source": "tp1bis-geopandas.md", "options": [{"_texte": "3 villes sur 5 : Paris et Bordeaux disparaissent sans aucun message, ce qui cache que les contours ne couvrent pas toute la zone", "correcte": true, "_justification": "Mesuré : <code>inner<\/code> renvoie Lyon, Marseille et Toulouse. <code>left<\/code> garde les 5 lignes avec des <code>NaN<\/code>, ce qui révèle l'incomplétude du jeu de contours."}, {"_texte": "5 villes, <code>inner<\/code> et <code>left<\/code> ne diffèrent que pour les colonnes", "correcte": false, "_justification": "Ils diffèrent par les lignes : <code>inner<\/code> ne garde que les villes ayant une correspondance."}, {"_texte": "2 villes : seules Paris et Bordeaux, les villes sans correspondance", "correcte": false, "_justification": "C'est l'inverse : <code>inner<\/code> ne garde que les villes avec correspondance (Lyon, Marseille, Toulouse)."}, {"_texte": "0 ville, <code>inner<\/code> exige que tous les points soient dans un polygone, sinon il renvoie un résultat vide", "correcte": false, "_justification": "<code>inner<\/code> ne lève pas d'erreur et ne renvoie pas un résultat vide : il filtre simplement les lignes sans correspondance."}]}, {"_enonce": "Après <code>territoires.dissolve(by=&quot;groupe&quot;, aggfunc={&quot;population&quot;: &quot;sum&quot;})<\/code>, que contient la table obtenue ?", "_multiple": false, "difficulte": "moyen", "theme": "dissolve", "source_fichier": "tp1bis-geopandas.md", "_source": "tp1bis-geopandas.md", "options": [{"_texte": "Cinq lignes, une par territoire, avec une colonne de population cumulée", "correcte": false, "_justification": "<code>dissolve<\/code> regroupe, comme <code>groupby<\/code> : il y a une ligne par valeur de <code>groupe<\/code>, soit deux."}, {"_texte": "Deux lignes, « nord » (60 500 000) et « sud » (9 300 000), chacune avec un seul polygone fusionné", "correcte": true, "_justification": "Exercice 5.1. Mesuré : populations 60 500 000 et 9 300 000, types de géométrie <code>Polygon<\/code> : l'union des rectangles voisins donne un polygone unique par groupe."}, {"_texte": "Deux lignes avec les populations, mais les géométries d'origine inchangées, <code>dissolve<\/code> ne touchant pas à la géométrie", "correcte": false, "_justification": "C'est justement ce qui distingue <code>dissolve<\/code> de <code>groupby<\/code> : il fusionne aussi les géométries du groupe."}, {"_texte": "Deux lignes, « nord » (45 000 000) et « sud » (8 200 000), <code>sum<\/code> gardant le maximum du groupe", "correcte": false, "_justification": "<code>sum<\/code> additionne : 12 M + 3,5 M + 45 M = 60,5 M pour le nord, 8,2 M + 1,1 M = 9,3 M pour le sud."}]}, {"_enonce": "Pour une carte choroplèthe de la population (une valeur numérique ordonnée, de 1,1 M à 45 M), quelle palette choisir ?", "_multiple": false, "difficulte": "moyen", "theme": "Cartographie", "source_fichier": "tp1bis-geopandas.md", "_source": "tp1bis-geopandas.md", "options": [{"_texte": "Une palette qualitative aux teintes contrastées sans ordre, pour bien distinguer chaque territoire", "correcte": false, "_justification": "Une palette qualitative est faite pour des catégories sans ordre, pas pour une quantité : elle ne dit rien de qui est plus peuplé."}, {"_texte": "Une palette arc-en-ciel, qui offre le plus de couleurs différentes", "correcte": false, "_justification": "Une palette arc-en-ciel crée des frontières visuelles qui n'existent pas dans les données et n'a pas d'ordre perceptif évident."}, {"_texte": "Une palette séquentielle (<code>OrRd<\/code>, <code>viridis<\/code>) : une différence de valeur se voit comme une différence de teinte perceptible", "correcte": true, "_justification": "Exercice 6.1. Une valeur ordonnée appelle une palette qui varie de façon régulière du clair au foncé."}, {"_texte": "Peu importe : le choix d'une palette est purement cosmétique", "correcte": false, "_justification": "Le choix n'est pas cosmétique : la famille de palette doit correspondre à la nature de la donnée (ordonnée ou catégorielle)."}]}]};
+const form = document.getElementById('qcm');
+DATA.questions.forEach((q, i) => {
+  const multi = q._multiple;
+  const div = document.createElement('div');
+  div.className = 'q'; div.id = 'q'+i;
+  let badges = '';
+  if (q.difficulte) badges += `<span class="badge b-${q.difficulte}">${q.difficulte}</span>`;
+  if (q.theme) badges += `<span class="badge b-theme">${q.theme}</span>`;
+  const hint = multi ? ' <small>(plusieurs réponses)</small>' : '';
+  let html = `<span class="qmark" id="m${i}"></span><h3>Question ${i+1}${hint}${badges}</h3>`;
+  html += `<div class="enonce">${q._enonce}</div>`;
+  q.options.forEach((o, j) => {
+    const type = multi ? 'checkbox' : 'radio';
+    html += `<label class="opt" id="o${i}_${j}">`
+          + `<input type="${type}" name="q${i}" value="${j}">${o._texte}</label>`;
+    html += `<div class="just" id="j${i}_${j}">${o._justification||''}</div>`;
+  });
+  if (q.source_fichier) html += `<div class="src" id="s${i}">Source : ${q._source}</div>`;
+  div.innerHTML = html;
+  form.appendChild(div);
+});
+function grade(){
+  let correct = 0;
+  DATA.questions.forEach((q, i) => {
+    const chosen = [...form.querySelectorAll(`input[name=q${i}]:checked`)].map(e=>+e.value);
+    const good = q.options.map((o,j)=>o.correcte?j:-1).filter(j=>j>=0);
+    const ok = chosen.length===good.length && chosen.every(j=>good.includes(j));
+    if (ok) correct++;
+    q.options.forEach((o,j)=>{
+      const lab = document.getElementById(`o${i}_${j}`);
+      lab.classList.remove('correct','wrong');
+      if (o.correcte) lab.classList.add('correct');
+      else if (chosen.includes(j)) lab.classList.add('wrong');
+      const ju = document.getElementById(`j${i}_${j}`);
+      if (ju && o._justification) ju.classList.add('show');
+    });
+    const m = document.getElementById('m'+i);
+    m.textContent = ok ? '✓' : '✗';
+    m.style.color = ok ? 'var(--ok)' : 'var(--ko)';
+    m.classList.add('show');
+    const s = document.getElementById('s'+i); if (s) s.classList.add('show');
+  });
+  const n = DATA.questions.length;
+  const pct = Math.round(100*correct/n);
+  const sc = document.getElementById('score');
+  sc.textContent = `Score : ${correct} / ${n}  (${pct} %)`;
+  sc.style.color = pct>=50 ? 'var(--ok)' : 'var(--ko)';
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+</script>
+</body>
+</html>

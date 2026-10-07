@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QCM — TP2 : Sorties structurées avec Pydantic</title>
+<style>
+  :root { --ok:#1b8a5a; --ko:#c0392b; --accent:#2c5f8a; --bg:#f6f7f9; }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, "Segoe UI", Roboto, sans-serif; line-height:1.5;
+         max-width: 820px; margin: 0 auto; padding: 1.5rem; color:#1a1a1a; background:var(--bg); }
+  h1 { color: var(--accent); margin-bottom:.2rem; }
+  .meta { color:#666; font-size:.9rem; margin-bottom:1rem; }
+  .consignes { background:#eef3f8; border-left:4px solid var(--accent); padding:.6rem .9rem;
+               border-radius:4px; margin-bottom:1.2rem; }
+  .q { background:#fff; border:1px solid #e1e4e8; border-radius:8px; padding:1rem 1.2rem;
+       margin-bottom:1rem; box-shadow:0 1px 2px rgba(0,0,0,.04); }
+  .q h3 { margin:.1rem 0 .2rem; font-size:1.05rem; }
+  .badge { font-size:.72rem; font-weight:600; padding:.1rem .5rem; border-radius:10px;
+           margin-left:.4rem; vertical-align:middle; }
+  .b-facile{background:#e3f4ea;color:var(--ok);} .b-moyen{background:#fdf3e0;color:#b87600;}
+  .b-difficile{background:#fbe6e6;color:var(--ko);} .b-theme{background:#eef0f3;color:#555;}
+  .enonce { margin:.4rem 0 .8rem; }
+  .opt { display:block; padding:.45rem .6rem; border:1px solid #e1e4e8; border-radius:6px;
+         margin:.35rem 0; cursor:pointer; transition:background .12s; }
+  .opt:hover { background:#f0f4f8; }
+  .opt input { margin-right:.55rem; }
+  .opt.correct { border-color:var(--ok); background:#eaf7f0; }
+  .opt.wrong   { border-color:var(--ko); background:#fbecec; }
+  .just { font-size:.86rem; color:#555; margin:.2rem 0 0 1.7rem; display:none; }
+  .just.show { display:block; }
+  .src { font-size:.78rem; color:#888; margin-top:.5rem; display:none; }
+  .src.show { display:block; }
+  .bar { position:sticky; bottom:0; background:var(--bg); padding:.8rem 0; }
+  button { background:var(--accent); color:#fff; border:0; padding:.6rem 1.3rem;
+           font-size:1rem; border-radius:6px; cursor:pointer; }
+  button.ghost { background:#fff; color:var(--accent); border:1px solid var(--accent); margin-left:.5rem; }
+  #score { font-size:1.2rem; font-weight:700; margin-left:1rem; }
+  .qmark { float:right; font-weight:700; display:none; }
+  .qmark.show{display:inline;}
+</style>
+</head>
+<body>
+<h1>QCM — TP2 : Sorties structurées avec Pydantic</h1>
+<div class="meta">Source : site/docs/ia-generative/tp2-sorties-structurees.md — 9 questions</div>
+<div class="consignes">Cochez la ou les bonnes réponses. Sauf mention contraire, une seule réponse est attendue.</div>
+<form id="qcm"></form>
+<div class="bar">
+  <button type="button" onclick="grade()">Valider mes réponses</button>
+  <button type="button" class="ghost" onclick="location.reload()">Réinitialiser</button>
+  <span id="score"></span>
+</div>
+<script>
+const DATA = {"questions": [{"_enonce": "Selon l'introduction du TP, quel est l'objectif principal des sorties structurées d'un LLM ?", "_multiple": false, "difficulte": "facile", "theme": "Intérêt des sorties structurées", "source_fichier": "tp2-sorties-structurees.md", "_source": "tp2-sorties-structurees.md", "options": [{"_texte": "Fiabiliser les réponses en imposant un schéma de validation et en évitant des parsings fragiles", "correcte": true, "_justification": "Le cours indique que les sorties structurées permettent d'imposer un schéma de validation et d'éviter des parsings fragiles (regex, JSON non valide)."}, {"_texte": "Accélérer le temps de réponse du modèle de langage", "correcte": false, "_justification": "Le cours ne mentionne aucun gain de vitesse ; l'enjeu est la fiabilité et la validation du format."}, {"_texte": "Réduire le coût d'appel à l'API Mistral", "correcte": false, "_justification": "Aucune mention de réduction de coût dans le TP ; il s'agit de fiabiliser le format des réponses."}, {"_texte": "Permettre au modèle de répondre dans un format totalement imprévisible", "correcte": false, "_justification": "C'est l'inverse : sans contrainte le modèle répond de façon imprévisible, et c'est précisément ce que la structuration vise à éviter."}]}, {"_enonce": "Quelle méthode LangChain est utilisée tout au long du TP pour contraindre la sortie du modèle à un schéma Pydantic ?", "_multiple": false, "difficulte": "facile", "theme": "API LangChain", "source_fichier": "tp2-sorties-structurees.md", "_source": "tp2-sorties-structurees.md", "options": [{"_texte": "<code>llm.with_structured_output(schema=...)<\/code>", "correcte": true, "_justification": "Tous les exemples enchaînent le prompt avec <code>llm.with_structured_output(schema=...)<\/code> pour imposer le schéma Pydantic."}, {"_texte": "<code>llm.bind_tools(...)<\/code>", "correcte": false, "_justification": "Cette méthode n'apparaît pas dans le TP ; le TP utilise <code>with_structured_output<\/code>."}, {"_texte": "<code>llm.parse_json(...)<\/code>", "correcte": false, "_justification": "Cette méthode n'existe pas dans le code du TP."}, {"_texte": "<code>StrOutputParser()<\/code>", "correcte": false, "_justification": "<code>StrOutputParser<\/code> est mentionné à l'étape 5 mais sert au parsing de chaîne, pas à contraindre la sortie au schéma ; c'est <code>with_structured_output<\/code> qui impose le schéma."}]}, {"_enonce": "Dans l'étape 2, quelle classe Pydantic définit la sortie booléenne attendue ?", "_multiple": false, "difficulte": "facile", "theme": "Réponse booléenne", "source_fichier": "tp2-sorties-structurees.md", "_source": "tp2-sorties-structurees.md", "options": [{"_texte": "<code>class Answer(BaseModel): answer: bool<\/code>", "correcte": true, "_justification": "L'étape 2 définit exactement <code>class Answer(BaseModel)<\/code> avec un champ <code>answer: bool<\/code>."}, {"_texte": "<code>class Bool(BaseModel): value: bool<\/code>", "correcte": false, "_justification": "Ni ce nom de classe ni ce nom de champ n'apparaissent dans le code de l'étape 2."}, {"_texte": "<code>class Answer(BaseModel): reponse: str<\/code>", "correcte": false, "_justification": "Le champ s'appelle <code>answer<\/code> et son type est <code>bool<\/code>, pas une chaîne <code>reponse<\/code>."}, {"_texte": "<code>class Reponse(BaseModel): answer: int<\/code>", "correcte": false, "_justification": "Le type attendu est <code>bool<\/code>, pas <code>int<\/code>, et la classe se nomme <code>Answer<\/code>."}]}, {"_enonce": "À l'étape 3, comment la classe <code>NextTask<\/code> restreint-elle l'action choisie à une liste prédéfinie de tâches ?", "_multiple": false, "difficulte": "moyen", "theme": "Action prédéfinie (énumération)", "source_fichier": "tp2-sorties-structurees.md", "_source": "tp2-sorties-structurees.md", "options": [{"_texte": "Via un <code>Field(..., enum=tasks, description=...)<\/code> sur le champ <code>action<\/code>", "correcte": true, "_justification": "Le champ <code>action: str<\/code> est défini avec <code>Field(..., enum=tasks, description=&quot;La prochaine action à mener&quot;)<\/code>, restreignant les valeurs à la liste <code>tasks<\/code>."}, {"_texte": "En typant le champ comme <code>action: Literal[...]<\/code>", "correcte": false, "_justification": "Le TP n'utilise pas <code>Literal<\/code> ; il passe la liste autorisée via le paramètre <code>enum<\/code> de <code>Field<\/code>."}, {"_texte": "En validant la sortie a posteriori avec une instruction <code>if action in tasks<\/code>", "correcte": false, "_justification": "Aucune validation manuelle a posteriori n'est faite ; la contrainte est portée par le schéma Pydantic lui-même."}, {"_texte": "En écrivant la liste des actions uniquement dans le prompt système, sans contrainte de schéma", "correcte": false, "_justification": "La liste figure aussi dans le prompt système, mais la contrainte effective vient de <code>enum=tasks<\/code> dans le <code>Field<\/code>."}]}, {"_enonce": "À l'étape 4, le champ <code>note_ton: int<\/code> est déclaré avec <code>Field(..., ge=1, le=5, ...)<\/code>. Que signifient les contraintes <code>ge<\/code> et <code>le<\/code> ?", "_multiple": false, "difficulte": "moyen", "theme": "Note entière (bornes de validation)", "source_fichier": "tp2-sorties-structurees.md", "_source": "tp2-sorties-structurees.md", "options": [{"_texte": "La valeur doit être supérieure ou égale à 1 et inférieure ou égale à 5", "correcte": true, "_justification": "<code>ge<\/code> (greater or equal) impose ≥ 1 et <code>le<\/code> (less or equal) impose ≤ 5 ; la note reste donc dans l'intervalle [1, 5]."}, {"_texte": "La valeur doit être strictement supérieure à 1 et strictement inférieure à 5", "correcte": false, "_justification": "<code>ge<\/code> et <code>le<\/code> incluent les bornes ; les comparaisons strictes correspondraient à <code>gt<\/code> et <code>lt<\/code>."}, {"_texte": "<code>ge<\/code> fixe la valeur par défaut et <code>le<\/code> la longueur maximale de la chaîne", "correcte": false, "_justification": "Ce ne sont pas des contraintes de défaut ni de longueur : ce sont des bornes numériques minimale et maximale."}, {"_texte": "Ce sont des descriptions textuelles affichées à l'utilisateur", "correcte": false, "_justification": "La description textuelle est portée par le paramètre <code>description<\/code> ; <code>ge<\/code>/<code>le<\/code> sont des contraintes de validation numérique."}]}, {"_enonce": "À l'étape 5, la chaîne se termine par <code>... | extract_translation<\/code>, avec <code>extract_translation = RunnableLambda(lambda translation: translation.translated_text)<\/code>. Que renvoie la fonction <code>traduit<\/code> ?", "_multiple": false, "difficulte": "moyen", "theme": "Format JSON exploitable (extraction d'un champ)", "source_fichier": "tp2-sorties-structurees.md", "_source": "tp2-sorties-structurees.md", "options": [{"_texte": "Uniquement le texte traduit, c'est-à-dire le champ <code>translated_text<\/code> de l'objet <code>Translation<\/code>", "correcte": true, "_justification": "Le <code>RunnableLambda<\/code> extrait <code>translation.translated_text<\/code>, donc la chaîne ne renvoie que le texte traduit."}, {"_texte": "L'objet <code>Translation<\/code> complet avec ses quatre champs", "correcte": false, "_justification": "L'objet complet serait renvoyé sans le <code>RunnableLambda<\/code> ; or celui-ci ne retourne que <code>translated_text<\/code> (c'est précisément l'objet de l'exercice 5.1)."}, {"_texte": "Une chaîne JSON brute non parsée", "correcte": false, "_justification": "La sortie est déjà structurée via <code>with_structured_output(Translation)<\/code> puis réduite à un attribut Python, pas une chaîne JSON brute."}, {"_texte": "La langue cible de la traduction (<code>translated_language<\/code>)", "correcte": false, "_justification": "Le lambda extrait <code>translated_text<\/code>, pas <code>translated_language<\/code>."}]}, {"_enonce": "À l'étape 6, comment la classe <code>MathReponse<\/code> structure-t-elle un raisonnement pas à pas ?", "_multiple": false, "difficulte": "moyen", "theme": "Raisonnement structuré (schémas imbriqués)", "source_fichier": "tp2-sorties-structurees.md", "_source": "tp2-sorties-structurees.md", "options": [{"_texte": "Elle contient une liste <code>etapes: list[Etape]<\/code> et une <code>reponse_finale: str<\/code>, où chaque <code>Etape<\/code> a une <code>explication<\/code> et une <code>sortie<\/code>", "correcte": true, "_justification": "Le code définit <code>MathReponse<\/code> avec <code>etapes: list[Etape]<\/code> et <code>reponse_finale: str<\/code>, et <code>Etape<\/code> avec <code>explication: str<\/code> et <code>sortie: str<\/code>."}, {"_texte": "Elle contient un unique champ <code>texte: str<\/code> contenant tout le raisonnement", "correcte": false, "_justification": "Le raisonnement est décomposé en une liste d'objets <code>Etape<\/code> structurés, pas un seul champ texte libre."}, {"_texte": "Elle hérite de <code>Etape<\/code> et y ajoute la réponse finale", "correcte": false, "_justification": "<code>MathReponse<\/code> n'hérite pas de <code>Etape<\/code> ; elle compose une liste d'<code>Etape<\/code> via <code>list[Etape]<\/code>."}, {"_texte": "Elle stocke les étapes dans un dictionnaire <code>dict[str, str]<\/code>", "correcte": false, "_justification": "Les étapes sont une liste typée <code>list[Etape]<\/code>, pas un dictionnaire."}]}, {"_enonce": "Parmi les éléments suivants, lesquels figurent dans les prérequis annoncés du TP ? (plusieurs réponses possibles)", "_multiple": true, "difficulte": "moyen", "theme": "Prérequis et environnement", "source_fichier": "tp2-sorties-structurees.md", "_source": "tp2-sorties-structurees.md", "options": [{"_texte": "Python ≥ 3.10 avec un environnement virtuel actif", "correcte": true, "_justification": "Les prérequis exigent « Python ≥ 3.10, un environnement virtuel actif »."}, {"_texte": "La bibliothèque <code>langchain-mistralai<\/code> installée", "correcte": true, "_justification": "Les prérequis demandent explicitement la bibliothèque <code>langchain-mistralai<\/code> installée."}, {"_texte": "Une clé API Mistral AI valide dans les variables d'environnement", "correcte": true, "_justification": "Les prérequis indiquent « Une clé API Mistral AI valide placée dans vos variables d'environnement »."}, {"_texte": "Une clé API OpenAI configurée localement", "correcte": false, "_justification": "OpenAI n'est cité que dans la rubrique « Pour aller plus loin » comme comparaison, pas dans les prérequis."}, {"_texte": "Un GPU local dédié à l'inférence", "correcte": false, "_justification": "Aucun GPU local n'est requis : l'inférence passe par l'API Mistral."}]}, {"_enonce": "Dans plusieurs exemples (booléen, action, note), le LLM est instancié avec <code>ChatMistralAI(model=&quot;mistral-large-latest&quot;, temperature=0)<\/code>. Pourquoi fixer <code>temperature=0<\/code> est-il cohérent avec l'objectif de classification/notation déterministe ?", "_multiple": false, "difficulte": "difficile", "theme": "Paramètres du modèle et déterminisme", "source_fichier": "tp2-sorties-structurees.md", "_source": "tp2-sorties-structurees.md", "options": [{"_texte": "Une température nulle vise des réponses les plus déterministes possibles, ce qui convient à des tâches de classification ou de notation reproductibles", "correcte": true, "_justification": "Les tâches structurées du TP (booléen, choix d'action, note de 1 à 5) requièrent des réponses stables ; <code>temperature=0<\/code> minimise l'aléa pour favoriser la reproductibilité, cohérent avec l'usage fait dans le code."}, {"_texte": "<code>temperature=0<\/code> augmente la créativité du modèle pour varier les réponses", "correcte": false, "_justification": "C'est l'inverse : une température élevée augmente la variabilité ; à 0 on cherche la réponse la plus probable et stable."}, {"_texte": "<code>temperature=0<\/code> désactive complètement le modèle de langage et renvoie une valeur fixe codée en dur", "correcte": false, "_justification": "Le modèle reste actif et raisonne sur l'entrée ; la température règle l'aléa d'échantillonnage, elle ne renvoie pas une constante."}, {"_texte": "<code>temperature=0<\/code> est obligatoire pour que <code>with_structured_output<\/code> fonctionne", "correcte": false, "_justification": "L'étape 5 utilise <code>mistral-medium-latest<\/code> sans <code>temperature=0<\/code> tout en employant la structuration : ce n'est donc pas une obligation technique."}]}]};
+const form = document.getElementById('qcm');
+DATA.questions.forEach((q, i) => {
+  const multi = q._multiple;
+  const div = document.createElement('div');
+  div.className = 'q'; div.id = 'q'+i;
+  let badges = '';
+  if (q.difficulte) badges += `<span class="badge b-${q.difficulte}">${q.difficulte}</span>`;
+  if (q.theme) badges += `<span class="badge b-theme">${q.theme}</span>`;
+  const hint = multi ? ' <small>(plusieurs réponses)</small>' : '';
+  let html = `<span class="qmark" id="m${i}"></span><h3>Question ${i+1}${hint}${badges}</h3>`;
+  html += `<div class="enonce">${q._enonce}</div>`;
+  q.options.forEach((o, j) => {
+    const type = multi ? 'checkbox' : 'radio';
+    html += `<label class="opt" id="o${i}_${j}">`
+          + `<input type="${type}" name="q${i}" value="${j}">${o._texte}</label>`;
+    html += `<div class="just" id="j${i}_${j}">${o._justification||''}</div>`;
+  });
+  if (q.source_fichier) html += `<div class="src" id="s${i}">Source : ${q._source}</div>`;
+  div.innerHTML = html;
+  form.appendChild(div);
+});
+function grade(){
+  let correct = 0;
+  DATA.questions.forEach((q, i) => {
+    const chosen = [...form.querySelectorAll(`input[name=q${i}]:checked`)].map(e=>+e.value);
+    const good = q.options.map((o,j)=>o.correcte?j:-1).filter(j=>j>=0);
+    const ok = chosen.length===good.length && chosen.every(j=>good.includes(j));
+    if (ok) correct++;
+    q.options.forEach((o,j)=>{
+      const lab = document.getElementById(`o${i}_${j}`);
+      lab.classList.remove('correct','wrong');
+      if (o.correcte) lab.classList.add('correct');
+      else if (chosen.includes(j)) lab.classList.add('wrong');
+      const ju = document.getElementById(`j${i}_${j}`);
+      if (ju && o._justification) ju.classList.add('show');
+    });
+    const m = document.getElementById('m'+i);
+    m.textContent = ok ? '✓' : '✗';
+    m.style.color = ok ? 'var(--ok)' : 'var(--ko)';
+    m.classList.add('show');
+    const s = document.getElementById('s'+i); if (s) s.classList.add('show');
+  });
+  const n = DATA.questions.length;
+  const pct = Math.round(100*correct/n);
+  const sc = document.getElementById('score');
+  sc.textContent = `Score : ${correct} / ${n}  (${pct} %)`;
+  sc.style.color = pct>=50 ? 'var(--ok)' : 'var(--ko)';
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+</script>
+</body>
+</html>

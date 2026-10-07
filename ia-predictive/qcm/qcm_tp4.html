@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QCM — TP4 : XGBoost, arrêt anticipé et ensemble de validation</title>
+<style>
+  :root { --ok:#1b8a5a; --ko:#c0392b; --accent:#2c5f8a; --bg:#f6f7f9; }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, "Segoe UI", Roboto, sans-serif; line-height:1.5;
+         max-width: 820px; margin: 0 auto; padding: 1.5rem; color:#1a1a1a; background:var(--bg); }
+  h1 { color: var(--accent); margin-bottom:.2rem; }
+  .meta { color:#666; font-size:.9rem; margin-bottom:1rem; }
+  .consignes { background:#eef3f8; border-left:4px solid var(--accent); padding:.6rem .9rem;
+               border-radius:4px; margin-bottom:1.2rem; }
+  .q { background:#fff; border:1px solid #e1e4e8; border-radius:8px; padding:1rem 1.2rem;
+       margin-bottom:1rem; box-shadow:0 1px 2px rgba(0,0,0,.04); }
+  .q h3 { margin:.1rem 0 .2rem; font-size:1.05rem; }
+  .badge { font-size:.72rem; font-weight:600; padding:.1rem .5rem; border-radius:10px;
+           margin-left:.4rem; vertical-align:middle; }
+  .b-facile{background:#e3f4ea;color:var(--ok);} .b-moyen{background:#fdf3e0;color:#b87600;}
+  .b-difficile{background:#fbe6e6;color:var(--ko);} .b-theme{background:#eef0f3;color:#555;}
+  .enonce { margin:.4rem 0 .8rem; }
+  .opt { display:block; padding:.45rem .6rem; border:1px solid #e1e4e8; border-radius:6px;
+         margin:.35rem 0; cursor:pointer; transition:background .12s; }
+  .opt:hover { background:#f0f4f8; }
+  .opt input { margin-right:.55rem; }
+  .opt.correct { border-color:var(--ok); background:#eaf7f0; }
+  .opt.wrong   { border-color:var(--ko); background:#fbecec; }
+  .just { font-size:.86rem; color:#555; margin:.2rem 0 0 1.7rem; display:none; }
+  .just.show { display:block; }
+  .src { font-size:.78rem; color:#888; margin-top:.5rem; display:none; }
+  .src.show { display:block; }
+  .bar { position:sticky; bottom:0; background:var(--bg); padding:.8rem 0; }
+  button { background:var(--accent); color:#fff; border:0; padding:.6rem 1.3rem;
+           font-size:1rem; border-radius:6px; cursor:pointer; }
+  button.ghost { background:#fff; color:var(--accent); border:1px solid var(--accent); margin-left:.5rem; }
+  #score { font-size:1.2rem; font-weight:700; margin-left:1rem; }
+  .qmark { float:right; font-weight:700; display:none; }
+  .qmark.show{display:inline;}
+</style>
+</head>
+<body>
+<h1>QCM — TP4 : XGBoost, arrêt anticipé et ensemble de validation</h1>
+<div class="meta">Source : site/docs/ia-predictive/tp4-xgboost.md — 10 questions</div>
+<div class="consignes">Cochez la bonne réponse. Une seule réponse est correcte par question. Toutes les valeurs numériques citées sont celles mesurées en rejouant le TP (xgboost 3.4.1, scikit-learn 1.9.1, jeu Breast Cancer, random_state=42).</div>
+<form id="qcm"></form>
+<div class="bar">
+  <button type="button" onclick="grade()">Valider mes réponses</button>
+  <button type="button" class="ghost" onclick="location.reload()">Réinitialiser</button>
+  <span id="score"></span>
+</div>
+<script>
+const DATA = {"questions": [{"_enonce": "Pourquoi l'arrêt anticipé s'appuie-t-il sur un ensemble de validation distinct du jeu de test ?", "_multiple": false, "difficulte": "facile", "theme": "Ensemble de validation", "source_fichier": "tp4-xgboost.md", "_source": "tp4-xgboost.md", "options": [{"_texte": "Parce que le critère d'arrêt consulte ce jeu à chaque itération : s'il s'agissait du test, il ne serait plus une évaluation finale indépendante", "correcte": true, "_justification": "Un jeu qui pilote une décision (ici, quand s'arrêter) ne mesure plus honnêtement la performance. Le test reste réservé à l'évaluation finale."}, {"_texte": "Parce que la validation sert à ré-entraîner le modèle à la fin sur plus de données", "correcte": false, "_justification": "Ce n'est pas son rôle ici : dans le TP, la validation n'est jamais utilisée pour entraîner, seulement pour surveiller."}, {"_texte": "Parce que le jeu de test est trop petit pour calculer une logloss", "correcte": false, "_justification": "La taille n'est pas la raison : la logloss se calcule sur n'importe quel jeu. C'est le rôle du test qui l'interdit."}, {"_texte": "Parce que XGBoost refuse un jeu de test dans <code>eval_set<\/code>", "correcte": false, "_justification": "Il l'accepterait sans broncher. C'est une discipline méthodologique, pas une limite technique."}]}, {"_enonce": "Sur les 569 tumeurs, le double partage de l'étape 1 (<code>test_size=0.2<\/code>, puis <code>test_size=0.2<\/code> sur le reste) donne quelles tailles pour entraînement, validation et test ?", "_multiple": false, "difficulte": "facile", "theme": "Ensemble de validation", "source_fichier": "tp4-xgboost.md", "_source": "tp4-xgboost.md", "options": [{"_texte": "341, 114 et 114", "correcte": false, "_justification": "Les deux partages ne sont pas de taille égale : le second porte sur les 455 restants, pas sur les 569."}, {"_texte": "455, 91 et 23", "correcte": false, "_justification": "Le test occupe 20 % des 569 lignes, soit 114, pas 23."}, {"_texte": "364, 91 et 114", "correcte": true, "_justification": "Le premier partage laisse 455 exemples et 114 au test ; le second prélève 20 % de 455 : 91 pour la validation, 364 pour l'entraînement."}, {"_texte": "455, 114 et 114", "correcte": false, "_justification": "455 est la taille de l'entraînement complet, avant d'en retirer la validation. Le second partage la réduit."}]}, {"_enonce": "Avec <code>n_estimators=1000<\/code>, <code>early_stopping_rounds=20<\/code> et <code>best_iteration<\/code> égal à 99, combien d'arbres le modèle utilise-t-il pour prédire ?", "_multiple": false, "difficulte": "moyen", "theme": "Arrêt anticipé", "source_fichier": "tp4-xgboost.md", "_source": "tp4-xgboost.md", "options": [{"_texte": "1000, le plafond fixé par <code>n_estimators<\/code>", "correcte": false, "_justification": "<code>n_estimators<\/code> est un plafond, pas un objectif : l'entraînement s'est arrêté bien avant."}, {"_texte": "120, le nombre d'itérations réellement entraînées", "correcte": false, "_justification": "Mesuré : 120 itérations ont été évaluées, mais les 20 dernières n'ont pas amélioré la validation. XGBoost conserve le modèle à la meilleure itération."}, {"_texte": "99, la valeur de <code>best_iteration<\/code>", "correcte": false, "_justification": "<code>best_iteration<\/code> est un indice qui commence à 0 : il désigne le 100e arbre. Il faut ajouter 1."}, {"_texte": "100, soit <code>best_iteration + 1<\/code>", "correcte": true, "_justification": "Mesuré : <code>predict<\/code> donne le même résultat qu'avec les 100 premiers arbres seulement (<code>iteration_range=(0, 100)<\/code>). L'entraînement s'est arrêté à l'itération 119, vingt itérations après la meilleure."}]}, {"_enonce": "Que se passe-t-il si on fixe <code>n_estimators=50<\/code> au lieu de 1000, avec les mêmes réglages et <code>early_stopping_rounds=20<\/code> ?", "_multiple": false, "difficulte": "moyen", "theme": "Arrêt anticipé", "source_fichier": "tp4-xgboost.md", "_source": "tp4-xgboost.md", "options": [{"_texte": "XGBoost remplace automatiquement 50 par la meilleure valeur trouvée", "correcte": false, "_justification": "XGBoost ne modifie jamais <code>n_estimators<\/code> : c'est un plafond que vous fixez, d'où la consigne de le prendre large."}, {"_texte": "Le plafond devient le facteur limitant : l'entraînement s'arrête à 50 arbres (<code>best_iteration<\/code> vaut 49) sans que le critère d'arrêt décide quoi que ce soit", "correcte": true, "_justification": "Mesuré : 50 itérations, <code>best_iteration<\/code> = 49. Le modèle de l'étape 2 avait besoin de 100 arbres : un plafond trop bas l'empêche d'atteindre son optimum."}, {"_texte": "L'entraînement s'arrête à l'itération 99, comme avant, car <code>early_stopping_rounds<\/code> prime sur <code>n_estimators<\/code>", "correcte": false, "_justification": "Aucun critère ne peut dépasser le plafond. L'entraînement ne dépasse pas 50 arbres."}, {"_texte": "XGBoost lève une erreur, car <code>n_estimators<\/code> doit être supérieur à <code>early_stopping_rounds<\/code>", "correcte": false, "_justification": "Il n'y a pas d'erreur : 50 est supérieur à 20, et l'entraînement s'exécute sans souci."}]}, {"_enonce": "Un assistant écrit <code>.fit(X_train, y_train, eval_set=[(X_val, y_val)], eval_metric=&quot;logloss&quot;, early_stopping_rounds=20)<\/code>. Avec xgboost 3.4.1, quel est le résultat ?", "_multiple": false, "difficulte": "moyen", "theme": "L'IA vous le donne en trois secondes", "source_fichier": "tp4-xgboost.md", "_source": "tp4-xgboost.md", "options": [{"_texte": "Une <code>TypeError<\/code> : <code>fit()<\/code> n'a pas de paramètre <code>eval_metric<\/code>. Ces deux arguments se déclarent dans le constructeur <code>XGBClassifier(...)<\/code>", "correcte": true, "_justification": "Mesuré : <code>XGBClassifier.fit() got an unexpected keyword argument 'eval_metric'<\/code>. Depuis XGBoost 2.0, ils appartiennent au modèle et non à l'appel d'entraînement."}, {"_texte": "L'argument <code>eval_metric<\/code> est ignoré en silence et <code>early_stopping_rounds<\/code> s'applique avec la logloss par défaut", "correcte": false, "_justification": "Rien n'est ignoré en silence : l'erreur est explicite, ce qui rend le piège plus facile à repérer que d'autres."}, {"_texte": "Le code fonctionne si on remplace <code>eval_set<\/code> par <code>validation_set<\/code>", "correcte": false, "_justification": "<code>eval_set<\/code> est le bon nom du paramètre. Ce sont <code>eval_metric<\/code> et <code>early_stopping_rounds<\/code> qui ont changé de place."}, {"_texte": "L'arrêt anticipé fonctionne, mais avec un avertissement de dépréciation", "correcte": false, "_justification": "Mesuré : aucune exécution possible. L'ancien style ne produit plus de simple avertissement."}]}, {"_enonce": "D'après l'étape 3, le <code>learning_rate<\/code> de 0,1 à 0,05 (divisé par deux) fait passer le nombre d'arbres utilisés de 61 à 100. Quelle lecture est exacte ?", "_multiple": false, "difficulte": "moyen", "theme": "learning_rate et nombre d'arbres", "source_fichier": "tp4-xgboost.md", "_source": "tp4-xgboost.md", "options": [{"_texte": "Le nombre d'arbres double exactement quand le taux est divisé par deux", "correcte": false, "_justification": "61 × 2 = 122, pas 100. Et de 0,05 à 0,01 (taux divisé par 5), on passe de 100 à 428 et non à 500."}, {"_texte": "Le nombre d'arbres reste constant, seul le temps d'entraînement par arbre change", "correcte": false, "_justification": "Le nombre d'arbres change nettement, de 41 à 428 sur la plage testée."}, {"_texte": "Le nombre d'arbres augmente quand le taux diminue, mais pas dans la même proportion : ×1,6 ici, pas ×2", "correcte": true, "_justification": "Mesuré : 41, 61, 100, 209 et 428 arbres pour les taux 0,2, 0,1, 0,05, 0,03 et 0,01. La relation est monotone sans être proportionnelle."}, {"_texte": "Le nombre d'arbres diminue quand le taux diminue, car chaque arbre apprend moins", "correcte": false, "_justification": "C'est l'inverse : un petit taux fait contribuer chaque arbre moins, il en faut donc plus avant l'arrêt."}]}, {"_enonce": "Toujours à l'étape 3, l'exactitude de test reste entre 0,939 et 0,947 pour les cinq taux. Quelle conclusion le TP en tire-t-il ?", "_multiple": false, "difficulte": "moyen", "theme": "learning_rate et nombre d'arbres", "source_fichier": "tp4-xgboost.md", "_source": "tp4-xgboost.md", "options": [{"_texte": "Le plus petit taux (0,01) est préférable, car il utilise le plus d'arbres (428), donc le modèle le plus riche", "correcte": false, "_justification": "Plus d'arbres ne veut pas dire meilleur : l'exactitude est la même (0,939 à 0,947) pour un coût d'entraînement dix fois plus élevé (428 contre 41 arbres)."}, {"_texte": "Le taux n'a aucun effet, il peut être choisi au hasard", "correcte": false, "_justification": "Il a un effet, mais sur le coût (de 41 à 428 arbres), pas sur la qualité finale."}, {"_texte": "Le plus grand taux est toujours le meilleur, quel que soit le jeu de données", "correcte": false, "_justification": "La conclusion est locale à ce jeu : le TP dit « parmi les taux de qualité comparable, préférer le plus grand », pas « toujours le plus grand »."}, {"_texte": "Parmi les taux de qualité comparable, on préfère le plus grand : il coûte moins d'itérations et donc moins de temps de calcul", "correcte": true, "_justification": "C'est la leçon pratique du corrigé de l'exercice 3.1. Sur 114 exemples, l'écart de 0,008 entre 0,939 et 0,947 représente un seul exemple."}]}, {"_enonce": "Après la meilleure itération, la logloss d'entraînement passe de 0,0296 à 0,0235 et celle de validation de 0,1239 à 0,1251. Comment lire ce résultat ?", "_multiple": false, "difficulte": "difficile", "theme": "Courbe d'apprentissage", "source_fichier": "tp4-xgboost.md", "_source": "tp4-xgboost.md", "options": [{"_texte": "Un bug, car la logloss de validation ne devrait jamais être supérieure à celle d'entraînement", "correcte": false, "_justification": "La logloss de validation est normalement supérieure (0,12 contre 0,03) : le modèle est évalué sur des données qu'il n'a pas vues."}, {"_texte": "Du surapprentissage : le modèle colle de mieux en mieux à l'entraînement tandis que la validation stagne ou remonte", "correcte": true, "_justification": "Mesuré. C'est le même phénomène que l'arbre non limité du TP3, observé ici en continu. L'arrêt anticipé automatise cette lecture."}, {"_texte": "Du sous-apprentissage : le modèle n'a pas assez de capacité pour baisser sur la validation", "correcte": false, "_justification": "Le sous-apprentissage donnerait des erreurs élevées sur les deux courbes. Ici l'entraînement baisse encore, signe d'un modèle qui a de la capacité à revendre."}, {"_texte": "Un bruit sans importance : les deux courbes n'ont aucun lien", "correcte": false, "_justification": "Les deux courbes se lisent ensemble : leur divergence est précisément le signal que l'arrêt anticipé détecte."}]}, {"_enonce": "À l'étape 5, un modèle de 100 arbres fixes entraîné sur 455 exemples obtient 0,947 en test, contre 0,939 pour le modèle à arrêt anticipé entraîné sur 364 exemples. Que retenir ?", "_multiple": false, "difficulte": "difficile", "theme": "Avec ou sans validation", "source_fichier": "tp4-xgboost.md", "_source": "tp4-xgboost.md", "options": [{"_texte": "L'écart est négligeable ici, car on avait déjà deviné un bon nombre d'arbres (100). L'arrêt anticipé vaut surtout quand on ne le connaît pas à l'avance", "correcte": true, "_justification": "Le nombre de 100 arbres n'a pas été deviné au hasard : il est proche du <code>best_iteration + 1<\/code> de l'étape 2. Le prix de l'arrêt anticipé est un entraînement amputé d'un cinquième."}, {"_texte": "Le modèle sans validation est meilleur, car il est entraîné sur le jeu de test", "correcte": false, "_justification": "Il n'utilise pas le test : il est entraîné sur <code>X_train_complet<\/code> (455 exemples), qui exclut <code>X_test<\/code>."}, {"_texte": "Les deux modèles sont identiques, car XGBoost ignore la taille de l'entraînement", "correcte": false, "_justification": "Les deux modèles diffèrent : les nombres d'exemples d'entraînement (455 et 364) et les exactitudes (0,947 et 0,939) ne sont pas les mêmes."}, {"_texte": "L'arrêt anticipé est moins bon et doit être abandonné", "correcte": false, "_justification": "L'écart (0,008) vaut un seul exemple de test sur 114 : il ne permet aucune conclusion de ce genre."}]}, {"_enonce": "Dans <code>eval_set=[(X_train, y_train), (X_val, y_val)]<\/code>, la validation est placée en dernier. Que se passe-t-il si on inverse l'ordre ?", "_multiple": false, "difficulte": "difficile", "theme": "Arrêt anticipé", "source_fichier": "tp4-xgboost.md", "_source": "tp4-xgboost.md", "options": [{"_texte": "XGBoost lève une erreur : la validation doit être placée en dernier", "correcte": false, "_justification": "Il n'y a pas de contrôle : l'entraînement s'exécute normalement. C'est ce qui rend l'erreur silencieuse."}, {"_texte": "L'entraînement s'arrête à 20 itérations exactement, car <code>early_stopping_rounds=20<\/code>", "correcte": false, "_justification": "<code>early_stopping_rounds<\/code> est une patience (20 itérations sans amélioration), pas un nombre d'itérations total."}, {"_texte": "Rien : le critère d'arrêt surveille tous les jeux de <code>eval_set<\/code> à la fois", "correcte": false, "_justification": "Il ne surveille que le dernier jeu de la liste."}, {"_texte": "L'arrêt anticipé surveille alors l'entraînement : la logloss d'entraînement baisse presque toujours, donc l'arrêt ne se déclenche pas (996 arbres au lieu de 100, mesuré)", "correcte": true, "_justification": "Mesuré : avec l'entraînement en dernier, <code>best_iteration + 1<\/code> vaut 996 sur un plafond de 1000. L'arrêt anticipé n'a plus d'effet, et le modèle est sur-entraîné sans erreur ni message."}]}]};
+const form = document.getElementById('qcm');
+DATA.questions.forEach((q, i) => {
+  const multi = q._multiple;
+  const div = document.createElement('div');
+  div.className = 'q'; div.id = 'q'+i;
+  let badges = '';
+  if (q.difficulte) badges += `<span class="badge b-${q.difficulte}">${q.difficulte}</span>`;
+  if (q.theme) badges += `<span class="badge b-theme">${q.theme}</span>`;
+  const hint = multi ? ' <small>(plusieurs réponses)</small>' : '';
+  let html = `<span class="qmark" id="m${i}"></span><h3>Question ${i+1}${hint}${badges}</h3>`;
+  html += `<div class="enonce">${q._enonce}</div>`;
+  q.options.forEach((o, j) => {
+    const type = multi ? 'checkbox' : 'radio';
+    html += `<label class="opt" id="o${i}_${j}">`
+          + `<input type="${type}" name="q${i}" value="${j}">${o._texte}</label>`;
+    html += `<div class="just" id="j${i}_${j}">${o._justification||''}</div>`;
+  });
+  if (q.source_fichier) html += `<div class="src" id="s${i}">Source : ${q._source}</div>`;
+  div.innerHTML = html;
+  form.appendChild(div);
+});
+function grade(){
+  let correct = 0;
+  DATA.questions.forEach((q, i) => {
+    const chosen = [...form.querySelectorAll(`input[name=q${i}]:checked`)].map(e=>+e.value);
+    const good = q.options.map((o,j)=>o.correcte?j:-1).filter(j=>j>=0);
+    const ok = chosen.length===good.length && chosen.every(j=>good.includes(j));
+    if (ok) correct++;
+    q.options.forEach((o,j)=>{
+      const lab = document.getElementById(`o${i}_${j}`);
+      lab.classList.remove('correct','wrong');
+      if (o.correcte) lab.classList.add('correct');
+      else if (chosen.includes(j)) lab.classList.add('wrong');
+      const ju = document.getElementById(`j${i}_${j}`);
+      if (ju && o._justification) ju.classList.add('show');
+    });
+    const m = document.getElementById('m'+i);
+    m.textContent = ok ? '✓' : '✗';
+    m.style.color = ok ? 'var(--ok)' : 'var(--ko)';
+    m.classList.add('show');
+    const s = document.getElementById('s'+i); if (s) s.classList.add('show');
+  });
+  const n = DATA.questions.length;
+  const pct = Math.round(100*correct/n);
+  const sc = document.getElementById('score');
+  sc.textContent = `Score : ${correct} / ${n}  (${pct} %)`;
+  sc.style.color = pct>=50 ? 'var(--ok)' : 'var(--ko)';
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QCM — TP10 : Théorie de l'information et analyse de données tabulaires</title>
+<style>
+  :root { --ok:#1b8a5a; --ko:#c0392b; --accent:#2c5f8a; --bg:#f6f7f9; }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, "Segoe UI", Roboto, sans-serif; line-height:1.5;
+         max-width: 820px; margin: 0 auto; padding: 1.5rem; color:#1a1a1a; background:var(--bg); }
+  h1 { color: var(--accent); margin-bottom:.2rem; }
+  .meta { color:#666; font-size:.9rem; margin-bottom:1rem; }
+  .consignes { background:#eef3f8; border-left:4px solid var(--accent); padding:.6rem .9rem;
+               border-radius:4px; margin-bottom:1.2rem; }
+  .q { background:#fff; border:1px solid #e1e4e8; border-radius:8px; padding:1rem 1.2rem;
+       margin-bottom:1rem; box-shadow:0 1px 2px rgba(0,0,0,.04); }
+  .q h3 { margin:.1rem 0 .2rem; font-size:1.05rem; }
+  .badge { font-size:.72rem; font-weight:600; padding:.1rem .5rem; border-radius:10px;
+           margin-left:.4rem; vertical-align:middle; }
+  .b-facile{background:#e3f4ea;color:var(--ok);} .b-moyen{background:#fdf3e0;color:#b87600;}
+  .b-difficile{background:#fbe6e6;color:var(--ko);} .b-theme{background:#eef0f3;color:#555;}
+  .enonce { margin:.4rem 0 .8rem; }
+  .opt { display:block; padding:.45rem .6rem; border:1px solid #e1e4e8; border-radius:6px;
+         margin:.35rem 0; cursor:pointer; transition:background .12s; }
+  .opt:hover { background:#f0f4f8; }
+  .opt input { margin-right:.55rem; }
+  .opt.correct { border-color:var(--ok); background:#eaf7f0; }
+  .opt.wrong   { border-color:var(--ko); background:#fbecec; }
+  .just { font-size:.86rem; color:#555; margin:.2rem 0 0 1.7rem; display:none; }
+  .just.show { display:block; }
+  .src { font-size:.78rem; color:#888; margin-top:.5rem; display:none; }
+  .src.show { display:block; }
+  .bar { position:sticky; bottom:0; background:var(--bg); padding:.8rem 0; }
+  button { background:var(--accent); color:#fff; border:0; padding:.6rem 1.3rem;
+           font-size:1rem; border-radius:6px; cursor:pointer; }
+  button.ghost { background:#fff; color:var(--accent); border:1px solid var(--accent); margin-left:.5rem; }
+  #score { font-size:1.2rem; font-weight:700; margin-left:1rem; }
+  .qmark { float:right; font-weight:700; display:none; }
+  .qmark.show{display:inline;}
+</style>
+</head>
+<body>
+<h1>QCM — TP10 : Théorie de l'information et analyse de données tabulaires</h1>
+<div class="meta">Source : site/docs/ia-predictive/tp10-theorie-information.md — 10 questions</div>
+<div class="consignes">Cochez la bonne réponse. Une seule réponse est correcte par question. Toutes les valeurs numériques citées sont celles mesurées en rejouant le TP (xgboost 3.4.1, scikit-learn 1.9.1, graine 42).</div>
+<form id="qcm"></form>
+<div class="bar">
+  <button type="button" onclick="grade()">Valider mes réponses</button>
+  <button type="button" class="ghost" onclick="location.reload()">Réinitialiser</button>
+  <span id="score"></span>
+</div>
+<script>
+const DATA = {"questions": [{"_enonce": "Une pièce est biaisée : 70 % de face, 30 % de pile. Que vaut son entropie, comparée à celle d'une pièce équilibrée (1 bit) ?", "_multiple": false, "difficulte": "facile", "theme": "Entropie", "source_fichier": "tp10-theorie-information.md", "_source": "tp10-theorie-information.md", "options": [{"_texte": "Exactement 1 bit, car il n'y a que deux issues", "correcte": false, "_justification": "Le nombre d'issues borne l'entropie (<code>log2(2)<\/code> = 1) mais ne la fixe pas : seules des issues équiprobables l'atteignent."}, {"_texte": "Environ 1,2 bit, car le biais ajoute de l'information", "correcte": false, "_justification": "Le biais retire de l'incertitude. L'entropie d'une pièce à deux issues ne dépasse jamais 1 bit."}, {"_texte": "0,7 bit, la probabilité de l'issue la plus fréquente", "correcte": false, "_justification": "L'entropie n'est pas une probabilité : c'est <code>-Σ p·log2(p)<\/code>, qui vaut ici 0,881."}, {"_texte": "Environ 0,881 bit, moins qu'une pièce équilibrée : l'issue la plus probable réduit l'incertitude", "correcte": true, "_justification": "Mesuré : 0,8813. L'incertitude est maximale quand les issues sont équiprobables."}]}, {"_enonce": "Quelle est l'entropie du dé pipé <code>[0.4, 0.2, 0.1, 0.1, 0.1, 0.1]<\/code>, de celui d'un dé équilibré, et de la distribution dégénérée <code>[1, 0, 0, 0, 0, 0]<\/code> ?", "_multiple": false, "difficulte": "facile", "theme": "Entropie", "source_fichier": "tp10-theorie-information.md", "_source": "tp10-theorie-information.md", "options": [{"_texte": "Environ 2,322 bits, 2,585 bits et 0 bit", "correcte": true, "_justification": "Mesuré (exercice 1.1). Les deux bornes sont 0 (issue certaine) et <code>log2(6)<\/code> ≈ 2,585 (issues équiprobables)."}, {"_texte": "2,585 bits, 2,322 bits et 1 bit", "correcte": false, "_justification": "Le dé équilibré est celui qui vaut 2,585, le dé pipé est plus bas, et une issue certaine vaut 0 bit, pas 1."}, {"_texte": "2,322 bits pour les deux dés, car ils ont tous deux six faces", "correcte": false, "_justification": "Le nombre de faces ne suffit pas : l'entropie dépend des probabilités. Le dé pipé vaut moins que l'équilibré."}, {"_texte": "2,322 bits, 2,585 bits et une erreur de calcul, car <code>log2(0)<\/code> n'est pas défini", "correcte": false, "_justification": "La fonction du TP écarte les probabilités nulles (<code>p[p &gt; 0]<\/code>) : elles ne contribuent rien, et l'on obtient 0 sans erreur."}]}, {"_enonce": "Un assistant écrit la fonction d'entropie avec <code>np.log<\/code> au lieu de <code>np.log2<\/code>. Que renvoie-t-elle pour une pièce équilibrée, et quelle est la bonne lecture ?", "_multiple": false, "difficulte": "moyen", "theme": "Entropie", "source_fichier": "tp10-theorie-information.md", "_source": "tp10-theorie-information.md", "options": [{"_texte": "1,0 : <code>np.log<\/code> et <code>np.log2<\/code> donnent le même résultat pour des probabilités de 0,5", "correcte": false, "_justification": "Ils coïncident seulement en 1 et diffèrent partout ailleurs : <code>ln(0,5)<\/code> vaut −0,693, <code>log2(0,5)<\/code> vaut −1."}, {"_texte": "Une erreur d'exécution, car <code>np.log<\/code> n'accepte pas des probabilités", "correcte": false, "_justification": "<code>np.log<\/code> accepte tout réel strictement positif. C'est justement parce que rien n'échoue que l'erreur d'unité passe inaperçue."}, {"_texte": "0,693 : ce sont des nats et non des bits, la même quantité au facteur <code>ln(2)<\/code> près ; aucune erreur n'est levée", "correcte": true, "_justification": "Mesuré : 0,6931 avec <code>np.log<\/code>, 1,0 avec <code>np.log2<\/code>. Pour un dé équilibré, <code>np.log<\/code> donnerait 1,792 au lieu de 2,585."}, {"_texte": "0,693 bit, un arrondi imprécis de 1 bit dû aux flottants", "correcte": false, "_justification": "Ce n'est pas un arrondi : c'est une autre unité (le nat). L'écart est le facteur constant <code>ln(2)<\/code>."}]}, {"_enonce": "Quelle est l'entropie maximale possible pour une variable à 8 issues, et dans quel cas est-elle atteinte ?", "_multiple": false, "difficulte": "moyen", "theme": "Entropie", "source_fichier": "tp10-theorie-information.md", "_source": "tp10-theorie-information.md", "options": [{"_texte": "8 bits, une par issue", "correcte": false, "_justification": "Le maximum est <code>log2(n)<\/code> et non <code>n<\/code> : il faut 3 questions oui/non pour départager 8 issues équiprobables."}, {"_texte": "3 bits (<code>log2(8)<\/code>), quand les 8 issues sont équiprobables", "correcte": true, "_justification": "Mesuré : 8 issues à 1/8 donnent exactement 3,0. Toute autre distribution sur 8 issues donne moins."}, {"_texte": "1 bit, quel que soit le nombre d'issues", "correcte": false, "_justification": "1 bit est le maximum pour deux issues seulement."}, {"_texte": "Elle n'est pas bornée : plus la distribution est déséquilibrée, plus l'entropie croît", "correcte": false, "_justification": "C'est l'inverse : un déséquilibre réduit l'entropie, jusqu'à 0 pour une issue certaine."}]}, {"_enonce": "Dans l'exemple jouet, <code>X<\/code> vaut « pair » ou « impair » et <code>Y<\/code> est une copie exacte de <code>X<\/code> (1000 tirages). Quelles valeurs obtient-on pour H(Y), H(Y|X) et I(X;Y) ?", "_multiple": false, "difficulte": "moyen", "theme": "Entropie conditionnelle et information mutuelle", "source_fichier": "tp10-theorie-information.md", "_source": "tp10-theorie-information.md", "options": [{"_texte": "H(Y) ≈ 1, H(Y|X) ≈ 1, I(X;Y) = 0 : X n'apprend rien sur Y", "correcte": false, "_justification": "Ce serait le cas de deux variables indépendantes, pas d'une copie exacte."}, {"_texte": "H(Y) = 0, H(Y|X) = 0, I(X;Y) = 0, car Y est une copie et n'apporte rien de nouveau", "correcte": false, "_justification": "Y n'est pas constante : H(Y) vaut 1 bit. Que Y soit une copie de X n'enlève pas son incertitude propre, c'est X qui l'explique."}, {"_texte": "H(Y) ≈ 1, H(Y|X) ≈ 2, I(X;Y) = −1", "correcte": false, "_justification": "Une entropie conditionnelle ne dépasse jamais l'entropie brute, et une information mutuelle n'est jamais négative."}, {"_texte": "H(Y) ≈ 1,000 bit, H(Y|X) = 0, I(X;Y) ≈ 1,000 : connaître X lève toute l'incertitude sur Y", "correcte": true, "_justification": "Mesuré : 0,9999, 0,0 et 0,9999. C'est le cas limite où l'information mutuelle égale H(Y)."}]}, {"_enonce": "Que vaut approximativement l'information mutuelle entre deux variables indépendantes ?", "_multiple": false, "difficulte": "moyen", "theme": "Entropie conditionnelle et information mutuelle", "source_fichier": "tp10-theorie-information.md", "_source": "tp10-theorie-information.md", "options": [{"_texte": "Zéro : connaître l'une ne réduit pas l'incertitude sur l'autre (mesuré avec 1000 tirages indépendants : moins de 0,001 bit)", "correcte": true, "_justification": "On a <code>H(Y|X) = H(Y)<\/code>, donc <code>I = 0<\/code>. Sur un échantillon fini, un tout petit résidu positif apparaît (0,0005 bit mesuré)."}, {"_texte": "Autant que l'entropie de la plus incertaine des deux, car les variables ont chacune de l'incertitude", "correcte": false, "_justification": "L'information mutuelle mesure ce qu'elles partagent. Deux variables sans lien ne partagent rien."}, {"_texte": "Une valeur négative, puisqu'elles se contredisent", "correcte": false, "_justification": "Une information mutuelle n'est jamais négative : elle est comprise entre 0 et <code>H(Y)<\/code>."}, {"_texte": "Exactement 1 bit, quelle que soit la nature des variables", "correcte": false, "_justification": "1 bit est la valeur du cas jouet où Y copie X, pas une constante universelle."}]}, {"_enonce": "Sur les 1092 jours simulés d'urgences, quel est le classement des informations mutuelles avec <code>Arrivees<\/code> mesuré à l'étape 3 ?", "_multiple": false, "difficulte": "moyen", "theme": "Cas d'usage : urgences", "source_fichier": "tp10-theorie-information.md", "_source": "tp10-theorie-information.md", "options": [{"_texte": "<code>Grippe<\/code> en tête, car doubler le volume moyen est l'effet le plus fort", "correcte": false, "_justification": "Mesuré : <code>Grippe<\/code> est dernière des trois, avec 0,625."}, {"_texte": "Les trois valent exactement 0, car <code>Arrivees<\/code> est un comptage aléatoire", "correcte": false, "_justification": "Ni nulles ni égales : 1,007, 0,911 et 0,625 pour une entropie <code>H(Arrivées)<\/code> de 7,46 bits."}, {"_texte": "<code>Jour<\/code> (≈ 1,007) devant <code>TempCat<\/code> (≈ 0,911) puis <code>Grippe<\/code> (≈ 0,625), alors que la grippe est l'effet le plus spectaculaire sur la moyenne (143,8 contre 283,2)", "correcte": true, "_justification": "Mesuré. Ce classement surprend : il ne reflète pas l'ampleur d'un effet sur la moyenne."}, {"_texte": "<code>TempCat<\/code> en tête, car la température est la seule variable continue", "correcte": false, "_justification": "Mesuré : <code>TempCat<\/code> est seconde, derrière <code>Jour<\/code>. Elle a été discrétisée en 4 classes, pas laissée continue."}]}, {"_enonce": "On calcule l'information mutuelle empirique entre <code>Arrivees<\/code> et un identifiant unique de chaque jour (1092 modalités, une par jour). Que trouve-t-on, et que faut-il en retenir ?", "_multiple": false, "difficulte": "difficile", "theme": "Cas d'usage : urgences", "source_fichier": "tp10-theorie-information.md", "_source": "tp10-theorie-information.md", "options": [{"_texte": "0 bit, car un identifiant n'a aucun lien avec le nombre d'arrivées", "correcte": false, "_justification": "Le calcul ne sait pas qu'un identifiant est dénué de sens : chaque groupe étant réduit à un point, la valeur conditionnelle est nulle et l'information mutuelle maximale."}, {"_texte": "Exactement H(Arrivées), soit 7,46 bits : l'estimateur empirique donne l'information maximale à une variable aux modalités nombreuses, même sans lien réel", "correcte": true, "_justification": "Mesuré : chaque groupe ne contient qu'un jour, donc H(Y|X) = 0. Cela invite à la prudence sur <code>Jour<\/code> (7 groupes de 156 jours) face à <code>Grippe<\/code> (2 groupes) : le nombre de modalités avantage mécaniquement l'estimateur."}, {"_texte": "1 bit, comme dans l'exemple jouet pair/impair", "correcte": false, "_justification": "1 bit est propre à l'exemple jouet, dont les deux modalités expliquent tout. Ici <code>H(Arrivées)<\/code> est 7,46."}, {"_texte": "Une valeur négative, car H(Y|X) dépasse H(Y)", "correcte": false, "_justification": "H(Y|X) ne peut pas dépasser H(Y), l'information mutuelle n'est jamais négative."}]}, {"_enonce": "Pour le XGBoost peu profond (<code>max_depth=2<\/code>, <code>count:poisson<\/code>) de l'étape 4, quelle variable domine <code>feature_importances_<\/code> ?", "_multiple": false, "difficulte": "moyen", "theme": "XGBoost et information", "source_fichier": "tp10-theorie-information.md", "_source": "tp10-theorie-information.md", "options": [{"_texte": "<code>Grippe<\/code> (environ 0,72), loin devant <code>Temperature<\/code> (0,13), alors que <code>Jour<\/code> avait l'information mutuelle la plus forte isolément", "correcte": true, "_justification": "Mesuré : 0,715 et 0,131. Information mutuelle et importance d'un modèle d'arbres sont liées mais pas identiques : un split binaire net est plus facile à exploiter qu'un effet réparti sur sept catégories."}, {"_texte": "<code>Jour_Sam<\/code>, car le samedi est le jour le plus chargé", "correcte": false, "_justification": "Mesuré : <code>Jour_Sam<\/code> pèse 0,054 environ. Le dimanche (200 arrivées) est d'ailleurs plus chargé que le samedi (189)."}, {"_texte": "<code>Temperature<\/code>, car c'est la seule variable continue", "correcte": false, "_justification": "Mesuré : <code>Temperature<\/code> est deuxième, à 0,13."}, {"_texte": "Aucune : les importances sont toutes égales à 1/9, puisque 9 colonnes", "correcte": false, "_justification": "Les importances ne sont pas uniformes : <code>Grippe<\/code> à elle seule en porte environ 72 %."}]}, {"_enonce": "Le TP annonce que la MAE passe d'environ 16,6 (<code>max_depth=2<\/code>) à 9,5 (<code>max_depth=6<\/code>). Sur quelles données ces erreurs sont-elles calculées, et que donne un jeu de test retenu (30 %, <code>random_state=0<\/code>) ?", "_multiple": false, "difficulte": "difficile", "theme": "XGBoost et information", "source_fichier": "tp10-theorie-information.md", "_source": "tp10-theorie-information.md", "options": [{"_texte": "Sur un jeu de test indépendant, ce sont donc des erreurs de généralisation", "correcte": false, "_justification": "Le code évalue <code>modele.predict(X)<\/code> sur <code>X<\/code> entier, celui qui a servi à entraîner : aucun jeu n'est mis de côté."}, {"_texte": "Sur les données d'entraînement ; sur un jeu retenu, l'arbre profond devient moins bon que l'arbre peu profond", "correcte": false, "_justification": "Mesuré : il reste meilleur (12,4 contre 17,5), même si l'écart se réduit."}, {"_texte": "Sur les données d'entraînement elles-mêmes ; sur un jeu retenu on mesure 17,5 puis 12,4 : l'arbre profond reste meilleur, mais l'avantage est surestimé", "correcte": true, "_justification": "Mesuré. Sur le jeu retenu l'erreur de l'arbre profond monte de 9,2 (entraînement) à 12,4 : il épouse en partie le bruit."}, {"_texte": "Sur les données d'entraînement, et sur un jeu retenu les deux modèles donnent la même MAE", "correcte": false, "_justification": "Mesuré : 17,5 et 12,4, deux valeurs nettement différentes."}]}]};
+const form = document.getElementById('qcm');
+DATA.questions.forEach((q, i) => {
+  const multi = q._multiple;
+  const div = document.createElement('div');
+  div.className = 'q'; div.id = 'q'+i;
+  let badges = '';
+  if (q.difficulte) badges += `<span class="badge b-${q.difficulte}">${q.difficulte}</span>`;
+  if (q.theme) badges += `<span class="badge b-theme">${q.theme}</span>`;
+  const hint = multi ? ' <small>(plusieurs réponses)</small>' : '';
+  let html = `<span class="qmark" id="m${i}"></span><h3>Question ${i+1}${hint}${badges}</h3>`;
+  html += `<div class="enonce">${q._enonce}</div>`;
+  q.options.forEach((o, j) => {
+    const type = multi ? 'checkbox' : 'radio';
+    html += `<label class="opt" id="o${i}_${j}">`
+          + `<input type="${type}" name="q${i}" value="${j}">${o._texte}</label>`;
+    html += `<div class="just" id="j${i}_${j}">${o._justification||''}</div>`;
+  });
+  if (q.source_fichier) html += `<div class="src" id="s${i}">Source : ${q._source}</div>`;
+  div.innerHTML = html;
+  form.appendChild(div);
+});
+function grade(){
+  let correct = 0;
+  DATA.questions.forEach((q, i) => {
+    const chosen = [...form.querySelectorAll(`input[name=q${i}]:checked`)].map(e=>+e.value);
+    const good = q.options.map((o,j)=>o.correcte?j:-1).filter(j=>j>=0);
+    const ok = chosen.length===good.length && chosen.every(j=>good.includes(j));
+    if (ok) correct++;
+    q.options.forEach((o,j)=>{
+      const lab = document.getElementById(`o${i}_${j}`);
+      lab.classList.remove('correct','wrong');
+      if (o.correcte) lab.classList.add('correct');
+      else if (chosen.includes(j)) lab.classList.add('wrong');
+      const ju = document.getElementById(`j${i}_${j}`);
+      if (ju && o._justification) ju.classList.add('show');
+    });
+    const m = document.getElementById('m'+i);
+    m.textContent = ok ? '✓' : '✗';
+    m.style.color = ok ? 'var(--ok)' : 'var(--ko)';
+    m.classList.add('show');
+    const s = document.getElementById('s'+i); if (s) s.classList.add('show');
+  });
+  const n = DATA.questions.length;
+  const pct = Math.round(100*correct/n);
+  const sc = document.getElementById('score');
+  sc.textContent = `Score : ${correct} / ${n}  (${pct} %)`;
+  sc.style.color = pct>=50 ? 'var(--ok)' : 'var(--ko)';
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+</script>
+</body>
+</html>
